@@ -1,0 +1,118 @@
+<svg viewBox="0 0 1160 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="How a SIEM works, from attack to analyst">
+<title>The SIEM Story — from attack to analyst</title>
+<desc>Six steps: attacker hits a victim, the victim writes a log, the agent collects and parses it, logs travel to the SIEM, a rule matches and raises an alert, the analyst investigates on the dashboard.</desc>
+<defs>
+  <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker>
+  <marker id="arR" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e0556b"/></marker>
+  <marker id="arG" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d4af37"/></marker>
+</defs>
+
+<rect width="1160" height="560" fill="#0a1226"/>
+<text x="30" y="40" fill="#fff" font-size="21" font-weight="700">How a SIEM Works — From Attack to Analyst</text>
+<text x="30" y="62" fill="#8ea3c8" font-size="12.5">The agent decides what is sent · the manager decides what is suspicious</text>
+<text x="1130" y="42" fill="#d4af37" font-size="13" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- STEP 1 attacker -->
+<g>
+  <circle cx="90" cy="190" r="10" fill="#d4af37"/><text x="90" y="195" text-anchor="middle" font-size="12" font-weight="700" fill="#0a1226">1</text>
+  <rect x="34" y="220" width="112" height="88" rx="10" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+  <text x="90" y="252" text-anchor="middle" fill="#f2c3cb" font-size="26">☠</text>
+  <text x="90" y="278" text-anchor="middle" fill="#f2c3cb" font-size="13" font-weight="700">Attacker</text>
+  <text x="90" y="295" text-anchor="middle" fill="#c98d99" font-size="10.5">brute-force login</text>
+</g>
+<path d="M150 264 L206 264" stroke="#e0556b" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arR)"/>
+
+<!-- STEP 2 victims -->
+<g>
+  <circle cx="268" cy="190" r="10" fill="#d4af37"/><text x="268" y="195" text-anchor="middle" font-size="12" font-weight="700" fill="#0a1226">2</text>
+  <rect x="212" y="132" width="116" height="72" rx="9" fill="#132244" stroke="#2b3f70" stroke-width="1.5" opacity="0"/>
+
+  <rect x="212" y="220" width="116" height="60" rx="9" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+  <text x="270" y="243" text-anchor="middle" fill="#e8edf7" font-size="12.5" font-weight="700">Windows PC</text>
+  <text x="270" y="261" text-anchor="middle" fill="#8ea3c8" font-size="10.5">writes Event 4625</text>
+
+  <rect x="212" y="290" width="116" height="60" rx="9" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+  <text x="270" y="313" text-anchor="middle" fill="#e8edf7" font-size="12.5" font-weight="700">Linux server</text>
+  <text x="270" y="331" text-anchor="middle" fill="#8ea3c8" font-size="10.5">writes auth.log</text>
+
+  <text x="270" y="378" text-anchor="middle" fill="#6d81ab" font-size="11">victims generate raw logs</text>
+</g>
+
+<!-- STEP 3 agents -->
+<g>
+  <circle cx="430" cy="190" r="10" fill="#d4af37"/><text x="430" y="195" text-anchor="middle" font-size="12" font-weight="700" fill="#0a1226">3</text>
+  <rect x="366" y="212" width="128" height="146" rx="10" fill="#101f1a" stroke="#3fa87a" stroke-width="1.7"/>
+  <text x="430" y="240" text-anchor="middle" fill="#7fe0b4" font-size="13.5" font-weight="700">AGENT</text>
+  <text x="430" y="258" text-anchor="middle" fill="#93b8a8" font-size="10.5">on every machine</text>
+  <line x1="384" y1="270" x2="476" y2="270" stroke="#1f3d33"/>
+  <text x="430" y="290" text-anchor="middle" fill="#c7d3e8" font-size="11">collects</text>
+  <text x="430" y="310" text-anchor="middle" fill="#c7d3e8" font-size="11">parses into fields</text>
+  <text x="430" y="330" text-anchor="middle" fill="#c7d3e8" font-size="11">ships out</text>
+  <text x="430" y="350" text-anchor="middle" fill="#6f9c89" font-size="10">inputs.conf</text>
+</g>
+<path d="M332 250 L362 250" stroke="#37c7d4" stroke-width="2" marker-end="url(#ar)"/>
+<path d="M332 320 L362 300" stroke="#37c7d4" stroke-width="2" marker-end="url(#ar)"/>
+
+<!-- STEP 4 transport -->
+<g>
+  <circle cx="556" cy="190" r="10" fill="#d4af37"/><text x="556" y="195" text-anchor="middle" font-size="12" font-weight="700" fill="#0a1226">4</text>
+  <path d="M498 285 L616 285" stroke="#37c7d4" stroke-width="2.4" marker-end="url(#ar)"/>
+  <rect x="508" y="248" width="98" height="28" rx="6" fill="#15213f" stroke="#2b3f70"/>
+  <text x="557" y="267" text-anchor="middle" fill="#8ea3c8" font-size="11" font-family="monospace">port 9997</text>
+  <text x="557" y="308" text-anchor="middle" fill="#6d81ab" font-size="10.5">over the network</text>
+</g>
+
+<!-- STEP 5 SIEM -->
+<g>
+  <circle cx="760" cy="150" r="10" fill="#d4af37"/><text x="760" y="155" text-anchor="middle" font-size="12" font-weight="700" fill="#0a1226">5</text>
+  <rect x="622" y="176" width="276" height="212" rx="12" fill="#15213f" stroke="#d4af37" stroke-width="2"/>
+  <text x="760" y="204" text-anchor="middle" fill="#f0d78a" font-size="15" font-weight="700">SIEM · the manager</text>
+
+  <rect x="642" y="220" width="236" height="30" rx="6" fill="#101a34" stroke="#2b3f70"/>
+  <text x="760" y="240" text-anchor="middle" fill="#c7d3e8" font-size="11.5">normalize → one format for all sources</text>
+
+  <rect x="642" y="256" width="236" height="30" rx="6" fill="#101a34" stroke="#2b3f70"/>
+  <text x="760" y="276" text-anchor="middle" fill="#c7d3e8" font-size="11.5">store &amp; index → searchable in seconds</text>
+
+  <rect x="642" y="292" width="236" height="30" rx="6" fill="#101a34" stroke="#2b3f70"/>
+  <text x="760" y="312" text-anchor="middle" fill="#c7d3e8" font-size="11.5">correlate → connect related events</text>
+
+  <rect x="642" y="328" width="236" height="42" rx="6" fill="#2b1e0d" stroke="#d4af37"/>
+  <text x="760" y="346" text-anchor="middle" fill="#f0d78a" font-size="11.5" font-weight="700">detection rules live here</text>
+  <text x="760" y="362" text-anchor="middle" fill="#bda45f" font-size="10" font-family="monospace">EventID=4625 AND count&gt;10</text>
+</g>
+
+<!-- STEP 6 alert + analyst -->
+<path d="M902 282 L946 282" stroke="#d4af37" stroke-width="2.2" marker-end="url(#arG)"/>
+<g>
+  <circle cx="1032" cy="150" r="10" fill="#d4af37"/><text x="1032" y="155" text-anchor="middle" font-size="12" font-weight="700" fill="#0a1226">6</text>
+
+  <rect x="952" y="176" width="176" height="88" rx="10" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+  <text x="1040" y="200" text-anchor="middle" fill="#f2c3cb" font-size="12.5" font-weight="700">⚠ ALERT</text>
+  <text x="1040" y="220" text-anchor="middle" fill="#e8a8b4" font-size="10.5">Brute force detected</text>
+  <text x="1040" y="238" text-anchor="middle" fill="#c98d99" font-size="10">host: WIN-VICTIM01</text>
+  <text x="1040" y="254" text-anchor="middle" fill="#c98d99" font-size="10">severity: High</text>
+
+  <rect x="952" y="278" width="176" height="110" rx="10" fill="#0e1730" stroke="#37c7d4" stroke-width="1.6"/>
+  <text x="1040" y="300" text-anchor="middle" fill="#37c7d4" font-size="12.5" font-weight="700">DASHBOARD</text>
+  <rect x="968" y="312" width="46" height="26" rx="4" fill="#132244"/><text x="991" y="329" text-anchor="middle" fill="#8ea3c8" font-size="10">alerts</text>
+  <rect x="1018" y="312" width="46" height="26" rx="4" fill="#132244"/><text x="1041" y="329" text-anchor="middle" fill="#8ea3c8" font-size="10">logins</text>
+  <rect x="1068" y="312" width="46" height="26" rx="4" fill="#132244"/><text x="1091" y="329" text-anchor="middle" fill="#8ea3c8" font-size="10">hosts</text>
+  <path d="M968 372 L992 356 L1016 364 L1040 346 L1064 352 L1090 340 L1112 348" stroke="#37c7d4" stroke-width="1.8" fill="none"/>
+
+  <text x="1040" y="424" text-anchor="middle" font-size="26">🧑‍💻</text>
+  <text x="1040" y="448" text-anchor="middle" fill="#e8edf7" font-size="13" font-weight="700">SOC Analyst</text>
+  <text x="1040" y="466" text-anchor="middle" fill="#8ea3c8" font-size="10.5">investigates &amp; decides</text>
+</g>
+<path d="M1040 392 L1040 404" stroke="#37c7d4" stroke-width="2" marker-end="url(#ar)"/>
+
+<!-- bottom captions -->
+<rect x="30" y="482" width="1100" height="52" rx="9" fill="#0e1730" stroke="#1f2d52"/>
+<text x="48" y="504" fill="#d4af37" font-size="11.5" font-weight="700">1 · attack</text>
+<text x="196" y="504" fill="#d4af37" font-size="11.5" font-weight="700">2 · log created</text>
+<text x="386" y="504" fill="#d4af37" font-size="11.5" font-weight="700">3 · agent collects + parses</text>
+<text x="640" y="504" fill="#d4af37" font-size="11.5" font-weight="700">4 · shipped</text>
+<text x="760" y="504" fill="#d4af37" font-size="11.5" font-weight="700">5 · rule matches</text>
+<text x="960" y="504" fill="#d4af37" font-size="11.5" font-weight="700">6 · analyst triages</text>
+<text x="48" y="524" fill="#8ea3c8" font-size="11">Without step 3 there is no data. Without step 5 there is no alert. Without step 6 nothing happens at all.</text>
+</svg>

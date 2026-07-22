@@ -1,0 +1,63 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="The four pillars of a SOC">
+<title>The four pillars of a SOC</title>
+<desc>People, processes, technology and intelligence hold up the SOC. One cracked pillar makes the whole structure lean.</desc>
+<rect width="900" height="400" fill="#0a1226"/>
+<text x="30" y="38" fill="#fff" font-size="19" font-weight="700">The Four Pillars of a SOC</text>
+<text x="30" y="58" fill="#8ea3c8" font-size="12">Remove any one and the whole structure leans — a SOC is never just a tool purchase</text>
+<text x="870" y="38" fill="#d4af37" font-size="12.5" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- roof, slightly tilted toward the cracked pillar -->
+<g transform="rotate(-1.2 450 110)">
+  <rect x="90" y="92" width="720" height="44" rx="8" fill="#2b1e0d" stroke="#d4af37" stroke-width="2"/>
+  <text x="450" y="121" text-anchor="middle" fill="#f0d78a" font-size="19" font-weight="800" letter-spacing="3">SOC</text>
+</g>
+
+<!-- pillars -->
+<g>
+  <rect x="112" y="150" width="140" height="170" rx="7" fill="#132244" stroke="#2b3f70" stroke-width="1.6"/>
+  <text x="182" y="182" text-anchor="middle" font-size="24">👥</text>
+  <text x="182" y="212" text-anchor="middle" fill="#e8edf7" font-size="14" font-weight="700">PEOPLE</text>
+  <text x="182" y="238" text-anchor="middle" fill="#8ea3c8" font-size="11">Analysts in tiers,</text>
+  <text x="182" y="254" text-anchor="middle" fill="#8ea3c8" font-size="11">trained and staffed</text>
+  <text x="182" y="288" text-anchor="middle" fill="#e0556b" font-size="10">without it: alerts</text>
+  <text x="182" y="302" text-anchor="middle" fill="#e0556b" font-size="10">nobody understands</text>
+</g>
+
+<g>
+  <rect x="272" y="150" width="140" height="170" rx="7" fill="#132244" stroke="#2b3f70" stroke-width="1.6"/>
+  <text x="342" y="182" text-anchor="middle" font-size="24">📋</text>
+  <text x="342" y="212" text-anchor="middle" fill="#e8edf7" font-size="14" font-weight="700">PROCESSES</text>
+  <text x="342" y="238" text-anchor="middle" fill="#8ea3c8" font-size="11">Workflows, playbooks,</text>
+  <text x="342" y="254" text-anchor="middle" fill="#8ea3c8" font-size="11">escalation paths</text>
+  <text x="342" y="288" text-anchor="middle" fill="#e0556b" font-size="10">without it: every</text>
+  <text x="342" y="302" text-anchor="middle" fill="#e0556b" font-size="10">incident improvised</text>
+</g>
+
+<g>
+  <rect x="432" y="150" width="140" height="170" rx="7" fill="#132244" stroke="#2b3f70" stroke-width="1.6"/>
+  <text x="502" y="182" text-anchor="middle" font-size="24">🖥️</text>
+  <text x="502" y="212" text-anchor="middle" fill="#e8edf7" font-size="14" font-weight="700">TECHNOLOGY</text>
+  <text x="502" y="238" text-anchor="middle" fill="#8ea3c8" font-size="11">SIEM, EDR, IDS/IPS —</text>
+  <text x="502" y="254" text-anchor="middle" fill="#8ea3c8" font-size="11">detection at scale</text>
+  <text x="502" y="288" text-anchor="middle" fill="#e0556b" font-size="10">without it:</text>
+  <text x="502" y="302" text-anchor="middle" fill="#e0556b" font-size="10">the team is blind</text>
+</g>
+
+<!-- cracked pillar -->
+<g>
+  <rect x="592" y="150" width="140" height="170" rx="7" fill="#1a1426" stroke="#e0556b" stroke-width="1.8" stroke-dasharray="7 4"/>
+  <text x="662" y="182" text-anchor="middle" font-size="24">🧠</text>
+  <text x="662" y="212" text-anchor="middle" fill="#f2c3cb" font-size="14" font-weight="700">INTELLIGENCE</text>
+  <text x="662" y="238" text-anchor="middle" fill="#c98d99" font-size="11">Current attacker</text>
+  <text x="662" y="254" text-anchor="middle" fill="#c98d99" font-size="11">methods and IOCs</text>
+  <text x="662" y="288" text-anchor="middle" fill="#e0556b" font-size="10">without it: you only</text>
+  <text x="662" y="302" text-anchor="middle" fill="#e0556b" font-size="10">catch yesterday</text>
+  <!-- crack -->
+  <path d="M662 150 L650 190 L672 224 L654 262 L668 320" stroke="#e0556b" stroke-width="2.2" fill="none"/>
+</g>
+
+<!-- base -->
+<rect x="90" y="326" width="720" height="16" rx="5" fill="#15213f" stroke="#2b3f70"/>
+
+<text x="450" y="372" text-anchor="middle" fill="#e0556b" font-size="12.5" font-weight="600">This SOC has the tools and the team — but no threat intelligence. It is leaning.</text>
+</svg>

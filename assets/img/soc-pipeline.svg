@@ -1,0 +1,66 @@
+<svg viewBox="0 0 1120 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="The five core SOC functions">
+<title>The SOC pipeline</title>
+<desc>Collection, detection, triage, investigation and response, with threat intelligence and forensics feeding in.</desc>
+<defs><marker id="p" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker></defs>
+<rect width="1120" height="330" fill="#0a1226"/>
+<text x="30" y="38" fill="#fff" font-size="19" font-weight="700">The Five Core SOC Functions</text>
+<text x="30" y="58" fill="#8ea3c8" font-size="12">Everything a SOC does fits into one of these five boxes — and so does this whole diploma</text>
+<text x="1090" y="38" fill="#d4af37" font-size="12.5" font-weight="700" text-anchor="end">IT GATE</text>
+
+<g>
+  <rect x="30" y="92" width="188" height="96" rx="10" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+  <text x="124" y="120" text-anchor="middle" fill="#37c7d4" font-size="12" font-weight="700">1 · COLLECTION</text>
+  <text x="124" y="142" text-anchor="middle" fill="#e8edf7" font-size="11.5">Can we even see it?</text>
+  <text x="124" y="162" text-anchor="middle" fill="#8ea3c8" font-size="10.5">→ centralized logs</text>
+  <text x="124" y="180" text-anchor="middle" fill="#d4af37" font-size="10">Sessions 2–3</text>
+</g>
+<path d="M222 140 L248 140" stroke="#37c7d4" stroke-width="2" marker-end="url(#p)"/>
+
+<g>
+  <rect x="252" y="92" width="188" height="96" rx="10" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+  <text x="346" y="120" text-anchor="middle" fill="#37c7d4" font-size="12" font-weight="700">2 · DETECTION</text>
+  <text x="346" y="142" text-anchor="middle" fill="#e8edf7" font-size="11.5">Does it look wrong?</text>
+  <text x="346" y="162" text-anchor="middle" fill="#8ea3c8" font-size="10.5">→ alerts with context</text>
+  <text x="346" y="180" text-anchor="middle" fill="#d4af37" font-size="10">Session 4</text>
+</g>
+<path d="M444 140 L470 140" stroke="#37c7d4" stroke-width="2" marker-end="url(#p)"/>
+
+<g>
+  <rect x="474" y="92" width="188" height="96" rx="10" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+  <text x="568" y="120" text-anchor="middle" fill="#37c7d4" font-size="12" font-weight="700">3 · TRIAGE</text>
+  <text x="568" y="142" text-anchor="middle" fill="#e8edf7" font-size="11.5">Real? How bad?</text>
+  <text x="568" y="162" text-anchor="middle" fill="#8ea3c8" font-size="10.5">→ prioritized, escalated</text>
+  <text x="568" y="180" text-anchor="middle" fill="#d4af37" font-size="10">Session 5</text>
+</g>
+<path d="M666 140 L692 140" stroke="#37c7d4" stroke-width="2" marker-end="url(#p)"/>
+
+<g>
+  <rect x="696" y="92" width="188" height="96" rx="10" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+  <text x="790" y="120" text-anchor="middle" fill="#37c7d4" font-size="12" font-weight="700">4 · INVESTIGATION</text>
+  <text x="790" y="142" text-anchor="middle" fill="#e8edf7" font-size="11.5">What happened?</text>
+  <text x="790" y="162" text-anchor="middle" fill="#8ea3c8" font-size="10.5">→ scope, cause, timeline</text>
+  <text x="790" y="180" text-anchor="middle" fill="#d4af37" font-size="10">Sessions 7–8</text>
+</g>
+<path d="M888 140 L914 140" stroke="#37c7d4" stroke-width="2" marker-end="url(#p)"/>
+
+<g>
+  <rect x="918" y="92" width="172" height="96" rx="10" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+  <text x="1004" y="120" text-anchor="middle" fill="#37c7d4" font-size="12" font-weight="700">5 · RESPONSE</text>
+  <text x="1004" y="142" text-anchor="middle" fill="#e8edf7" font-size="11.5">How do we stop it?</text>
+  <text x="1004" y="162" text-anchor="middle" fill="#8ea3c8" font-size="10.5">→ contained, recovered</text>
+  <text x="1004" y="180" text-anchor="middle" fill="#d4af37" font-size="10">Sessions 6, 9–10</text>
+</g>
+
+<!-- supporting -->
+<rect x="252" y="234" width="188" height="56" rx="9" fill="#0e1730" stroke="#8b7ce8" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="346" y="256" text-anchor="middle" fill="#b0a5f0" font-size="11.5" font-weight="700">Threat Intelligence</text>
+<text x="346" y="274" text-anchor="middle" fill="#8b93b8" font-size="10">feeds detection &amp; triage</text>
+<path d="M346 232 L346 192" stroke="#8b7ce8" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+<rect x="696" y="234" width="188" height="56" rx="9" fill="#0e1730" stroke="#3fa87a" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="790" y="256" text-anchor="middle" fill="#7fe0b4" font-size="11.5" font-weight="700">Digital Forensics</text>
+<text x="790" y="274" text-anchor="middle" fill="#7ea595" font-size="10">deepens investigation</text>
+<path d="M790 232 L790 192" stroke="#3fa87a" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+<text x="30" y="312" fill="#7e91b8" font-size="11">When you feel lost on shift, ask: which stage am I in right now? The answer tells you your next action.</text>
+</svg>

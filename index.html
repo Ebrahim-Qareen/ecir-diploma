@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eCIR Diploma — ITGate Academy</title>
+<meta name="description" content="Enterprise Cyber Incident Response (eCIR) diploma — SOC operations, SIEM, detection engineering, incident response and DFIR. ITGate Academy.">
+<link rel="stylesheet" href="assets/css/itgate.css">
+<link rel="icon" href="assets/img/itgate-logo.jpg">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR Diploma</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="#sessions" class="active">Sessions</a>
+      <a href="#lab">SOC Lab</a>
+      <a href="#resources">Resources</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Enterprise Cyber Incident Response · eCIR v2</div>
+    <h1>Build a SOC.<br>Defend it. <span>Investigate it.</span></h1>
+    <p>A 40-hour practical diploma taking you from your first alert to a full digital forensic
+       investigation — while you build a working Security Operations Center of your own.</p>
+
+    <div class="stats">
+      <div class="stat"><b>10</b><span>Sessions</span></div>
+      <div class="stat"><b>40</b><span>Hours</span></div>
+      <div class="stat"><b>4</b><span>Lab machines</span></div>
+      <div class="stat"><b>60%</b><span>Hands-on</span></div>
+      <div class="stat"><b>eCIR</b><span>Exam aligned</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap section" id="sessions">
+  <h2 class="sec">Course Roadmap</h2>
+  <p class="sec-desc">Each session builds on the previous one — and adds a new piece to your SOC lab.
+     Colours mark the four pillars: <span style="color:var(--cyan)">SIEM</span> ·
+     <span style="color:var(--purple)">Incident Response</span> ·
+     <span style="color:var(--gold)">Analysis</span> ·
+     <span style="color:var(--green)">DFIR</span>.</p>
+
+  <div class="grid">
+
+    <a class="card p-siem" href="session-01/index.html">
+      <div class="card-top"><span class="snum">S01</span><h3>Welcome to the SOC</h3></div>
+      <p>What a SOC really is, how the team is structured, and the mental model of a SIEM before you ever touch one.</p>
+      <div class="card-meta">
+        <span class="tag siem">Foundations</span>
+        <span class="tag">SOC roles</span>
+        <span class="tag">SIEM concept</span>
+        <span class="status done">Delivered</span>
+      </div>
+    </a>
+
+    <a class="card p-siem" href="session-02/index.html">
+      <div class="card-top"><span class="snum">S02</span><h3>Build the Lab &amp; Make Logs Flow</h3></div>
+      <p>Stand up the lab, deploy Splunk, install forwarders — and watch your first real logs arrive.</p>
+      <div class="card-meta">
+        <span class="tag siem">SIEM 1/4</span>
+        <span class="tag">Splunk</span>
+        <span class="tag">Log collection</span>
+        <span class="status done">Delivered</span>
+      </div>
+    </a>
+
+    <a class="card p-siem" href="session-03/index.html">
+      <div class="card-top"><span class="snum">S03</span><h3>Windows &amp; Linux Telemetry</h3></div>
+      <p>Event channels, the Event IDs that matter, Sysmon, auditd — and making messy logs searchable.</p>
+      <div class="card-meta">
+        <span class="tag siem">SIEM 2/4</span>
+        <span class="tag">Sysmon</span>
+        <span class="tag">SPL</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+    <a class="card p-siem" href="session-04/index.html">
+      <div class="card-top"><span class="snum">S04</span><h3>Detection Engineering</h3></div>
+      <p>Write the rules that create the alerts you used to only receive. Attack, detect, tune, map to ATT&amp;CK.</p>
+      <div class="card-meta">
+        <span class="tag siem">SIEM 3/4</span>
+        <span class="tag">Sigma</span>
+        <span class="tag">MITRE</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+    <a class="card p-siem" href="session-05/index.html">
+      <div class="card-top"><span class="snum">S05</span><h3>Triage, IOCs &amp; Threat Intel</h3></div>
+      <p>Turn an alert queue into decisions: classify, enrich, score, escalate — and write the case report.</p>
+      <div class="card-meta">
+        <span class="tag siem">SIEM 4/4</span>
+        <span class="tag">Triage</span>
+        <span class="tag">Enrichment</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+    <a class="card p-ir" href="session-06/index.html">
+      <div class="card-top"><span class="snum">S06</span><h3>The IR Lifecycle &amp; Platform</h3></div>
+      <p>NIST and SANS lifecycles walked phase by phase, then run a real case in TheHive and automate it.</p>
+      <div class="card-meta">
+        <span class="tag ir">Incident Response</span>
+        <span class="tag">TheHive</span>
+        <span class="tag">SOAR</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+    <a class="card p-analysis" href="session-07/index.html">
+      <div class="card-top"><span class="snum">S07</span><h3>First Response &amp; the Endpoint</h3></div>
+      <p>The first five minutes, evidence order of volatility, process trees, pivoting and timelines.</p>
+      <div class="card-meta">
+        <span class="tag analysis">Analysis 1/2</span>
+        <span class="tag">Timelines</span>
+        <span class="tag">Pivoting</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+    <a class="card p-analysis" href="session-08/index.html">
+      <div class="card-top"><span class="snum">S08</span><h3>Network Analysis</h3></div>
+      <p>Read the wire: PCAP analysis, beaconing, exfiltration, IDS alerts and firewall logs together.</p>
+      <div class="card-meta">
+        <span class="tag analysis">Analysis 2/2</span>
+        <span class="tag">Wireshark</span>
+        <span class="tag">Suricata</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+    <a class="card p-dfir" href="session-09/index.html">
+      <div class="card-top"><span class="snum">S09</span><h3>DFIR: Evidence &amp; Acquisition</h3></div>
+      <p>Forensic principles, chain of custody, and acquiring memory, disk and artifacts that hold up.</p>
+      <div class="card-meta">
+        <span class="tag dfir">DFIR 1/2</span>
+        <span class="tag">FTK · KAPE</span>
+        <span class="tag">Chain of custody</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+    <a class="card p-dfir" href="session-10/index.html">
+      <div class="card-top"><span class="snum">S10</span><h3>Memory, Artifacts &amp; Capstone</h3></div>
+      <p>Volatility, malicious files, registry persistence — then a full attack simulation, start to report.</p>
+      <div class="card-meta">
+        <span class="tag dfir">DFIR 2/2</span>
+        <span class="tag">Volatility</span>
+        <span class="tag">Capstone</span>
+        <span class="status soon">Planned</span>
+      </div>
+    </a>
+
+  </div>
+</main>
+
+<section class="wrap section-sm" id="lab">
+  <h2 class="sec">The SOC Lab</h2>
+  <p class="sec-desc">One environment that grows with you across all ten sessions — and stays yours afterwards.</p>
+  <div class="tiles">
+    <a class="tile" href="lab/index.html">
+      <span class="ico">🖧</span>
+      <h4>Lab Overview &amp; Topology</h4>
+      <p>Architecture, machines, networks and how each session extends it.</p>
+    </a>
+    <a class="tile" href="lab/setup.html">
+      <span class="ico">⚙️</span>
+      <h4>Setup Guide</h4>
+      <p>Step-by-step build with verification checks and troubleshooting.</p>
+    </a>
+    <a class="tile" href="lab/attacks.html">
+      <span class="ico">🎯</span>
+      <h4>Attack &amp; Detection Matrix</h4>
+      <p>Every attack, the logs it produces, and the detection that catches it.</p>
+    </a>
+    <a class="tile" href="lab/challenges/index.html">
+      <span class="ico">🔎</span>
+      <h4>Investigation Challenges</h4>
+      <p>Evidence packages to investigate exactly like a SOC analyst.</p>
+    </a>
+  </div>
+</section>
+
+<section class="wrap section-sm" id="resources">
+  <h2 class="sec">Resources</h2>
+  <p class="sec-desc">Reference material that supports every session. New items are added here as the course grows.</p>
+  <div class="tiles">
+    <a class="tile" href="cheatsheets/index.html">
+      <span class="ico">📄</span>
+      <h4>Cheat Sheets</h4>
+      <p>Windows Event IDs, Sysmon, SPL, Volatility, DFIR commands, MITRE mapping.</p>
+    </a>
+    <a class="tile" href="resources/labs.html">
+      <span class="ico">🧪</span>
+      <h4>Practice Labs</h4>
+      <p>TryHackMe rooms per session, plus CyberDefenders, BTLO and LetsDefend picks.</p>
+    </a>
+    <a class="tile" href="resources/glossary.html">
+      <span class="ico">📚</span>
+      <h4>Glossary</h4>
+      <p>Every term in simple English, with the SOC meaning beside it.</p>
+    </a>
+    <a class="tile" href="resources/references.html">
+      <span class="ico">🔗</span>
+      <h4>References</h4>
+      <p>INE mapping, NIST/SANS documents, vendor docs and further reading.</p>
+    </a>
+  </div>
+</section>
+
+<section class="wrap section-sm" id="about">
+  <h2 class="sec">About This Course</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+    <div class="card" style="cursor:default">
+      <h3 style="margin-bottom:8px">Who it is for</h3>
+      <p style="margin:0">Students with CCNA, CEH, Windows Server and Linux fundamentals who want to work
+         as SOC analysts. We do not re-teach networking or operating system basics — we build on them.</p>
+    </div>
+    <div class="card" style="cursor:default">
+      <h3 style="margin-bottom:8px">How it works</h3>
+      <p style="margin:0">Every session follows the same rhythm: recap, a real incident story, theory,
+         a live demo, lab building, hands-on practice, an investigation, and homework.</p>
+    </div>
+    <div class="card" style="cursor:default">
+      <h3 style="margin-bottom:8px">What you leave with</h3>
+      <p style="margin:0">A working SOC lab, your own detection rules, a DFIR collection script,
+         written case reports — and the skills the eCIR exam tests.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Your gate to the world</span>
+    <span class="mono">Primary reference: INE eCIR v2</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Test Page — eCIR | ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR Diploma</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">Sessions</a>
+      <a href="../lab/index.html">SOC Lab</a>
+      <a href="../index.html#resources">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap section">
+<div class="page-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h5>Session 01 · Pages</h5>
+    <ol>
+      <li><a href="index.html">Cover</a></li>
+      <li><a href="#">Objectives</a></li>
+      <li><a href="#">Recap</a></li>
+      <li><a href="#">Incident hook</a></li>
+      <li class="now"><a href="#">Theory — What is a SOC</a></li>
+      <li><a href="#">Theory — Core functions</a></li>
+      <li><a href="#">Theory — Tiers &amp; roles</a></li>
+      <li><a href="#">Demo</a></li>
+      <li><a href="#">Knowledge check</a></li>
+      <li><a href="#">Break</a></li>
+      <li><a href="#">Summary</a></li>
+      <li><a href="#">Homework</a></li>
+    </ol>
+  </aside>
+
+  <!-- CONTENT -->
+  <article>
+    <div class="page-head">
+      <div class="kicker">
+        <span class="snum">S01 · P04</span>
+        <span class="tag siem">Theory</span>
+        <span class="time">⏱ 12 min</span>
+      </div>
+      <h1>Design Test Page — Component Library</h1>
+      <p class="lede">Every component used across the course, on one page. This is the visual system we
+         lock before building the other 200 pages.</p>
+    </div>
+
+    <div class="content">
+
+      <div class="oneline">
+        A SIEM is the platform that collects logs from everywhere, connects them together, and tells
+        you when something looks wrong.
+      </div>
+
+      <h2>Why it exists</h2>
+      <p>Every system in an organization writes logs, but they live in a hundred different places.
+         Nobody can watch a hundred places at once. The SIEM brings them into one screen so a single
+         analyst can defend the whole company.</p>
+
+      <h3>How it works</h3>
+      <ul>
+        <li>An <strong>agent</strong> on each machine collects logs and applies parsing configuration.</li>
+        <li>Logs travel over the network to the <strong>manager</strong> (the SIEM server).</li>
+        <li>The manager stores, indexes, and runs <strong>detection rules</strong> against them.</li>
+        <li>When a rule matches, an <strong>alert</strong> lands in the analyst's queue.</li>
+      </ul>
+
+      <!-- VISUAL PLACEHOLDER -->
+      <div class="visual">
+        <div class="v-head">
+          <span class="v-badge">Visual · Animation</span>
+          <h4>V1 — The SIEM Story</h4>
+        </div>
+        <dl>
+          <dt>Shows</dt>
+          <dd>Six build steps: (1) attacker brute-forces the victim → (2) victim writes Event ID 4625
+              → (3) the agent collects and parses → (4) logs travel over :9997 → (5) a rule matches and
+              raises an alert → (6) the SOC analyst opens it and starts triage.</dd>
+          <dt>Purpose</dt>
+          <dd>One image answers "what is a SIEM, and which part lives where" — closing the promise
+              made in Session 1.</dd>
+          <dt>Source</dt>
+          <dd>Original draw.io in ITGate theme. THM <em>Introduction to SIEM</em> for inspiration only.</dd>
+        </dl>
+      </div>
+
+      <h2>Comparison tables</h2>
+      <table>
+        <thead>
+          <tr><th>Component</th><th>Where it runs</th><th>What it holds</th><th>You configure</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Agent</strong></td><td>On every endpoint</td><td>Collection + parsing config</td><td><code>inputs.conf</code></td></tr>
+          <tr><td><strong>Manager</strong></td><td>The SIEM server</td><td>Storage, indexes, rules</td><td>Detection searches</td></tr>
+          <tr><td><strong>Analyst</strong></td><td>The console</td><td>Judgement</td><td>Nothing — you decide</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Callout boxes</h2>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>As a Tier 1 analyst, the SIEM is your main screen. Everything you see there exists because
+           somebody configured collection correctly. A missing log source is a blind spot you will
+           never notice — until an attacker uses it.</p>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">Common Mistake</span>
+        <p>Thinking a SIEM equals security. Companies buy an expensive platform, forward nothing useful
+           into it, and believe they are protected. Tools without telemetry are storage, not defence.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">Exam Tip</span>
+        <p>Remember: <strong>SIEM = SIM + SEM</strong>. SIM is historical log management, SEM is
+           real-time monitoring and alerting.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 — Detection &amp; Analysis, lesson 3.5 (SIEM Fundamentals).
+           Knowledge base: <code>Module03_Detection/06_SIEM_Fundamentals_Splunk.md</code></p>
+      </div>
+
+      <h2>Commands and code</h2>
+      <p>Inline commands look like <code>index=wineventlog EventCode=4625</code>, and blocks look like this:</p>
+<pre><code># Enable the receiver on the SIEM server
+sudo /opt/splunk/bin/splunk enable listen 9997 -auth admin:password
+
+# Point a forwarder at it
+sudo /opt/splunkforwarder/bin/splunk add forward-server 10.10.30.10:9997</code></pre>
+
+      <h2>Lab steps</h2>
+      <ol class="steps">
+        <li>
+          <strong>Install Splunk on SOC-CORE01.</strong>
+          <p class="muted">Download the .deb package, then install and start it.</p>
+<pre><code>sudo dpkg -i splunk-*.deb
+sudo /opt/splunk/bin/splunk start --accept-license</code></pre>
+        </li>
+        <li>
+          <strong>Create your indexes.</strong>
+          <p class="muted">Separate indexes keep Windows and Linux data clean and searchable.</p>
+        </li>
+        <li>
+          <strong>Install the forwarder on the victim.</strong>
+          <p class="muted">This is the agent we discussed in Session 1 — now it becomes real.</p>
+        </li>
+      </ol>
+
+      <div class="verify">
+        <h4>✅ Verification</h4>
+        <ul>
+          <li>Splunk web interface opens at <code>http://10.10.30.10:8000</code></li>
+          <li><code>index=wineventlog</code> returns events</li>
+          <li>Logging out and back in on the victim produces a new 4624 within one minute</li>
+          <li>Snapshot taken: <code>L2-complete</code></li>
+        </ul>
+      </div>
+
+      <h2>Knowledge check</h2>
+
+      <div class="q">
+        <p><span class="qn">Q1</span> Where does log parsing configuration live — on the agent or the manager?</p>
+        <details>
+          <summary>Show answer</summary>
+          <p>On the <strong>agent</strong>. The agent decides what to collect and how to read it before
+             shipping. The manager holds storage and the detection rules.</p>
+        </details>
+      </div>
+
+      <div class="q">
+        <p><span class="qn">Q2</span> An alert fires but the activity turns out to be an administrator's
+           legitimate script. What is this called, and why does it matter?</p>
+        <details>
+          <summary>Show answer</summary>
+          <p>A <strong>false positive</strong>. Too many of them cause alert fatigue, which is how real
+             attacks get closed by mistake.</p>
+        </details>
+      </div>
+
+      <h2>Break page</h2>
+      <div class="breakpage">
+        <div class="bigtime">15:00</div>
+        <h3>Break</h3>
+        <p>When we come back: writing your first detection rule.</p>
+      </div>
+
+      <h2>Key takeaways</h2>
+      <ul class="takeaways">
+        <li>A SIEM collects logs from everywhere and puts them on one screen.</li>
+        <li>The agent collects and parses; the manager stores and runs the rules.</li>
+        <li>SIEM = SIM (history) + SEM (real time).</li>
+        <li>No logs means no detection — collection is where security starts.</li>
+      </ul>
+
+      <div class="pagenav">
+        <a href="index.html"><small>Previous</small>Session cover</a>
+        <a class="next" href="#"><small>Next</small>Core functions of a SOC</a>
+      </div>
+
+    </div>
+  </article>
+
+</div>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma</span>
+    <span class="mono">Design test page · v1</span>
+  </div>
+</footer>
+
+</body>
+</html>

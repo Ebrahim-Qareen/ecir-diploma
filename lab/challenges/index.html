@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investigation Challenges — eCIR | ITGate Academy</title>
+<link rel="stylesheet" href="../../assets/css/itgate.css">
+<link rel="icon" href="../../assets/img/itgate-logo.jpg">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../../index.html">
+      <img src="../../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Challenges</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../../index.html">Sessions</a>
+      <a href="../index.html">SOC Lab</a>
+      <a href="../../resources/labs.html">Practice Labs</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:44px 0 34px">
+  <div class="wrap">
+    <div class="eyebrow">Investigate like an analyst · answer from the logs</div>
+    <h1>Investigation <span>Challenges</span></h1>
+    <p>Ingest a dataset into your Splunk, then answer each question <strong>from the evidence</strong> — no guessing.
+       Questions are sequential: a wrong answer sends the next hunt to the wrong place. One correct option each.</p>
+  </div>
+</section>
+
+<main class="wrap section">
+
+  <!-- INGEST -->
+  <h2 class="sec" id="ingest">How to ingest a dataset</h2>
+  <p class="sec-desc">Splunk → <strong>Add Data → Upload</strong> → pick the file → source type <code>_json</code> → set the index → All time.</p>
+  <table class="content" style="width:100%">
+    <thead><tr><th>Challenge</th><th>File</th><th>Index</th><th>Time range</th></tr></thead>
+    <tbody>
+      <tr><td>Warm-up · VPN</td><td><a href="data/VPN-logs.json" download>VPN-logs.json</a></td><td><code>vpn_logs</code></td><td>All time</td></tr>
+      <tr><td>Scenario 1 · SSH endpoint</td><td><a href="data/ssh-endpoint-compromise.json" download>ssh-endpoint-compromise.json</a></td><td><code>endpoint_logs</code></td><td>2024-03-14 → 03-19</td></tr>
+      <tr><td>Scenario 2 · Web attacks</td><td><a href="data/web-attacks-access.json" download>web-attacks-access.json</a></td><td><code>web_logs</code></td><td>2024-04-08 → 04-12</td></tr>
+    </tbody>
+  </table>
+  <div class="box tip"><span class="box-t">Remember</span>
+    <p>JSON fields not showing? Add <code>| spath</code>. Count things with <code>| stats count by field</code>.
+       Instructors: SPL solutions are hidden under each scenario — reveal only for grading.</p>
+  </div>
+
+  <!-- WARMUP VPN -->
+  <h2 class="sec" id="vpn" style="margin-top:36px">Warm-up · VPN Logs</h2>
+  <p class="sec-desc">Single-field questions to get comfortable. Index <code>vpn_logs</code>.</p>
+  <div class="content">
+    <div class="q mcq" data-answer="b" data-why="Count events per UserName; Maleena has the most VPN activity.">
+      <p><span class="qn">Q1</span> Which user has the most VPN connections?</p>
+      <ul class="opts"><li data-opt="a">Smith</li><li data-opt="b">Maleena</li><li data-opt="c">Emily</li><li data-opt="d">John</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="c" data-why="Filter Source_Country!=&quot;France&quot; and count — that is the number of connections not from France.">
+      <p><span class="qn">Q2</span> How do you find connections that did <em>not</em> come from France?</p>
+      <ul class="opts">
+        <li data-opt="a">index=vpn_logs France</li>
+        <li data-opt="b">index=vpn_logs | stats count</li>
+        <li data-opt="c">index=vpn_logs | spath | search Source_Country!="France" | stats count</li>
+        <li data-opt="d">index=vpn_logs Source_Country=France</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--cyan);font-weight:600">Instructor · SPL</summary>
+      <pre><code>index=vpn_logs | spath | top UserName
+index=vpn_logs | spath | search Source_Country!="France" | stats count</code></pre></details>
+  </div>
+
+  <!-- SCENARIO 1 -->
+  <h2 class="sec" id="s1" style="margin-top:36px">Scenario 1 · Linux Endpoint Compromise (SSH → Malware)</h2>
+  <p class="sec-desc">Host <code>app-prod-02</code> triggered alerts overnight. Reconstruct the intrusion. Index <code>endpoint_logs</code>.
+     Fields: <code>timestamp, host, event_type, src_ip, src_country, user, process, command, result, dest_ip, dest_port, file_name, file_hash</code>.</p>
+  <div class="content">
+
+    <div class="q mcq" data-answer="c" data-why="Count failed authentications by src_ip — 45.9.148.37 has 134 vs 11 for the next. That is the brute-force source.">
+      <p><span class="qn">Q1</span> Which IP is the brute-force source?</p>
+      <ul class="opts"><li data-opt="a">212.70.149.83</li><li data-opt="b">58.221.34.12</li><li data-opt="c">45.9.148.37</li><li data-opt="d">10.20.5.9</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="b" data-why="First result=success from 45.9.148.37, sorted by time, is backupsvc.">
+      <p><span class="qn">Q2</span> Which account was the <em>first</em> successfully authenticated from that IP?</p>
+      <ul class="opts"><li data-opt="a">root</li><li data-opt="b">backupsvc</li><li data-opt="c">ubuntu</li><li data-opt="d">deploy</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="d" data-why="The process event shows wget pulling from 185.220.101.45:8080 — the C2.">
+      <p><span class="qn">Q3</span> Which tool + C2 endpoint pulled the second-stage payload?</p>
+      <ul class="opts"><li data-opt="a">curl from 185.220.101.45:443</li><li data-opt="b">scp from 45.9.148.37:22</li><li data-opt="c">wget from 91.189.91.10:80</li><li data-opt="d">wget from 185.220.101.45:8080</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="c" data-why="The dropper script downloaded from the C2 is update.sh (kinsing/xmrig are the miner artifacts).">
+      <p><span class="qn">Q4</span> Filename of the dropper script from Q3?</p>
+      <ul class="opts"><li data-opt="a">backup.sh</li><li data-opt="b">kinsing</li><li data-opt="c">update.sh</li><li data-opt="d">xmrig</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="b" data-why="Trust the network telemetry: event_type=network shows the miner beaconing to 185.220.101.45:8080. pool.minexmr.com:4444 only appears in the command line — the distractor.">
+      <p><span class="qn">Q5</span> By <em>network telemetry</em>, where did the miner repeatedly beacon?</p>
+      <ul class="opts"><li data-opt="a">pool.minexmr.com:4444</li><li data-opt="b">185.220.101.45:8080</li><li data-opt="c">45.9.148.37:4444</li><li data-opt="d">185.125.190.20:443</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="b" data-why="Two persistence mechanisms: a malicious cron file /etc/cron.d/mysql-backup and a UID-0 backdoor user sysupd (useradd -o -u 0).">
+      <p><span class="qn">Q6</span> Which TWO persistence mechanisms were established?</p>
+      <ul class="opts">
+        <li data-opt="a">SSH authorized_key + systemd service</li>
+        <li data-opt="b">Cron /etc/cron.d/mysql-backup + UID-0 user sysupd</li>
+        <li data-opt="c">Modified /etc/passwd + new sudoers entry</li>
+        <li data-opt="d">Registry Run key + scheduled task</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="b" data-why="The dropper (update.sh) hash is 9f2c4b8e… Option A is the miner's hash — the trap.">
+      <p><span class="qn">Q7</span> SHA-256 of the <em>dropper</em> (update.sh) for blocklisting?</p>
+      <ul class="opts">
+        <li data-opt="a">1a7f3e9c2b8d…3a2 (miner)</li>
+        <li data-opt="b">9f2c4b8e7a1d…5e8a</li>
+        <li data-opt="c">d41d8cd98f00…998e</li>
+        <li data-opt="d">0000feed1234…7788</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="box ine"><span class="box-t">Kill chain (MITRE)</span>
+      <p>T1110 Brute Force → T1078 Valid Accounts → T1105 Ingress Tool Transfer → T1496 Resource Hijacking → T1053.003 Cron / T1136.001 Local Account. Dwell ≈ 11–12 min.</p></div>
+
+    <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--cyan);font-weight:600">Instructor · SPL solutions</summary>
+<pre><code># Q1 brute-force source
+index=endpoint_logs event_type=authentication result=failed | stats count by src_ip | sort - count
+# Q2 first success from attacker IP
+index=endpoint_logs event_type=authentication result=success src_ip="45.9.148.37" | sort + timestamp | table timestamp user
+# Q3 download tool + C2
+index=endpoint_logs event_type=process (command="*wget*" OR command="*curl*") | table timestamp user command
+# Q4 + Q7 dropper name + hash
+index=endpoint_logs event_type=file | table timestamp process file_name file_hash
+# Q5 miner beacon (network, not command line)
+index=endpoint_logs event_type=network dest_port=8080 | stats count by dest_ip dest_port
+# Q6 persistence
+index=endpoint_logs (process=useradd OR file_name="mysql-backup" OR command="*cron*") | table timestamp user process command file_name</code></pre></details>
+  </div>
+
+  <!-- SCENARIO 2 -->
+  <h2 class="sec" id="s2" style="margin-top:36px">Scenario 2 · Web Application Attack Chain</h2>
+  <p class="sec-desc"><code>shop.cybert-lab.com</code> was targeted on 2024-04-11. Trace the full kill chain in the access logs. Index <code>web_logs</code>.
+     Fields: <code>timestamp, src_ip, src_country, method, uri, status, bytes, user_agent, referer, http_version, host</code>.</p>
+  <div class="content">
+
+    <div class="q mcq" data-answer="b" data-why="Count status=404 by src_ip — 193.106.191.22 has 91 vs 1 for everyone else: directory brute-forcing.">
+      <p><span class="qn">Q1</span> Which IP produced the 404 spike (directory brute-forcing)?</p>
+      <ul class="opts"><li data-opt="a">84.163.1.178</li><li data-opt="b">193.106.191.22</li><li data-opt="c">102.216.142.63</li><li data-opt="d">151.1.37.69</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="c" data-why="The User-Agent on that IP's 404 flood is gobuster/3.6. sqlmap appears later for the SQLi/LFI stage.">
+      <p><span class="qn">Q2</span> Which tool did the initial enumeration?</p>
+      <ul class="opts"><li data-opt="a">sqlmap/1.8.2</li><li data-opt="b">Nikto/2.5</li><li data-opt="c">gobuster/3.6</li><li data-opt="d">curl/8.2</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="d" data-why="/admin/login shows 41× 401 (failed) then a 302 redirect — the successful login.">
+      <p><span class="qn">Q3</span> Which endpoint was brute-forced, and which status marked success?</p>
+      <ul class="opts"><li data-opt="a">/login — 200</li><li data-opt="b">/wp-login.php — 200</li><li data-opt="c">/admin/dashboard — 401</li><li data-opt="d">/admin/login — 302</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="c" data-why="UNION-based SQLi: UNION SELECT username,password,3 FROM users-- extracted the users table.">
+      <p><span class="qn">Q4</span> Which technique extracted data from the users table via <code>id</code>?</p>
+      <ul class="opts">
+        <li data-opt="a">Reflected XSS via &lt;script&gt;</li>
+        <li data-opt="b">Boolean-blind: ' OR '1'='1</li>
+        <li data-opt="c">UNION SELECT username,password,3 FROM users--</li>
+        <li data-opt="d">Error-based: ' ORDER BY 5--</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="c" data-why="/etc/shadow returned 403 (blocked); /etc/passwd and config.php returned 200.">
+      <p><span class="qn">Q5</span> Via <code>/download</code>, which file was <em>blocked</em> (403)?</p>
+      <ul class="opts"><li data-opt="a">/etc/passwd</li><li data-opt="b">/var/www/config.php</li><li data-opt="c">/etc/shadow</li><li data-opt="d">None — all 200</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="b" data-why="The web shell is shell.php and the first command run through it was whoami.">
+      <p><span class="qn">Q6</span> Web-shell filename and first command executed?</p>
+      <ul class="opts"><li data-opt="a">cmd.php — id</li><li data-opt="b">shell.php — whoami</li><li data-opt="c">c99.php — cat /etc/passwd</li><li data-opt="d">upload.php — ls</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="q mcq" data-answer="c" data-why="URL-decode the cmd param: wget from 193.106.191.22 to /tmp/bd — the attacker hosts the payload on their own IP.">
+      <p><span class="qn">Q7</span> The secondary payload was fetched from which IP, to what path?</p>
+      <ul class="opts"><li data-opt="a">185.220.101.45 → /tmp/x</li><li data-opt="b">45.9.148.37 → /var/www/bd</li><li data-opt="c">193.106.191.22 → /tmp/bd</li><li data-opt="d">103.99.1.55 → /tmp/bd</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="box ine"><span class="box-t">OWASP mapping (bonus)</span>
+      <p>Dir enum → recon · brute force → A07 Auth Failures · SQLi → A03 Injection · path traversal → A01 Broken Access Control · web shell + RCE → A03 Injection.</p></div>
+
+    <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--cyan);font-weight:600">Instructor · SPL solutions</summary>
+<pre><code># Q1 dir brute-force source
+index=web_logs status=404 | stats count by src_ip | sort - count
+# Q2 tool (filter to the 404 flood first)
+index=web_logs src_ip="193.106.191.22" status=404 | stats count by user_agent | sort - count
+# Q3 login brute force + success (401 fail, 302 success)
+index=web_logs uri="/admin/login" | stats count by status
+# Q4 SQLi payloads
+index=web_logs uri="*UNION*" OR uri="*'%20OR%20'1'='1*" | table timestamp uri status
+# Q5 path traversal outcomes
+index=web_logs uri="/download*" | table timestamp uri status
+# Q6 web shell + commands
+index=web_logs uri="*shell.php*" | sort + timestamp | table timestamp uri status
+# Q7 secondary payload (URL-decode cmd)
+index=web_logs uri="*shell.php*wget*" | table timestamp uri</code></pre></details>
+  </div>
+
+  <div class="box tip" style="margin-top:24px"><span class="box-t">How to run this in class</span>
+    <p>Give students the dataset + questions only. They ingest, investigate, and answer. Reveal the SPL
+       and the answer feedback for grading. These three challenges map to Sessions 2–4 (SIEM &amp; detection);
+       harder DFIR challenges arrive in Sessions 9–10.</p></div>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Investigation Challenges</span>
+    <span class="mono">Datasets are self-authored for ITGate training</span>
+  </div>
+</footer>
+
+<script src="../../assets/js/quiz.js"></script>
+</body>
+</html>

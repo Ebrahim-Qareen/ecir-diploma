@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cheat Sheets — eCIR | ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Cheat Sheets</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">Sessions</a>
+      <a href="../resources/labs.html">Practice Labs</a>
+      <a href="index.html" class="active">Cheat Sheets</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:44px 0 36px">
+  <div class="wrap">
+    <div class="eyebrow">Reference · grows with the course</div>
+    <h1>Cheat <span>Sheets</span></h1>
+    <p>Every session leaves behind a one-card summary. They collect here so you can revise the whole
+       diploma in one place — or print any card as a PDF.</p>
+    <div style="margin-top:22px">
+      <button class="btn-sm" onclick="window.print()">🖨 Print all / save as PDF</button>
+    </div>
+  </div>
+</section>
+
+<main class="wrap section">
+
+  <!-- jump nav -->
+  <div class="tiles" style="margin-bottom:32px">
+    <a class="tile" href="#s01"><span class="ico">✅</span><h4>Session 1</h4><p>SOC, roles, SIEM fundamentals</p></a>
+    <a class="tile" href="#s02"><span class="ico">✅</span><h4>Session 2</h4><p>Splunk, ports, forwarders, first SPL</p></a>
+    <a class="tile" href="#s03" style="opacity:.55"><span class="ico">🔒</span><h4>Session 3</h4><p>Windows/Linux telemetry — coming soon</p></a>
+    <a class="tile" href="#topical" style="opacity:.55"><span class="ico">📇</span><h4>Topical packs</h4><p>Event IDs · SPL · Volatility · MITRE</p></a>
+  </div>
+
+  <!-- SESSION 1 -->
+  <h2 class="sec" id="s01">Session 1 · Welcome to the SOC</h2>
+  <p class="sec-desc">
+    <a href="../session-01/index.html#p18">Open in the session →</a>
+  </p>
+
+  <div class="cheat">
+    <div class="cheat-head">
+      <h3>📋 Session 1 Cheat Sheet</h3>
+      <a class="btn-sm" href="../session-01/index.html" style="text-decoration:none">▶ Go to Session 1</a>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-card"><h5>Core definitions</h5><ul>
+        <li><b>SOC</b> — central team that monitors, detects, analyzes and responds, 24/7</li>
+        <li><b>SIEM</b> — collects logs everywhere, connects them, alerts on rules</li>
+        <li><b>SIEM = SIM + SEM</b> — history + real time</li>
+        <li><b>Agent</b> — collects &amp; parses on the machine</li>
+        <li><b>Manager</b> — stores, correlates, holds the rules</li></ul></div>
+
+      <div class="cheat-card"><h5>The four pillars</h5><ul>
+        <li><b>People</b> — analysts in tiers</li>
+        <li><b>Processes</b> — repeatable workflows</li>
+        <li><b>Technology</b> — SIEM, EDR, IDS/IPS</li>
+        <li><b>Intelligence</b> — current attacker knowledge</li>
+        <li>All four, or the SOC leans</li></ul></div>
+
+      <div class="cheat-card"><h5>The five SOC functions</h5><ul>
+        <li><b>1 Collection</b> → centralized logs</li>
+        <li><b>2 Detection</b> → alerts with context</li>
+        <li><b>3 Triage</b> → prioritized, escalated</li>
+        <li><b>4 Investigation</b> → scope, cause, timeline</li>
+        <li><b>5 Response</b> → contained, recovered</li></ul></div>
+
+      <div class="cheat-card"><h5>Who does what</h5><ul>
+        <li><b>Tier 1</b> — monitors queue, triages, escalates</li>
+        <li><b>Tier 2</b> — investigates, contains <i>(= Incident Responder)</i></li>
+        <li><b>Tier 3</b> — hunts, reverse engineers, writes rules</li>
+        <li><b>Engineer</b> — onboards sources, tunes detections</li>
+        <li><b>Admin</b> — keeps the platform alive</li>
+        <li><b>Manager</b> — metrics, staffing, reporting</li></ul></div>
+
+      <div class="cheat-card"><h5>Log pipeline</h5><ul>
+        <li><b>Parsing</b> — one log → fields</li>
+        <li><b>Normalization</b> — all sources → same format</li>
+        <li><b>Correlation</b> — related events → one story</li>
+        <li>Ingestion: agent · syslog · manual · port forward</li>
+        <li>Splunk forwarder ships to port <code>9997</code></li></ul></div>
+
+      <div class="cheat-card"><h5>Event IDs met</h5><ul>
+        <li><b>4625</b> — failed logon</li>
+        <li><b>4624</b> — successful logon</li>
+        <li><b>4688</b> — process created</li>
+        <li><b>104</b> — event log cleared ⚠</li>
+        <li>Linux: <code>/var/log/auth.log</code> — "Failed password"</li></ul></div>
+
+      <div class="cheat-card"><h5>Five problems a SIEM solves</h5><ul>
+        <li>Too many log sources</li>
+        <li>No centralization</li>
+        <li>Limited context</li>
+        <li>Limited analysis capacity</li>
+        <li>Format chaos</li></ul></div>
+
+      <div class="cheat-card"><h5>Company structure</h5><ul>
+        <li><b>CEO → CISO</b></li>
+        <li><b>Red Team</b> — attacks to test</li>
+        <li><b>GRC</b> — policy &amp; compliance</li>
+        <li><b>Blue Team</b> — defends (SOC, CIRT, specialists)</li>
+        <li><b>Internal SOC</b> vs <b>MSSP</b> — depth vs variety</li></ul></div>
+
+      <div class="cheat-card"><h5>Sentences worth memorizing</h5><ul>
+        <li>"The agent decides what is sent. The manager decides what is suspicious."</li>
+        <li>"No logs means no detection."</li>
+        <li>"Attacks are rarely invisible — they are unwatched."</li>
+        <li>"Check the data before blaming the rule."</li></ul></div>
+    </div>
+  </div>
+
+  <!-- SESSION 2 -->
+  <h2 class="sec" id="s02" style="margin-top:40px">Session 2 · Build the Lab &amp; Make Logs Flow</h2>
+  <p class="sec-desc"><a href="../session-02/index.html#p16">Open in the session →</a></p>
+  <div class="cheat">
+    <div class="cheat-head"><h3>📋 Session 2 Cheat Sheet</h3>
+      <a class="btn-sm" href="../session-02/index.html" style="text-decoration:none">▶ Go to Session 2</a></div>
+    <div class="cheat-grid">
+      <div class="cheat-card"><h5>Splunk roles</h5><ul><li><b>Universal Forwarder</b> — agent, ships logs</li><li><b>Indexer</b> — receives, parses, stores</li><li><b>Search Head</b> — the web console</li></ul></div>
+      <div class="cheat-card"><h5>Key ports</h5><ul><li><code>8000</code> web UI</li><li><code>9997</code> receive from forwarders</li><li><code>8089</code> management</li></ul></div>
+      <div class="cheat-card"><h5>The two config files</h5><ul><li><code>inputs.conf</code> — WHAT to collect</li><li><code>outputs.conf</code> — WHERE to send</li></ul></div>
+      <div class="cheat-card"><h5>Install commands</h5><ul><li><code>splunk enable listen 9997</code></li><li><code>splunk add index wineventlog</code></li><li><code>splunk add forward-server IP:9997</code></li><li><code>splunk add monitor /var/log/auth.log</code></li></ul></div>
+      <div class="cheat-card"><h5>First SPL</h5><ul><li>Start with <code>index=</code> + time range</li><li><code>| stats count by field</code></li><li>Pipe <code>|</code> = pass to next command</li></ul></div>
+      <div class="cheat-card"><h5>Debug "no data"</h5><ul><li>Walk the pipeline backwards</li><li>Forwarder running? outputs.conf right? 9997 open?</li><li>Index name exists and matches?</li></ul></div>
+    </div>
+  </div>
+
+  <!-- future sessions -->
+  <h2 class="sec" id="s03" style="margin-top:40px">Coming as the course grows</h2>
+  <p class="sec-desc">Each new session adds its cheat sheet here automatically.</p>
+  <div class="tiles">
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 2</h4><p>SIEM deploy · SPL basics · forwarders</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 3</h4><p>Windows channels · Sysmon · Event IDs</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 4</h4><p>Detection rules · Sigma · MITRE</p></div>
+  </div>
+
+  <!-- topical packs -->
+  <h2 class="sec" id="topical" style="margin-top:40px">Topical Reference Packs</h2>
+  <p class="sec-desc">Standalone quick-reference cards used across many sessions (added with their sessions).</p>
+  <div class="tiles">
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🪟</span><h4>Windows Event IDs</h4><p>Logon, process, service, task, WMI</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔎</span><h4>SPL &amp; KQL</h4><p>Search, filter, stats, timechart</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🧠</span><h4>Volatility</h4><p>Memory forensics plugin recipe</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🎯</span><h4>MITRE ATT&amp;CK</h4><p>Tactics &amp; common technique IDs</p></div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Cheat Sheets</span>
+    <span class="mono">Primary reference: INE eCIR v2</span>
+  </div>
+</footer>
+
+</body>
+</html>

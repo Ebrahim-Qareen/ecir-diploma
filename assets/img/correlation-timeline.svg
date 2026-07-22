@@ -1,0 +1,57 @@
+<svg viewBox="0 0 1080 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Correlation turns four normal events into one incident">
+<title>Correlation in action</title>
+<desc>Four individually normal events within five minutes combine into possible data exfiltration.</desc>
+<rect width="1080" height="400" fill="#0a1226"/>
+<text x="30" y="38" fill="#fff" font-size="19" font-weight="700">Correlation in Action</text>
+<text x="30" y="58" fill="#8ea3c8" font-size="12">Four harmless events. One serious incident. This is what a SIEM sees that a single log file cannot.</text>
+<text x="1050" y="38" fill="#d4af37" font-size="12.5" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- timeline -->
+<line x1="70" y1="196" x2="1010" y2="196" stroke="#2b3f70" stroke-width="2"/>
+<text x="70" y="230" fill="#5f7bb0" font-size="11">09:14</text>
+<text x="300" y="230" fill="#5f7bb0" font-size="11">09:16</text>
+<text x="540" y="230" fill="#5f7bb0" font-size="11">09:17</text>
+<text x="790" y="230" fill="#5f7bb0" font-size="11">09:19</text>
+<text x="960" y="230" fill="#5f7bb0" font-size="11">5 minutes</text>
+
+<!-- event 1 -->
+<circle cx="96" cy="196" r="8" fill="#3fa87a"/>
+<rect x="46" y="92" width="196" height="82" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.4"/>
+<text x="144" y="114" text-anchor="middle" fill="#7fe0b4" font-size="11.5" font-weight="700">VPN login</text>
+<text x="144" y="133" text-anchor="middle" fill="#c7d3e8" font-size="10.5">Ahmed, new IP address</text>
+<text x="144" y="156" text-anchor="middle" fill="#6f9c89" font-size="10">alone: normal — people travel</text>
+
+<!-- event 2 -->
+<circle cx="326" cy="196" r="8" fill="#3fa87a"/>
+<rect x="276" y="92" width="196" height="82" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.4"/>
+<text x="374" y="114" text-anchor="middle" fill="#7fe0b4" font-size="11.5" font-weight="700">File access</text>
+<text x="374" y="133" text-anchor="middle" fill="#c7d3e8" font-size="10.5">finance shared drive</text>
+<text x="374" y="156" text-anchor="middle" fill="#6f9c89" font-size="10">alone: normal — it is his job</text>
+
+<!-- event 3 -->
+<circle cx="566" cy="196" r="8" fill="#3fa87a"/>
+<rect x="516" y="92" width="196" height="82" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.4"/>
+<text x="614" y="114" text-anchor="middle" fill="#7fe0b4" font-size="11.5" font-weight="700">PowerShell runs</text>
+<text x="614" y="133" text-anchor="middle" fill="#c7d3e8" font-size="10.5">script on his machine</text>
+<text x="614" y="156" text-anchor="middle" fill="#6f9c89" font-size="10">alone: normal — IT uses scripts</text>
+
+<!-- event 4 -->
+<circle cx="816" cy="196" r="8" fill="#3fa87a"/>
+<rect x="766" y="92" width="196" height="82" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.4"/>
+<text x="864" y="114" text-anchor="middle" fill="#7fe0b4" font-size="11.5" font-weight="700">Large upload</text>
+<text x="864" y="133" text-anchor="middle" fill="#c7d3e8" font-size="10.5">to an external server</text>
+<text x="864" y="156" text-anchor="middle" fill="#6f9c89" font-size="10">alone: normal — cloud backup</text>
+
+<!-- bracket joining all four -->
+<path d="M96 260 L96 276 L816 276 L816 260" stroke="#e0556b" stroke-width="2.2" fill="none"/>
+<path d="M96 214 L96 258" stroke="#3fa87a" stroke-width="1.4" stroke-dasharray="3 3"/>
+<path d="M326 214 L326 276" stroke="#3fa87a" stroke-width="1.4" stroke-dasharray="3 3"/>
+<path d="M566 214 L566 276" stroke="#3fa87a" stroke-width="1.4" stroke-dasharray="3 3"/>
+<path d="M816 214 L816 258" stroke="#3fa87a" stroke-width="1.4" stroke-dasharray="3 3"/>
+
+<rect x="286" y="292" width="510" height="66" rx="10" fill="#2a1420" stroke="#e0556b" stroke-width="1.8"/>
+<text x="541" y="318" text-anchor="middle" fill="#f2c3cb" font-size="14.5" font-weight="700">⚠ TOGETHER: possible data exfiltration</text>
+<text x="541" y="340" text-anchor="middle" fill="#e8a8b4" font-size="11.5">stolen VPN credentials → data collected → tooling → data leaving the company</text>
+
+<text x="30" y="384" fill="#7e91b8" font-size="11">On the VPN server you see only event 1. On the file server only event 2. Nobody sees the story except the system holding all four.</text>
+</svg>

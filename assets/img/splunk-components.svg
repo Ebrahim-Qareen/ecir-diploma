@@ -1,0 +1,50 @@
+<svg viewBox="0 0 1040 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Splunk three components">
+<title>Splunk components</title>
+<defs><marker id="s" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker></defs>
+<rect width="1040" height="300" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="18" font-weight="700">Splunk — Three Components That Work Together</text>
+<text x="1012" y="36" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- sources -->
+<rect x="24" y="96" width="150" height="120" rx="9" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<text x="99" y="122" text-anchor="middle" fill="#e8edf7" font-size="12.5" font-weight="700">Log sources</text>
+<text x="99" y="148" text-anchor="middle" fill="#8ea3c8" font-size="10.5">Windows events</text>
+<text x="99" y="166" text-anchor="middle" fill="#8ea3c8" font-size="10.5">Linux syslog / auth</text>
+<text x="99" y="184" text-anchor="middle" fill="#8ea3c8" font-size="10.5">firewalls · apps</text>
+
+<!-- forwarder -->
+<rect x="214" y="96" width="180" height="120" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.7"/>
+<text x="304" y="120" text-anchor="middle" fill="#7fe0b4" font-size="13" font-weight="700">1 · FORWARDER</text>
+<text x="304" y="142" text-anchor="middle" fill="#c7d3e8" font-size="10.5">lightweight agent</text>
+<text x="304" y="160" text-anchor="middle" fill="#c7d3e8" font-size="10.5">on each endpoint</text>
+<text x="304" y="182" text-anchor="middle" fill="#93b8a8" font-size="10">collects &amp; ships</text>
+<text x="304" y="200" text-anchor="middle" fill="#6f9c89" font-size="9.5" font-family="monospace">→ :9997</text>
+
+<!-- indexer -->
+<rect x="434" y="96" width="180" height="120" rx="9" fill="#15213f" stroke="#d4af37" stroke-width="2"/>
+<text x="524" y="120" text-anchor="middle" fill="#f0d78a" font-size="13" font-weight="700">2 · INDEXER</text>
+<text x="524" y="142" text-anchor="middle" fill="#c7d3e8" font-size="10.5">parses &amp; normalizes</text>
+<text x="524" y="160" text-anchor="middle" fill="#c7d3e8" font-size="10.5">into field-value pairs</text>
+<text x="524" y="182" text-anchor="middle" fill="#c7d3e8" font-size="10.5">stores as events</text>
+<text x="524" y="200" text-anchor="middle" fill="#bda45f" font-size="9.5">indexes: wineventlog · linux</text>
+
+<!-- search head -->
+<rect x="654" y="96" width="180" height="120" rx="9" fill="#0e1730" stroke="#37c7d4" stroke-width="1.7"/>
+<text x="744" y="120" text-anchor="middle" fill="#37c7d4" font-size="13" font-weight="700">3 · SEARCH HEAD</text>
+<text x="744" y="142" text-anchor="middle" fill="#c7d3e8" font-size="10.5">the web console</text>
+<text x="744" y="160" text-anchor="middle" fill="#c7d3e8" font-size="10.5">Search &amp; Reporting app</text>
+<text x="744" y="182" text-anchor="middle" fill="#c7d3e8" font-size="10.5">you run SPL here</text>
+<text x="744" y="200" text-anchor="middle" fill="#8ea3c8" font-size="9.5">tables · charts · dashboards</text>
+
+<!-- analyst -->
+<text x="944" y="150" text-anchor="middle" font-size="30">🧑‍💻</text>
+<text x="944" y="178" text-anchor="middle" fill="#e8edf7" font-size="12" font-weight="700">Analyst</text>
+
+<path d="M176 156 L212 156" stroke="#37c7d4" stroke-width="2" marker-end="url(#s)"/>
+<path d="M396 156 L432 156" stroke="#37c7d4" stroke-width="2" marker-end="url(#s)"/>
+<path d="M616 156 L652 156" stroke="#37c7d4" stroke-width="2" marker-end="url(#s)"/>
+<path d="M836 156 L900 150" stroke="#37c7d4" stroke-width="2" marker-end="url(#s)"/>
+
+<text x="28" y="262" fill="#8ea3c8" font-size="11.5">In our lab, the Indexer and Search Head both live on SOC-CORE01. Same architecture as an enterprise — just smaller.</text>
+<text x="28" y="282" fill="#7e91b8" font-size="11">Forwarder = the agent (Session 1's "agent"). Indexer = the manager. Search Head = where you investigate.</text>
+</svg>

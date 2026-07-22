@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOC Lab — eCIR | ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text"><span class="brand-name">ITGate Academy</span><span class="brand-sub">eCIR · SOC Lab</span></span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">Sessions</a>
+      <a href="index.html" class="active">Lab Overview</a>
+      <a href="setup.html">Setup Guide</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:44px 0 34px">
+  <div class="wrap">
+    <div class="eyebrow">One environment · built across 10 sessions</div>
+    <h1>Your <span>SOC Lab</span></h1>
+    <p>You build one lab and grow it every session — by the end it is a working miniature SOC that
+       stays yours after the course.</p>
+    <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap">
+      <a class="btn-sm" href="setup.html" style="text-decoration:none">⚙️ Open the Setup Guide</a>
+    </div>
+  </div>
+</section>
+
+<main class="wrap section">
+  <h2 class="sec">Topology</h2>
+  <p class="sec-desc">Minimal footprint: 4 core VMs, FortiGate edge, no Active Directory. Grows without redesign.</p>
+  <figure class="fig">
+    <img src="../../04_SOC_Lab/diagrams/lab_topology_v2.svg" onerror="this.src='../assets/img/lab_topology_v2.svg'" alt="SOC lab topology — LAN and SOC segments behind a FortiGate, logs flowing to Splunk">
+    <figcaption>The lab you are building — victims on the LAN, Splunk on the SOC segment, everything feeding the SIEM.</figcaption>
+  </figure>
+
+  <h2 class="sec" style="margin-top:34px">What activates each session</h2>
+  <table class="content" style="width:100%">
+    <thead><tr><th>Session</th><th>You add</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Plan &amp; prepare host (concept only)</td></tr>
+      <tr><td><b>2</b></td><td><b>VMs, network, Splunk, forwarders — logs flowing</b> ✅</td></tr>
+      <tr><td>3</td><td>Sysmon, PowerShell logging, auditd, deep telemetry</td></tr>
+      <tr><td>4</td><td>Attack tooling, detection rules, alerts, dashboards</td></tr>
+      <tr><td>5</td><td>Threat-intel enrichment (Cortex)</td></tr>
+      <tr><td>6</td><td>TheHive + Shuffle (IR + SOAR)</td></tr>
+      <tr><td>7–8</td><td>Analyst toolchain · network sensor (academy)</td></tr>
+      <tr><td>9–10</td><td>DFIR acquisition toolkit · full attack simulation</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tiles" style="margin-top:28px">
+    <a class="tile" href="setup.html"><span class="ico">⚙️</span><h4>Setup Guide</h4><p>Step-by-step build with verifications</p></a>
+    <a class="tile" href="../session-02/index.html"><span class="ico">📡</span><h4>Session 2</h4><p>Build the lab in class</p></a>
+    <a class="tile" href="../cheatsheets/index.html"><span class="ico">📄</span><h4>Cheat Sheets</h4><p>Commands &amp; ports per session</p></a>
+    <a class="tile" href="../resources/labs.html"><span class="ico">🧪</span><h4>Practice Labs</h4><p>THM rooms that reinforce the build</p></a>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · SOC Lab</span>
+    <span class="mono">Design: 04_SOC_Lab/</span>
+  </div>
+</footer>
+</body>
+</html>

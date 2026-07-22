@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice Labs — eCIR | ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Practice Labs</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">Sessions</a>
+      <a href="labs.html" class="active">Practice Labs</a>
+      <a href="../cheatsheets/index.html">Cheat Sheets</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:44px 0 36px">
+  <div class="wrap">
+    <div class="eyebrow">Hands-on · reinforces every session</div>
+    <h1>Practice <span>Labs</span></h1>
+    <p>The external labs that back up each session. TryHackMe is the main source; CyberDefenders, BTLO
+       and LetsDefend appear where they fit better. INE remains the primary reference for the exam —
+       these labs build the muscle memory.</p>
+  </div>
+</section>
+
+<main class="wrap section">
+
+  <div class="tiles" style="margin-bottom:32px">
+    <a class="tile" href="#s01"><span class="ico">✅</span><h4>Session 1</h4><p>3 rooms · SOC &amp; SIEM intro</p></a>
+    <a class="tile" href="#s02"><span class="ico">✅</span><h4>Session 2</h4><p>3 rooms · Splunk &amp; logs</p></a>
+    <a class="tile" href="#platforms"><span class="ico">🌐</span><h4>Platforms</h4><p>THM · CyberDefenders · BTLO · LetsDefend</p></a>
+    <a class="tile" href="#legend"><span class="ico">🏷️</span><h4>How to read</h4><p>Required vs optional · in-class vs home</p></a>
+  </div>
+
+  <!-- SESSION 1 -->
+  <h2 class="sec" id="s01">Session 1 · Welcome to the SOC</h2>
+  <p class="sec-desc"><a href="../session-01/index.html#p20">Open Session 1 homework →</a></p>
+
+  <div class="grid">
+
+    <a class="card p-siem" href="https://tryhackme.com/room/jrsecanalystintrouxo" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Junior Security Analyst Intro</h3></div>
+      <p>A day in the life of a Tier 1 analyst — team roles and a live alert dashboard.</p>
+      <div class="card-meta">
+        <span class="tag siem">Required</span>
+        <span class="tag">Homework</span>
+        <span class="tag">~1 h</span>
+      </div>
+    </a>
+
+    <a class="card p-siem" href="https://tryhackme.com/room/introtosiem" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Introduction to SIEM</h3></div>
+      <p>Log sources, the five problems, SIEM features and detection rules — reinforces the whole second half.</p>
+      <div class="card-meta">
+        <span class="tag siem">Required</span>
+        <span class="tag">Homework</span>
+        <span class="tag">~1.5 h</span>
+      </div>
+    </a>
+
+    <a class="card p-ir" href="https://tryhackme.com/room/socroleinblueteam" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>SOC Role in Blue Team</h3></div>
+      <p>Security hierarchy, Blue Team departments and career path — includes the CISO role-matching challenge.</p>
+      <div class="card-meta">
+        <span class="tag ir">Optional</span>
+        <span class="tag">Go deeper</span>
+        <span class="tag">~1 h</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- SESSION 2 -->
+  <h2 class="sec" id="s02" style="margin-top:40px">Session 2 · Build the Lab &amp; Make Logs Flow</h2>
+  <p class="sec-desc"><a href="../session-02/index.html#p18">Open Session 2 homework →</a></p>
+  <div class="grid">
+    <a class="card p-siem" href="https://tryhackme.com/room/splunk101" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Splunk: The Basics</h3></div>
+      <p>First SPL after logs land — the search language you use every remaining session.</p>
+      <div class="card-meta"><span class="tag siem">Required</span><span class="tag">Homework</span><span class="tag">~1 h</span></div></a>
+    <a class="card p-siem" href="https://tryhackme.com/room/introtologs" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Intro to Logs</h3></div>
+      <p>Log types, formats and retention — reinforces the eight-stage pipeline.</p>
+      <div class="card-meta"><span class="tag siem">Required</span><span class="tag">Homework</span><span class="tag">~1 h</span></div></a>
+    <a class="card p-siem" href="https://tryhackme.com/room/splunklab" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Splunk: Setting up a SOC Lab</h3></div>
+      <p>A Splunk build very close to ours — good reinforcement of the forwarder setup.</p>
+      <div class="card-meta"><span class="tag ir">Optional</span><span class="tag">Go deeper</span><span class="tag">~1.5 h</span></div></a>
+  </div>
+
+    <h2 class="sec" style="margin-top:36px">Investigation Challenges</h2>
+  <p class="sec-desc">Self-authored datasets to investigate in your own Splunk — answer from the evidence.</p>
+  <div class="tiles">
+    <a class="tile" href="../lab/challenges/index.html"><span class="ico">🔎</span><h4>VPN · SSH · Web</h4><p>3 challenges · 14 questions · sequential</p></a>
+  </div>
+
+  <!-- future -->
+  <h2 class="sec" id="more" style="margin-top:40px">Coming as the course grows</h2>
+  <p class="sec-desc">Each session's labs are added here — Splunk, ELK, Wireshark, Volatility, and the DFIR challenges.</p>
+  <div class="tiles">
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 2–5</h4><p>SIEM · detection · triage · threat intel</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 6–8</h4><p>IR lifecycle · endpoint · network</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 9–10</h4><p>DFIR · CyberDefenders · capstone</p></div>
+  </div>
+
+  <!-- platforms -->
+  <h2 class="sec" id="platforms" style="margin-top:40px">The Platforms We Use</h2>
+  <p class="sec-desc">Different platforms suit different topics. We pick the best one per session.</p>
+  <div class="tiles">
+    <a class="tile" href="https://tryhackme.com" target="_blank" rel="noopener"><span class="ico">🎯</span><h4>TryHackMe</h4><p>Main source — SOC concepts, SIEM, detection, network</p></a>
+    <a class="tile" href="https://cyberdefenders.org" target="_blank" rel="noopener"><span class="ico">🧬</span><h4>CyberDefenders</h4><p>Real evidence packages — best for DFIR (Sessions 9–10)</p></a>
+    <a class="tile" href="https://blueteamlabs.online" target="_blank" rel="noopener"><span class="ico">📝</span><h4>Blue Team Labs Online</h4><p>Short investigations with written reports</p></a>
+    <a class="tile" href="https://letsdefend.io" target="_blank" rel="noopener"><span class="ico">📥</span><h4>LetsDefend</h4><p>A real-feeling SOC alert queue — great for triage practice</p></a>
+  </div>
+
+  <!-- legend -->
+  <h2 class="sec" id="legend" style="margin-top:40px">How to Read the Labels</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div class="card" style="cursor:default">
+      <h3 style="margin-bottom:8px">Required vs Optional</h3>
+      <p style="margin:0"><span class="tag siem">Required</span> labs are part of the homework and expected before
+         the next session. <span class="tag ir">Optional</span> labs are for anyone who wants to go deeper.</p>
+    </div>
+    <div class="card" style="cursor:default">
+      <h3 style="margin-bottom:8px">In-class vs Homework</h3>
+      <p style="margin:0">Some rooms are demonstrated live in class; most are done as homework so class time
+         stays on the lab you build yourself.</p>
+    </div>
+    <div class="card" style="cursor:default">
+      <h3 style="margin-bottom:8px">INE stays primary</h3>
+      <p style="margin:0">These labs reinforce the INE material — they never replace it. Where wording differs,
+         INE's version is the one the eCIR exam tests.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Practice Labs</span>
+    <span class="mono">TryHackMe content belongs to TryHackMe · linked, not republished</span>
+  </div>
+</footer>
+
+</body>
+</html>

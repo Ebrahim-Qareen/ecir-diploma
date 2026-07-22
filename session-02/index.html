@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 02 — Build the Lab &amp; Make Logs Flow | eCIR · ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body data-session="s02">
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Session 02</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">All sessions</a>
+      <a href="../lab/index.html">SOC Lab</a>
+      <a href="../cheatsheets/index.html">Cheat Sheets</a>
+    </nav>
+  </div>
+</header>
+
+<div class="progress-wrap"><div class="wrap progress-inner" id="progressHost"></div></div>
+
+<div class="wrap section">
+<div class="page-layout">
+
+  <aside class="sidebar">
+    <h5>Session 02 · Pages</h5>
+    <ol id="sessionNav"></ol>
+  </aside>
+
+  <article>
+
+  <!-- P1 COVER -->
+  <section class="page" data-title="Cover">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02</span><span class="tag siem">SIEM 1 / 4</span><span class="time">⏱ 4 hours</span></div>
+      <h1>Build the Lab &amp; Make Logs Flow</h1>
+      <p class="lede">Yesterday the SIEM was a concept. Today you build one, point two machines at it,
+         and watch your first real logs arrive.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">By the end of today you will have a working Splunk server, a Windows and a
+        Linux machine sending logs to it, and you will run your first search.</div>
+
+      <h2>Today's agenda</h2>
+      <table>
+        <thead><tr><th>Block</th><th>Topic</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Recap Session 1</td><td>10 min</td></tr>
+          <tr><td>2</td><td>Log pipeline · Splunk architecture · demo</td><td>40 min</td></tr>
+          <tr><td>3</td><td>Lab — build the base lab &amp; install Splunk</td><td>55 min</td></tr>
+          <tr><td>—</td><td><strong>Break</strong></td><td>15 min</td></tr>
+          <tr><td>4</td><td>Lab — forwarders on Windows &amp; Linux</td><td>50 min</td></tr>
+          <tr><td>5</td><td>Verify logs · upload &amp; search practice</td><td>35 min</td></tr>
+          <tr><td>6</td><td>Investigation challenges · knowledge check · homework</td><td>35 min</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box warn">
+        <span class="box-t">Come prepared</span>
+        <p>You need VMware installed and BIOS virtualization enabled (Session 1 homework). If your laptop
+           is not ready, pair with someone today and catch up before Session 3.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P2 OBJECTIVES -->
+  <section class="page" data-title="Objectives">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P02</span><span class="tag siem">Objectives</span><span class="time">⏱ 3 min</span></div>
+      <h1>What You Will Be Able To Do</h1>
+      <p class="lede">Five things — all hands-on.</p>
+    </div>
+    <div class="content">
+      <ul class="takeaways">
+        <li><strong>Describe</strong> the eight stages a log passes through, from creation to alert.</li>
+        <li><strong>Name</strong> Splunk's three roles — forwarder, indexer, search head — and what each does.</li>
+        <li><strong>Install</strong> Splunk and enable it to receive logs on port 9997.</li>
+        <li><strong>Configure</strong> a Universal Forwarder with <code>inputs.conf</code> and <code>outputs.conf</code>.</li>
+        <li><strong>Verify</strong> logs are arriving and run your first SPL search.</li>
+      </ul>
+      <div class="box tip">
+        <span class="box-t">Today's rule</span>
+        <p>Do not move to the next step until the verification passes. A broken step now becomes ten
+           broken steps later. Slow is smooth, smooth is fast.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P3 RECAP -->
+  <section class="page" data-title="Recap Session 1">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P03</span><span class="tag analysis">Recap</span><span class="time">⏱ 10 min</span></div>
+      <h1>Quick Recap — Session 1</h1>
+      <p class="lede">Answer before you reveal. If any of these feel shaky, flag it now.</p>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="b"
+           data-why="The agent (forwarder) collects and parses on the machine. The manager (SIEM server) stores the data and holds the detection rules.">
+        <p><span class="qn">Q1</span> Where does parsing configuration live?</p>
+        <ul class="opts">
+          <li data-opt="a">On the SIEM server</li>
+          <li data-opt="b">On the agent, on each machine</li>
+          <li data-opt="c">In the analyst's dashboard</li>
+          <li data-opt="d">In the firewall</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="c"
+           data-why="SIEM = SIM (historical storage and search) + SEM (real-time monitoring and alerting).">
+        <p><span class="qn">Q2</span> SIEM combines which two capabilities?</p>
+        <ul class="opts">
+          <li data-opt="a">Endpoint + network detection</li>
+          <li data-opt="b">Incident + event response</li>
+          <li data-opt="c">Security Information Management + Security Event Management</li>
+          <li data-opt="d">Storage + firewalling</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q"><p><span class="qn">Q3</span> Name the five core SOC functions in order.</p>
+        <details><summary>Show answer</summary><p>Collection → Detection → Triage → Investigation → Response. Today we build the <strong>Collection</strong> function.</p></details></div>
+
+      <div class="q"><p><span class="qn">Q4</span> Last session's promise was "the agent collects, the manager holds the rules". Which part do we make real today?</p>
+        <details><summary>Show answer</summary><p>Both halves — you install the <strong>manager</strong> (Splunk) and the <strong>agents</strong> (forwarders). The rules themselves come in Session 4.</p></details></div>
+    </div>
+  </section>
+
+  <!-- P4 HOOK -->
+  <section class="page" data-title="Incident story">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P04</span><span class="tag analysis">Incident story</span><span class="time">⏱ 6 min</span></div>
+      <h1>The Alert That Never Came</h1>
+      <p class="lede">A true and very common failure.</p>
+    </div>
+    <div class="content">
+      <p>A company is attacked over SSH on a Linux server. The server recorded every failed login in
+         <code>/var/log/auth.log</code> — hundreds of them. The SIEM had a perfect brute-force rule ready.</p>
+
+      <p>No alert ever fired. Why? Nobody had configured that server to <strong>forward</strong> its logs.
+         The evidence sat on the machine, unread, while the attacker walked in.</p>
+
+      <div class="box warn">
+        <span class="box-t">The lesson for today</span>
+        <p>A detection rule is worthless if the log never reaches the SIEM. Collection is step one for a
+           reason. Today you make sure the logs actually arrive — the single most common thing SOCs get wrong.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P5 THEORY: PIPELINE -->
+  <section class="page" data-title="The log pipeline">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P05</span><span class="tag siem">Theory</span><span class="time">⏱ 14 min</span></div>
+      <h1>The Log Pipeline — Eight Stages</h1>
+      <p class="lede">Every log takes the same journey. Know the stages and you can fix any break.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">Generation → Collection → Shipping → Aggregation → Parsing → Storage → Analysis → Alerting.</div>
+
+      <table>
+        <thead><tr><th>#</th><th>Stage</th><th>What happens</th><th>Where today</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Generation</td><td>A machine writes a log line</td><td>Windows &amp; Linux victims</td></tr>
+          <tr><td>2</td><td>Collection</td><td>An agent picks the log up</td><td>Universal Forwarder</td></tr>
+          <tr><td>3</td><td>Shipping</td><td>The log travels over the network</td><td>Port 9997</td></tr>
+          <tr><td>4</td><td>Aggregation</td><td>All sources land in one place</td><td>Splunk indexer</td></tr>
+          <tr><td>5</td><td>Parsing</td><td>Raw text → fields</td><td>Splunk sourcetypes</td></tr>
+          <tr><td>6</td><td>Storage</td><td>Indexed for fast search</td><td>Splunk indexes</td></tr>
+          <tr><td>7</td><td>Analysis</td><td>You search and pivot</td><td>SPL (today)</td></tr>
+          <tr><td>8</td><td>Alerting</td><td>A rule match notifies you</td><td>Session 4</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>When "there is no data", walk this pipeline backwards: is it alerting? indexed? parsed?
+           arriving? being collected? being generated? The break is always at one specific stage.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · lesson 3.4 — Log collection, shipping &amp; aggregation</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P6 THEORY: SPLUNK ARCH -->
+  <section class="page" data-title="Splunk architecture">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P06</span><span class="tag siem">Theory</span><span class="time">⏱ 14 min</span></div>
+      <h1>Splunk Architecture — Three Roles</h1>
+      <p class="lede">Splunk is one product that plays three parts. In our lab, two of them live on one server.</p>
+    </div>
+    <div class="content">
+      <table>
+        <thead><tr><th>Role</th><th>Job</th><th>Where in our lab</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Universal Forwarder</strong><br><span class="muted">the agent</span></td>
+              <td>Sits on each machine, collects logs, ships them out. Lightweight — no searching.</td>
+              <td>WIN-VICTIM01 &amp; LNX-VICTIM01</td></tr>
+          <tr><td><strong>Indexer</strong><br><span class="muted">the manager</span></td>
+              <td>Receives logs, parses and indexes them, stores them for fast search.</td>
+              <td>SOC-CORE01</td></tr>
+          <tr><td><strong>Search Head</strong><br><span class="muted">the console</span></td>
+              <td>The web interface where you run searches and build dashboards.</td>
+              <td>SOC-CORE01 (same box)</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="fig">
+        <img src="../assets/img/splunk-components.svg" alt="Splunk three components: forwarder collects, indexer parses and stores, search head where you run SPL">
+        <figcaption>Forwarder → Indexer → Search Head. In our lab the indexer and search head share SOC-CORE01.</figcaption>
+      </figure>
+
+      <figure class="fig">
+        <img src="images/thm-splunk-components.png" alt="Splunk components — forwarder, indexer, search head (source: TryHackMe · Splunk: The Basics)" loading="lazy">
+        <figcaption>Splunk components — forwarder, indexer, search head (source: TryHackMe · Splunk: The Basics)</figcaption>
+      </figure>
+
+      <div class="box note">
+        <span class="box-t">Small lab, big concept</span>
+        <p>In a real enterprise these are separate servers — many forwarders, a cluster of indexers,
+           dedicated search heads. In our lab the indexer and search head share SOC-CORE01. The
+           <strong>architecture is identical</strong>, just smaller.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">Heavy vs Universal Forwarder</span>
+        <p>A <strong>Universal</strong> Forwarder just ships logs (what we use). A <strong>Heavy</strong>
+           Forwarder can parse and filter before sending. Start universal — it covers 90% of needs.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · lesson 3.5 — SIEM fundamentals (Splunk)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P7 DEMO -->
+  <section class="page" data-title="Instructor demo">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P07</span><span class="tag analysis">Demo</span><span class="time">⏱ 25 min</span></div>
+      <h1>Watch It Done Once</h1>
+      <p class="lede">The instructor builds the whole flow while you watch. Then you do it yourself.</p>
+    </div>
+    <div class="content">
+      <p>Follow along on screen. Do not type yet — watch the shape of the whole thing so the steps make
+         sense when you do them.</p>
+
+      <ol class="steps">
+        <li><strong>Install Splunk</strong> on the Ubuntu server, start it, open the web UI.</li>
+        <li><strong>Enable receiving</strong> on port 9997 — the door logs come in through.</li>
+        <li><strong>Create indexes</strong> — separate buckets for Windows and Linux logs.</li>
+        <li><strong>Install a forwarder</strong> on a victim and point it at the server.</li>
+        <li><strong>Generate a log</strong> — log in and out — and watch it appear in Splunk.</li>
+      </ol>
+
+      <figure class="fig">
+        <img src="images/thm-splunk-ingestion.png" alt="Splunk Add Data ingestion methods (source: TryHackMe)" loading="lazy">
+        <figcaption>Splunk’s Add Data screen — the ingestion methods you use in the lab (source: TryHackMe)</figcaption>
+      </figure>
+
+      <div class="box soc">
+        <span class="box-t">Watch for</span>
+        <p>Notice the instructor verifies after every step — checking the data arrived before moving on.
+           Copy that habit. It is the difference between a working lab and a mystery to debug.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P8 LAB: BASE + SPLUNK -->
+  <section class="page" data-title="Lab · install Splunk">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P08</span><span class="tag siem">SOC Lab</span><span class="time">⏱ 45 min</span></div>
+      <h1>Lab — Install Splunk on SOC-CORE01</h1>
+      <p class="lede">Your turn. Go at your own pace and verify each step.</p>
+    </div>
+    <div class="content">
+      <div class="box note">
+        <span class="box-t">Before you start</span>
+        <p>Your VMs exist with static IPs on <strong>one shared host-only network (VMnet10, 10.10.20.0/24)</strong>.
+           SOC-CORE01 is <code>10.10.20.10</code>. Snapshot it now, named <code>pre-splunk</code>.</p>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">Lessons from the real build (save yourself hours)</span>
+        <p>• Two separate host-only networks <strong>don't route</strong> — put all VMs on ONE (VMnet10).<br>
+           • Use Ubuntu <strong>Server</strong>, not Desktop.<br>
+           • Store VMs on a data drive, <strong>not OneDrive/C:</strong> — a full C: breaks VMware networking.<br>
+           • Running as root? add <code>--run-as-root</code> and <code>enable boot-start -user root</code>.</p>
+      </div>
+
+      <ol class="steps">
+        <li><strong>Install Splunk Enterprise.</strong>
+          <p class="muted">Download the .deb from splunk.com (free account), copy it to SOC-CORE01, then:</p>
+<pre><code>sudo dpkg -i splunk-*.deb
+sudo /opt/splunk/bin/splunk start --accept-license --run-as-root
+# set the admin username and password when prompted
+sudo /opt/splunk/bin/splunk enable boot-start</code></pre>
+        </li>
+        <li><strong>Open the web interface.</strong>
+          <p class="muted">From your host browser: <code>http://10.10.20.10:8000</code> — log in with the admin account you just set.</p>
+        </li>
+        <li><strong>Enable the receiver on port 9997.</strong>
+          <p class="muted">This is the door forwarders send logs through.</p>
+<pre><code>sudo /opt/splunk/bin/splunk enable listen 9997 -auth admin:&lt;your-password&gt;</code></pre>
+        </li>
+        <li><strong>Create your indexes.</strong>
+          <p class="muted">Separate buckets keep Windows and Linux data clean and searchable.</p>
+<pre><code>sudo /opt/splunk/bin/splunk add index wineventlog
+sudo /opt/splunk/bin/splunk add index linux</code></pre>
+        </li>
+      </ol>
+
+      <div class="verify">
+        <h4>✅ Verification</h4>
+        <ul>
+          <li>The Splunk web UI opens at <code>http://10.10.20.10:8000</code> and you can log in</li>
+          <li>Settings → Indexes shows <code>wineventlog</code> and <code>linux</code></li>
+          <li>Settings → Forwarding and receiving → Receive data shows port <code>9997</code> enabled</li>
+        </ul>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">If the UI won't open</span>
+        <p>Check Splunk is running (<code>sudo /opt/splunk/bin/splunk status</code>) and the Ubuntu firewall
+           allows it (<code>sudo ufw allow 8000,9997/tcp</code>).</p>
+      </div>
+
+      <p class="muted">Snapshot SOC-CORE01 again, named <code>splunk-ready</code>.</p>
+    </div>
+  </section>
+
+  <!-- P9 KNOWLEDGE CHECK 1 -->
+  <section class="page" data-title="Knowledge check 1">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P09</span><span class="tag analysis">Knowledge check</span><span class="time">⏱ 8 min</span></div>
+      <h1>Knowledge Check — First Half</h1>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="c"
+           data-why="Port 9997 is Splunk's default receiving port for forwarders. 8000 is the web UI; 8089 is the management port.">
+        <p><span class="qn">Q1</span> Which port do forwarders send logs to by default?</p>
+        <ul class="opts">
+          <li data-opt="a">8000</li>
+          <li data-opt="b">443</li>
+          <li data-opt="c">9997</li>
+          <li data-opt="d">22</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a"
+           data-why="The Universal Forwarder is the lightweight agent that only collects and ships. The indexer stores and parses; the search head is the console.">
+        <p><span class="qn">Q2</span> Which Splunk role sits on the victim machine and only ships logs?</p>
+        <ul class="opts">
+          <li data-opt="a">Universal Forwarder</li>
+          <li data-opt="b">Indexer</li>
+          <li data-opt="c">Search Head</li>
+          <li data-opt="d">Deployment Server</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q"><p><span class="qn">Q3</span> Why do we create separate indexes for Windows and Linux instead of one big index?</p>
+        <details><summary>Show answer</summary><p>Cleaner searches (scope to <code>index=linux</code>), easier access control and retention per source, and better performance. Good hygiene from day one.</p></details></div>
+
+      <div class="q"><p><span class="qn">Q4</span> You enabled a great rule but no alert fires. Using today's pipeline, list what you'd check.</p>
+        <details><summary>Show answer</summary><p>Walk it backwards: is the data indexed (<code>index=…</code> returns events)? Is it arriving (receiver on 9997)? Is the forwarder running and configured to send that source? Is the source even generating the log?</p></details></div>
+    </div>
+  </section>
+
+  <!-- P10 BREAK -->
+  <section class="page" data-title="Break">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P10</span><span class="tag">Break</span><span class="time">⏱ 15 min</span></div>
+      <h1>Break</h1>
+      <p class="lede">Stretch. When we return: the agents.</p>
+    </div>
+    <div class="content">
+      <div class="timer-card" data-timer="15">
+        <div class="timer-ring">
+          <svg viewBox="0 0 120 120">
+            <circle class="timer-ring-bg" cx="60" cy="60" r="54"></circle>
+            <circle class="timer-ring-fill" cx="60" cy="60" r="54"></circle>
+          </svg>
+          <div class="timer-display">15:00</div>
+        </div>
+        <h3>Break time</h3>
+        <p class="timer-note">Press start when the break begins.</p>
+        <div class="timer-btns">
+          <button class="btn primary" data-act="start">▶ Start break</button>
+          <button class="btn" data-act="reset">↺ Reset</button>
+        </div>
+        <div class="after-break"><strong>After the break:</strong> install forwarders and make logs actually flow.</div>
+      </div>
+      <div class="box tip">
+        <span class="box-t">If your Splunk isn't ready</span>
+        <p>Use the break to catch up or pair with a neighbour. You need the server working before the next block.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P11 LAB: WINDOWS FORWARDER -->
+  <section class="page" data-title="Lab · Windows forwarder">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P11</span><span class="tag siem">SOC Lab</span><span class="time">⏱ 25 min</span></div>
+      <h1>Lab — Forwarder on WIN-VICTIM01</h1>
+      <p class="lede">Install the agent, tell it what to collect, tell it where to send.</p>
+    </div>
+    <div class="content">
+      <ol class="steps">
+        <li><strong>Install the Universal Forwarder.</strong>
+          <p class="muted">Download the Windows UF (.msi) from splunk.com and install it. During setup, when
+             asked for a receiving indexer, you can enter <code>10.10.20.10:9997</code> — or set it in the file below.</p>
+        </li>
+        <li><strong>Tell it what to collect.</strong>
+          <p class="muted">Create <code>C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf</code>:</p>
+<pre><code>[WinEventLog://Security]
+disabled = 0
+index = wineventlog
+
+[WinEventLog://System]
+disabled = 0
+index = wineventlog
+
+[WinEventLog://Application]
+disabled = 0
+index = wineventlog</code></pre>
+        </li>
+        <li><strong>Tell it where to send.</strong>
+          <p class="muted">Create <code>outputs.conf</code> in the same folder:</p>
+<pre><code>[tcpout]
+defaultGroup = soc
+
+[tcpout:soc]
+server = 10.10.20.10:9997</code></pre>
+        </li>
+        <li><strong>Restart the forwarder.</strong>
+<pre><code>Restart-Service SplunkForwarder</code></pre>
+        </li>
+      </ol>
+
+      <div class="verify">
+        <h4>✅ Verification</h4>
+        <ul>
+          <li><code>Get-Service SplunkForwarder</code> shows Running</li>
+          <li>In Splunk, search <code>index=wineventlog</code> — events appear within a minute</li>
+          <li>Log out and back in on WIN-VICTIM01 → a new <code>4624</code> shows up</li>
+        </ul>
+      </div>
+
+      <div class="box note">
+        <span class="box-t">This is the promise from Session 1</span>
+        <p><code>inputs.conf</code> is the "parsing/collection config on the agent" we talked about.
+           <code>outputs.conf</code> points at the manager. You are holding both halves now.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P12 LAB: LINUX FORWARDER -->
+  <section class="page" data-title="Lab · Linux forwarder">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P12</span><span class="tag siem">SOC Lab</span><span class="time">⏱ 20 min</span></div>
+      <h1>Lab — Forwarder on LNX-VICTIM01</h1>
+      <p class="lede">Same idea, Linux commands.</p>
+    </div>
+    <div class="content">
+      <ol class="steps">
+        <li><strong>Install and start the forwarder.</strong>
+<pre><code>sudo dpkg -i splunkforwarder-*.deb
+sudo /opt/splunkforwarder/bin/splunk start --accept-license</code></pre>
+        </li>
+        <li><strong>Point it at the indexer.</strong>
+<pre><code>sudo /opt/splunkforwarder/bin/splunk add forward-server 10.10.20.10:9997 -auth admin:&lt;pw&gt;</code></pre>
+        </li>
+        <li><strong>Monitor the auth and system logs.</strong>
+<pre><code>sudo /opt/splunkforwarder/bin/splunk add monitor /var/log/auth.log -index linux
+sudo /opt/splunkforwarder/bin/splunk add monitor /var/log/syslog  -index linux
+sudo /opt/splunkforwarder/bin/splunk restart</code></pre>
+        </li>
+      </ol>
+
+      <div class="verify">
+        <h4>✅ Verification</h4>
+        <ul>
+          <li><code>index=linux</code> returns events in Splunk</li>
+          <li>SSH into LNX-VICTIM01 → a login line appears in <code>auth.log</code> → shows in Splunk</li>
+          <li>A wrong password → "Failed password" line appears in Splunk</li>
+        </ul>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p><code>/var/log/auth.log</code> is the single most useful Linux log for a SOC analyst — SSH,
+           sudo, and logins all live here. We will hunt in it constantly from Session 4 onward.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P13 CONFIG EXPLAINED + SPL -->
+  <section class="page" data-title="Config &amp; first SPL">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P13</span><span class="tag siem">Theory + hands-on</span><span class="time">⏱ 20 min</span></div>
+      <h1>Reading the Config, and Your First SPL</h1>
+      <p class="lede">Understand what you just wrote, then search it.</p>
+    </div>
+    <div class="content">
+      <h2>What those two files mean</h2>
+      <table>
+        <thead><tr><th>File</th><th>Answers</th><th>Key line</th></tr></thead>
+        <tbody>
+          <tr><td><code>inputs.conf</code></td><td>WHAT do I collect?</td><td><code>[WinEventLog://Security]</code></td></tr>
+          <tr><td><code>outputs.conf</code></td><td>WHERE do I send it?</td><td><code>server = 10.10.20.10:9997</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Your first searches</h2>
+      <p>In the Splunk search bar, always start with an <strong>index</strong> and a <strong>time range</strong> — never search "All time" over everything.</p>
+<pre><code># Every successful Windows logon, counted by account
+index=wineventlog EventCode=4624
+| stats count by Account_Name
+
+# Failed logons — the start of a brute force
+index=wineventlog EventCode=4625
+| table _time, Account_Name, Source_Network_Address
+
+# Linux failed passwords
+index=linux "Failed password"
+| stats count by host</code></pre>
+
+      <div class="box note">
+        <span class="box-t">SPL comes next session</span>
+        <p>Read left to right: <code>index=… filters</code> → <code>| command</code> → <code>| command</code>.
+           These are just enough to <strong>confirm your logs arrived</strong>. You do not need to master SPL today — full search training is <strong>Session 3</strong>. Copy, run, verify.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · lesson 3.10 — Splunk Query Language</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P13b PRACTICE: SPLUNK UPLOAD + SPL -->
+  <section class="page" data-title="Practice · upload &amp; search">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P14</span><span class="tag siem">Hands-on</span><span class="time">⏱ 25 min</span></div>
+      <h1>Practice — Upload Logs &amp; Search Them</h1>
+      <p class="lede">Beyond your own machines: ingest a real log file and answer questions from it, the way analysts do.</p>
+    </div>
+    <div class="content">
+      <p>Your forwarders push live data. But analysts also <strong>upload</strong> evidence files to investigate.
+         We use the TryHackMe <em>Splunk: The Basics</em> VPN-log dataset to practise the full ingest-and-search flow.</p>
+
+      <h2>The 5-step upload wizard</h2>
+      <table>
+        <thead><tr><th>Step</th><th>What you choose</th></tr></thead>
+        <tbody>
+          <tr><td>1 · Select source</td><td>The <code>VPN_logs</code> file (Add Data → Upload)</td></tr>
+          <tr><td>2 · Select source type</td><td>JSON (Splunk auto-detects it)</td></tr>
+          <tr><td>3 · Input settings</td><td>Create index <code>vpn_logs</code>, set a hostname</td></tr>
+          <tr><td>4 · Review</td><td>Check the settings</td></tr>
+          <tr><td>5 · Done</td><td>Search &amp; Reporting → time range <strong>All time</strong></td></tr>
+        </tbody>
+      </table>
+
+      <figure class="fig">
+        <img src="images/thm-splunk-adddata.png" alt="Splunk Add Data → Upload wizard (source: TryHackMe · Splunk: The Basics)" loading="lazy">
+        <figcaption>Splunk Add Data → Upload wizard (source: TryHackMe · Splunk: The Basics)</figcaption>
+      </figure>
+
+      <figure class="fig">
+        <img src="images/thm-splunk-adddata.gif" alt="Animated walkthrough of the Splunk upload wizard (source: TryHackMe · Splunk: The Basics)" loading="lazy">
+        <figcaption>The 5-step upload, animated — watch it once, then do it (source: TryHackMe · Splunk: The Basics)</figcaption>
+      </figure>
+
+      <h2>Search it (JSON needs <code>spath</code>)</h2>
+<pre><code># how many VPN events total?
+index=vpn_logs | stats count
+
+# JSON fields not showing? parse them with spath
+index=vpn_logs | spath | search UserName="Maleena" | stats count
+
+# which users came from one IP?
+index=vpn_logs | spath | search Source_ip="107.14.182.38"
+| stats values(UserName) as UserName count
+
+# any logins from outside France?
+index=vpn_logs | spath | search Source_Country!="France" | stats count</code></pre>
+
+      <div class="box note">
+        <span class="box-t">Two things to remember</span>
+        <p><code>| spath</code> parses JSON fields so you can search them. <code>| stats count</code> answers
+           "how many?". These two carry you through most beginner Splunk questions.</p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>This is exactly how you'll be handed evidence later in the course: a log file, and questions.
+           Upload → parse → search → answer. Same loop, harder data.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · lesson 3.10 — Splunk Query Language (full SPL is Session 3)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P14 INVESTIGATION -->
+  <section class="page" data-title="Find yourself in the logs">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P15</span><span class="tag analysis">Investigation</span><span class="time">⏱ 20 min</span></div>
+      <h1>Investigation — Find Yourself in the Logs</h1>
+      <p style="margin:8px 0 0"><a class="btn-sm" href="../lab/challenges/index.html" style="text-decoration:none">🔎 Open the Investigation Challenges (VPN · SSH · Web)</a></p>
+      <p class="lede">Prove the whole pipeline works by generating events and finding them.</p>
+    </div>
+    <div class="content">
+      <p>Do each action, then find it in Splunk. Write down the search you used.</p>
+
+      <table>
+        <thead><tr><th>Do this</th><th>Then find it</th></tr></thead>
+        <tbody>
+          <tr><td>Log off and back on to WIN-VICTIM01</td><td>Your <code>4624</code> logon — what Logon Type is it?</td></tr>
+          <tr><td>Type a wrong password once on Windows</td><td>The <code>4625</code> — does it show your username?</td></tr>
+          <tr><td>SSH into LNX-VICTIM01 with a wrong password</td><td>The "Failed password" line — what source IP?</td></tr>
+          <tr><td>SSH in correctly</td><td>The "Accepted password" line — same IP?</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">Answer these</span>
+        <p>Which index held each event? How long did it take to appear? If one never appeared, which
+           pipeline stage broke — and how did you find out?</p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">Why this matters</span>
+        <p>You just did what an attacker does (failed then successful login) and watched it become
+           evidence. Every investigation for the rest of the course starts exactly here: an action,
+           a log, a search.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P14b INVESTIGATION CHALLENGES -->
+  <section class="page" data-title="Investigation challenges">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P16</span><span class="tag dfir">Challenges</span><span class="time">⏱ 20 min</span></div>
+      <h1>Investigation Challenges</h1>
+      <p class="lede">Now use your SIEM like an analyst: ingest a dataset, then answer every question from the evidence — no guessing.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">Three ready datasets. Upload one, investigate, and answer. Questions are sequential —
+        a wrong answer sends the next hunt to the wrong place.</div>
+
+      <h2>Ingest (Add Data → Upload → source type <code>_json</code>)</h2>
+      <table>
+        <thead><tr><th>Challenge</th><th>Index</th><th>Time range</th></tr></thead>
+        <tbody>
+          <tr><td>Warm-up · VPN</td><td><code>vpn_logs</code></td><td>All time</td></tr>
+          <tr><td>Scenario 1 · SSH endpoint (SSH → malware)</td><td><code>endpoint_logs</code></td><td>2024-03-14 → 03-19</td></tr>
+          <tr><td>Scenario 2 · Web attack chain</td><td><code>web_logs</code></td><td>2024-04-08 → 04-12</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:14px">
+        <a class="btn primary" href="../lab/challenges/index.html" style="text-decoration:none">🔎 Open the full challenges (datasets + 16 questions)</a>
+      </p>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>This is the loop you'll repeat all course: <strong>upload → parse (<code>spath</code>) → search
+           (<code>stats</code>) → answer</strong>. Scenario 1 walks an SSH brute-force into a cryptominer;
+           Scenario 2 walks a web recon into a web shell. Reconstruct each from the logs alone.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">In class</span>
+        <p>Start the VPN warm-up together, then race Scenario 1 in pairs. Scenario 2 is homework.
+           Instructors: SPL solutions are on the challenges page under each scenario.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · lesson 3.10 (SPL) · 3.15–3.16 (triage &amp; IOCs — deepened in Sessions 4–5)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P15 KNOWLEDGE CHECK 2 -->
+  <section class="page" data-title="Knowledge check 2">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P17</span><span class="tag analysis">Knowledge check</span><span class="time">⏱ 8 min</span></div>
+      <h1>Knowledge Check — Second Half</h1>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="b"
+           data-why="inputs.conf defines WHAT to collect (which logs). outputs.conf defines WHERE to send them (the indexer address).">
+        <p><span class="qn">Q1</span> Which file tells a forwarder <strong>where</strong> to send logs?</p>
+        <ul class="opts">
+          <li data-opt="a">inputs.conf</li>
+          <li data-opt="b">outputs.conf</li>
+          <li data-opt="c">props.conf</li>
+          <li data-opt="d">server.conf</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d"
+           data-why="Logon Type 4624 with type 3 is a network logon, type 2 is interactive (local), type 10 is RDP. Knowing the type tells you HOW someone logged in.">
+        <p><span class="qn">Q2</span> A <code>4624</code> event tells you a successful logon. What extra detail tells you <em>how</em> they logged in?</p>
+        <ul class="opts">
+          <li data-opt="a">The event's severity</li>
+          <li data-opt="b">The index name</li>
+          <li data-opt="c">The source port</li>
+          <li data-opt="d">The Logon Type</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q"><p><span class="qn">Q3</span> Write an SPL search that counts Linux "Failed password" events per host.</p>
+        <details><summary>Show answer</summary><p><code>index=linux "Failed password" | stats count by host</code></p></details></div>
+
+      <div class="q"><p><span class="qn">Q4</span> Your Windows forwarder is "Running" but no events appear in Splunk. Name two likely causes.</p>
+        <details><summary>Show answer</summary><p>Any two: <code>outputs.conf</code> has the wrong server/port; the receiver on 9997 isn't enabled; a firewall blocks 9997; <code>inputs.conf</code> is in the wrong folder or the index name doesn't exist.</p></details></div>
+    </div>
+  </section>
+
+  <!-- P16 SUMMARY + CHEAT SHEET -->
+  <section class="page" data-title="Summary &amp; cheat sheet">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P18</span><span class="tag">Summary</span><span class="time">⏱ 8 min</span></div>
+      <h1>Summary &amp; Cheat Sheet</h1>
+    </div>
+    <div class="content">
+      <h2>What we built, in order</h2>
+      <ol>
+        <li>The <strong>eight-stage log pipeline</strong> — the map for every "no data" problem.</li>
+        <li>Splunk's <strong>three roles</strong> — forwarder, indexer, search head.</li>
+        <li>Installed <strong>Splunk</strong> and enabled receiving on <strong>9997</strong>.</li>
+        <li>Created the <strong>wineventlog</strong> and <strong>linux</strong> indexes.</li>
+        <li>Installed <strong>forwarders</strong> and wrote <code>inputs.conf</code> + <code>outputs.conf</code>.</li>
+        <li>Verified logs flowing and ran <strong>first SPL</strong>.</li>
+      </ol>
+
+      <div class="cheat">
+        <div class="cheat-head">
+          <h3>📋 Session 2 Cheat Sheet</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a class="btn-sm" href="../cheatsheets/index.html#s02" style="text-decoration:none">📚 All cheat sheets</a>
+            <button class="btn-sm" onclick="window.print()">🖨 Print / save as PDF</button>
+          </div>
+        </div>
+        <div class="cheat-grid">
+          <div class="cheat-card"><h5>Splunk roles</h5><ul>
+            <li><b>Universal Forwarder</b> — agent, ships logs</li>
+            <li><b>Indexer</b> — receives, parses, stores</li>
+            <li><b>Search Head</b> — the web console</li>
+            <li>Lab: indexer + search head on SOC-CORE01</li></ul></div>
+
+          <div class="cheat-card"><h5>Key ports</h5><ul>
+            <li><code>8000</code> — Splunk web UI</li>
+            <li><code>9997</code> — receive logs from forwarders</li>
+            <li><code>8089</code> — management</li></ul></div>
+
+          <div class="cheat-card"><h5>The two config files</h5><ul>
+            <li><code>inputs.conf</code> — WHAT to collect</li>
+            <li><code>outputs.conf</code> — WHERE to send</li>
+            <li>Windows path: <code>...\SplunkUniversalForwarder\etc\system\local\</code></li></ul></div>
+
+          <div class="cheat-card"><h5>Install commands</h5><ul>
+            <li><code>splunk start --accept-license</code></li>
+            <li><code>splunk enable listen 9997</code></li>
+            <li><code>splunk add index wineventlog</code></li>
+            <li><code>splunk add forward-server IP:9997</code></li>
+            <li><code>splunk add monitor /var/log/auth.log</code></li></ul></div>
+
+          <div class="cheat-card"><h5>First SPL</h5><ul>
+            <li>Always start with <code>index=</code> + time range</li>
+            <li><code>| stats count by field</code></li>
+            <li><code>| table _time, field, field</code></li>
+            <li>Pipe <code>|</code> = pass to next command</li></ul></div>
+
+          <div class="cheat-card"><h5>Debug "no data"</h5><ul>
+            <li>Walk the pipeline backwards</li>
+            <li>Indexed? → arriving? → collected? → generated?</li>
+            <li>Forwarder running? outputs.conf right? 9997 open?</li>
+            <li>Index name exists and matches?</li></ul></div>
+          <div class="cheat-card"><h5>Search starters (SPL)</h5><ul><li><code>index=x | stats count</code></li><li>JSON: add <code>| spath</code></li><li><code>| search Field="value"</code></li><li><code>| table _time, a, b</code></li><li>Time range = All time</li></ul></div>
+          <div class="cheat-card"><h5>Upload a log file</h5><ul><li>Add Data → Upload</li><li>File → source type (JSON)</li><li>Set index + hostname</li><li>Review → Done → search</li></ul></div>
+          <div class="cheat-card"><h5>Real-build gotchas</h5><ul><li>One shared VMnet (host-only nets don't route)</li><li>Ubuntu <b>Server</b>, not Desktop</li><li>VMs off OneDrive/C:</li><li><code>--run-as-root</code> · <code>-user root</code></li><li>Win+L makes a 4624; whoami doesn't</li></ul></div>
+        </div>
+      </div>
+
+      <div class="box note">
+        <span class="box-t">Next session</span>
+        <p>Logs are flowing but they are shallow. Session 3 turns on <strong>Sysmon</strong> and the deep
+           Windows channels, and you learn to read and search them like an analyst.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P17 TAKEAWAYS -->
+  <section class="page" data-title="Key takeaways">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P19</span><span class="tag">Takeaways</span><span class="time">⏱ 3 min</span></div>
+      <h1>Key Takeaways</h1>
+    </div>
+    <div class="content">
+      <ul class="takeaways">
+        <li>A log's journey: generate → collect → ship → aggregate → parse → store → analyze → alert.</li>
+        <li>Splunk = forwarder (agent) + indexer (store) + search head (console).</li>
+        <li>Forwarders send to the indexer on port 9997.</li>
+        <li><code>inputs.conf</code> = what to collect. <code>outputs.conf</code> = where to send.</li>
+        <li>A rule is worthless if the log never arrives — collection is step one.</li>
+        <li>When there's no data, walk the pipeline backwards to find the break.</li>
+        <li>Every investigation starts with: an action → a log → a search.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- P18 HOMEWORK -->
+  <section class="page" data-title="Homework">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P20</span><span class="tag dfir">Homework</span><span class="time">⏱ 5 min</span></div>
+      <h1>Homework</h1>
+      <p class="lede">Finish your lab and build SPL confidence before Session 3.</p>
+    </div>
+    <div class="content">
+      <div class="hw-head">
+        <div class="hw-progress" id="hwProgress">Required: <b>0 / 3</b> &nbsp;·&nbsp; All tasks: <b>0 / 4</b></div>
+        <div class="hw-actions">
+          <a class="btn-sm" href="../resources/labs.html#s02" style="text-decoration:none">🧪 All practice labs</a>
+          <button class="btn-sm" id="btnNewTask">➕ Create task</button>
+          <button class="btn-sm" id="hwAddAll">📅 Add all deadlines</button>
+          <button class="btn-sm" id="hwReset">↺ Reset progress</button>
+        </div>
+      </div>
+
+      <div id="taskList">
+
+        <div class="task mandatory" data-due="2026-08-04">
+          <div class="task-top"><h3 class="task-title">Finish your lab — logs from both machines</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 4 Aug</span></div>
+          <div class="task-body"><p>Both <code>index=wineventlog</code> and <code>index=linux</code> must return live events.
+             If a step failed in class, fix it now. This is the foundation for every session after this.</p></div>
+          <div class="task-deliver"><b>Deliverable:</b> a screenshot of both indexes returning events.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task mandatory" data-due="2026-08-04">
+          <div class="task-top"><h3 class="task-title">TryHackMe — Splunk: The Basics</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 4 Aug</span></div>
+          <div class="task-body"><p>Finish the whole room — it repeats the VPN-log upload and SPL we did in class, so it should feel familiar. Reinforcement before Session 3 goes deep on SPL.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/splunk101" target="_blank" rel="noopener">🔗 Open the room</a></div>
+          <div class="task-deliver"><b>Bring:</b> one SPL search you found useful.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task mandatory" data-due="2026-08-04">
+          <div class="task-top"><h3 class="task-title">TryHackMe — Intro to Logs</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 4 Aug</span></div>
+          <div class="task-body"><p>Log types, formats and retention — reinforces the pipeline you built today.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/introtologs" target="_blank" rel="noopener">🔗 Open the room</a></div>
+          <div class="task-deliver"><b>Bring:</b> the difference between a raw log and a parsed field.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task optional" data-due="2026-08-11">
+          <div class="task-top"><h3 class="task-title">Go deeper — Splunk: Setting up a SOC Lab</h3>
+            <span class="badge opt">Optional</span><span class="badge due">Due · 11 Aug</span></div>
+          <div class="task-body"><p>THM walks a Splunk lab build very close to ours — a good way to reinforce what you did.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/splunklab" target="_blank" rel="noopener">🔗 THM — Splunk: Setting up a SOC Lab</a></div>
+          <div class="task-deliver"><b>Optional:</b> one thing their setup does that ours doesn't.</div>
+          <div class="task-btns"></div>
+        </div>
+
+      </div><!-- /taskList -->
+
+      <p class="hw-note">Progress is saved in this browser. "Add all deadlines" downloads an .ics for
+         Outlook, Google or Apple Calendar. Tasks you create are saved here too — use ✕ to remove.</p>
+    </div>
+  </section>
+
+  <!-- P19 REFERENCES -->
+  <section class="page" data-title="References">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S02 · P21</span><span class="tag">References</span></div>
+      <h1>References</h1>
+    </div>
+    <div class="content">
+      <h2>Primary source — INE eCIR v2</h2>
+      <table>
+        <thead><tr><th>Topic</th><th>INE module &amp; lesson</th></tr></thead>
+        <tbody>
+          <tr><td>Log collection, shipping &amp; aggregation</td><td>Module 3 · 3.4</td></tr>
+          <tr><td>SIEM fundamentals (Splunk)</td><td>Module 3 · 3.5</td></tr>
+          <tr><td>Install &amp; configure Splunk (labs)</td><td>Module 3 · 3.6–3.9</td></tr>
+          <tr><td>Splunk Query Language</td><td>Module 3 · 3.10</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Supporting labs — TryHackMe</h2>
+      <ul>
+        <li><a href="https://tryhackme.com/room/splunk101" target="_blank" rel="noopener">Splunk: The Basics</a></li>
+        <li><a href="https://tryhackme.com/room/introtologs" target="_blank" rel="noopener">Intro to Logs</a></li>
+        <li><a href="https://tryhackme.com/room/splunklab" target="_blank" rel="noopener">Splunk: Setting up a SOC Lab</a></li>
+      </ul>
+
+      <h2>Lab guide</h2>
+      <ul>
+        <li><a href="../lab/setup.html">SOC Lab setup guide — Part 2 (Splunk &amp; forwarders)</a></li>
+      </ul>
+
+      <div class="box note">
+        <span class="box-t">Reminder</span>
+        <p>INE is the primary reference for the exam. THM reinforces — where wording differs, INE wins.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREATE TASK MODAL -->
+  <div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-label="Create a homework task">
+    <div class="modal-box">
+      <h3>Create a homework task</h3>
+      <p class="modal-sub">Add your own lab, reading or exercise to this session's homework list.</p>
+      <div class="field"><label for="tTitle">Task title *</label>
+        <input type="text" id="tTitle" placeholder="e.g. TryHackMe — Investigating with Splunk"></div>
+      <div class="field"><label for="tDesc">Description</label>
+        <textarea id="tDesc" placeholder="What should the student do?"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label for="tDue">Deadline</label><input type="date" id="tDue"></div>
+        <div class="field"><label>Type</label>
+          <div class="seg"><button type="button" data-type="mandatory" class="sel">Required</button>
+            <button type="button" data-type="optional">Optional</button></div></div>
+      </div>
+      <div class="field"><label>Links, labs or files</label>
+        <div id="tLinks"><div class="link-row">
+          <input type="text" placeholder="Label" class="lk-label">
+          <input type="text" placeholder="https://… or file.pdf" class="lk-url"></div></div>
+        <button type="button" class="btn-sm" id="addLink" style="margin-top:6px">＋ Add another link</button></div>
+      <div class="field"><label for="tDeliver">Deliverable</label>
+        <input type="text" id="tDeliver" placeholder="e.g. Screenshot of the completed room"></div>
+      <div class="modal-actions">
+        <button class="btn-sm" data-close>Cancel</button>
+        <button class="btn primary" id="tSave">Add to homework list</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagenav">
+    <a href="#" id="btnPrev"><small>Previous</small><span class="lbl">—</span></a>
+    <a href="#" id="btnNext" class="next"><small>Next</small><span class="lbl">—</span></a>
+  </div>
+  <p class="kbd-hint">Navigate with <span class="kbd">←</span> <span class="kbd">→</span> arrow keys</p>
+
+  </article>
+</div>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Session 02</span>
+    <span class="mono">Primary reference: INE eCIR v2</span>
+  </div>
+</footer>
+
+<script src="../assets/js/session.js"></script>
+<script src="../assets/js/homework.js"></script>
+<script src="../assets/js/quiz.js"></script>
+<script src="../assets/js/task-creator.js"></script>
+</body>
+</html>

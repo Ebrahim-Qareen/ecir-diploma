@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOC Lab Setup Guide — eCIR | ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Lab Setup</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">Sessions</a>
+      <a href="index.html">Lab Overview</a>
+      <a href="setup.html" class="active">Setup Guide</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:44px 0 34px">
+  <div class="wrap">
+    <div class="eyebrow">Build your SOC · grows each session</div>
+    <h1>Lab <span>Setup Guide</span></h1>
+    <p>Follow the part that matches the session you're on. Do each step, pass the verification, then
+       snapshot. Never move on with a broken step.</p>
+    <div style="margin-top:20px"><button class="btn-sm" onclick="window.print()">🖨 Print / save as PDF</button></div>
+  </div>
+</section>
+
+<main class="wrap section">
+
+  <div class="tiles" style="margin-bottom:30px">
+    <a class="tile" href="#part0"><span class="ico">🧰</span><h4>Part 0</h4><p>Host prep (once)</p></a>
+    <a class="tile" href="#part1"><span class="ico">🖧</span><h4>Part 1 · S2</h4><p>VMs, networks, IPs</p></a>
+    <a class="tile" href="#part2"><span class="ico">📡</span><h4>Part 2 · S2</h4><p>Splunk &amp; forwarders</p></a>
+    <a class="tile" href="#trouble"><span class="ico">🔧</span><h4>Troubleshooting</h4><p>When it won't work</p></a>
+  </div>
+
+  <div class="content">
+
+  <!-- PART 0 -->
+  <h2 class="sec" id="part0">Part 0 · Host Prep (do once)</h2>
+  <ul>
+    <li>CPU 4+ cores with virtualization <strong>ON</strong> in BIOS (Intel VT-x / AMD SVM).</li>
+    <li>RAM 16 GB ideal (8 GB works — run fewer VMs at once). 150 GB+ SSD free.</li>
+    <li>Install <strong>VMware Workstation Pro</strong> (free).</li>
+  </ul>
+  <p>On Windows 11, turn off Hyper-V for full speed, then reboot:</p>
+<pre><code>bcdedit /set hypervisorlaunchtype off</code></pre>
+
+  <!-- PART 1 -->
+  <h2 class="sec" id="part1">Part 1 · Networks &amp; VMs <span class="muted" style="font-size:13px">(Session 2)</span></h2>
+
+  <h3>Networks — Virtual Network Editor (run as admin)</h3>
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Subnet</th><th>DHCP</th></tr></thead>
+    <tbody>
+      <tr><td>VMnet10</td><td>Host-only</td><td>10.10.20.0/24</td><td>OFF</td></tr>
+      <tr><td>VMnet8</td><td>NAT (default)</td><td>—</td><td>ON</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The three VMs</h3>
+  <table>
+    <thead><tr><th>VM</th><th>OS</th><th>RAM</th><th>Disk</th><th>Adapters</th></tr></thead>
+    <tbody>
+      <tr><td>SOC-CORE01</td><td>Ubuntu Server 22.04</td><td>4–6 GB</td><td>80 GB</td><td>VMnet10 + VMnet8</td></tr>
+      <tr><td>WIN-VICTIM01</td><td>Windows 10/11</td><td>4 GB</td><td>60 GB</td><td>VMnet10 + VMnet8</td></tr>
+      <tr><td>LNX-VICTIM01</td><td>Ubuntu Server 22.04</td><td>2 GB</td><td>40 GB</td><td>VMnet10 + VMnet8</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Static IPs</h3>
+  <p><strong>SOC-CORE01</strong> — <code>/etc/netplan/00-installer-config.yaml</code>:</p>
+<pre><code>network:
+  version: 2
+  ethernets:
+    ens33: { addresses: [10.10.20.10/24] }   # lab (VMnet10)
+    ens34: { dhcp4: true }                    # NAT / updates</code></pre>
+<pre><code>sudo netplan apply &amp;&amp; ip a</code></pre>
+  <p><strong>LNX-VICTIM01:</strong> same, use <code>10.10.20.102/24</code>. &nbsp;
+     <strong>WIN-VICTIM01:</strong> set VMnet10 adapter to <code>10.10.20.101</code>, mask <code>255.255.255.0</code>, no gateway.</p>
+  <p>Hostnames: <code>sudo hostnamectl set-hostname SOC-CORE01</code> · Windows: <code>Rename-Computer -NewName WIN-VICTIM01 -Restart</code></p>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>L1-network-ready</code></h4>
+    <ul>
+      <li><code>ping 10.10.20.101</code> works from LNX-VICTIM01</li>
+      <li>Each VM reaches the internet (<code>ping 8.8.8.8</code>)</li>
+    </ul>
+  </div>
+
+  <!-- PART 2 -->
+  <h2 class="sec" id="part2">Part 2 · Splunk &amp; Forwarders <span class="muted" style="font-size:13px">(Session 2)</span></h2>
+
+  <h3>Install Splunk on SOC-CORE01</h3>
+<pre><code>sudo dpkg -i splunk-*.deb
+sudo /opt/splunk/bin/splunk start --accept-license    # set admin user + password
+sudo /opt/splunk/bin/splunk enable boot-start
+sudo ufw allow 8000,9997/tcp</code></pre>
+  <p>Open <code>http://10.10.20.10:8000</code> from your host and log in.</p>
+
+  <h3>Enable receiving + create indexes</h3>
+<pre><code>sudo /opt/splunk/bin/splunk enable listen 9997 -auth admin:&lt;pw&gt;
+sudo /opt/splunk/bin/splunk add index wineventlog
+sudo /opt/splunk/bin/splunk add index linux</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>L2-splunk-ready</code></h4>
+    <ul>
+      <li>Web UI opens and you can log in</li>
+      <li>Settings → Indexes shows <code>wineventlog</code> and <code>linux</code></li>
+      <li>Receive data shows port <code>9997</code> enabled</li>
+    </ul>
+  </div>
+
+  <h3>Forwarder — WIN-VICTIM01</h3>
+  <p>Install the Windows UF (.msi). Create these in
+     <code>...\SplunkUniversalForwarder\etc\system\local\</code>:</p>
+  <p><strong>inputs.conf</strong> — what to collect:</p>
+<pre><code>[WinEventLog://Security]
+disabled = 0
+index = wineventlog
+
+[WinEventLog://System]
+disabled = 0
+index = wineventlog
+
+[WinEventLog://Application]
+disabled = 0
+index = wineventlog</code></pre>
+  <p><strong>outputs.conf</strong> — where to send:</p>
+<pre><code>[tcpout]
+defaultGroup = soc
+
+[tcpout:soc]
+server = 10.10.20.10:9997</code></pre>
+<pre><code>Restart-Service SplunkForwarder</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify</h4>
+    <ul>
+      <li><code>Get-Service SplunkForwarder</code> = Running</li>
+      <li>Splunk: <code>index=wineventlog</code> returns events</li>
+      <li>Log off/on → a new <code>4624</code> appears</li>
+    </ul>
+  </div>
+
+  <h3>Forwarder — LNX-VICTIM01</h3>
+<pre><code>sudo dpkg -i splunkforwarder-*.deb
+sudo /opt/splunkforwarder/bin/splunk start --accept-license --run-as-root
+sudo /opt/splunkforwarder/bin/splunk add forward-server 10.10.20.10:9997 -auth admin:&lt;pw&gt;
+sudo /opt/splunkforwarder/bin/splunk add monitor /var/log/auth.log -index linux
+sudo /opt/splunkforwarder/bin/splunk add monitor /var/log/syslog  -index linux
+sudo /opt/splunkforwarder/bin/splunk restart</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>L2-complete</code></h4>
+    <ul>
+      <li><code>index=linux</code> returns events</li>
+      <li>Wrong SSH password → "Failed password" appears in Splunk</li>
+    </ul>
+  </div>
+
+  <h3>First searches</h3>
+<pre><code>index=wineventlog EventCode=4624 | stats count by Account_Name
+index=wineventlog EventCode=4625 | table _time, Account_Name, Source_Network_Address
+index=linux "Failed password" | stats count by host</code></pre>
+
+  <!-- TROUBLE -->
+  <h2 class="sec" id="trouble">Troubleshooting</h2>
+  <table>
+    <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>No data in Splunk</td><td>Forwarder running? <code>outputs.conf</code> server/port right? 9997 enabled? Index name matches?</td></tr>
+      <tr><td>Web UI won't open</td><td><code>sudo /opt/splunk/bin/splunk status</code>; <code>sudo ufw allow 8000/tcp</code></td></tr>
+      <tr><td>VMs can't ping</td><td>Same VMnet? Static IPs same subnet? Allow ICMP on Windows Firewall</td></tr>
+      <tr><td>VMware slow</td><td>Hyper-V still on — see Part 0</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box note">
+    <span class="box-t">Next parts</span>
+    <p>Part 3 (Sysmon &amp; deep telemetry) is added with Session 3. Each session extends this same guide —
+       you are building one lab, not many.</p>
+  </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Lab Setup</span>
+    <span class="mono">Full source: 04_SOC_Lab/Session02_Lab_Build.md</span>
+  </div>
+</footer>
+
+</body>
+</html>
