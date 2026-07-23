@@ -42,6 +42,7 @@
     <a class="tile" href="#part0"><span class="ico">🧰</span><h4>Part 0</h4><p>Host prep (once)</p></a>
     <a class="tile" href="#part1"><span class="ico">🖧</span><h4>Part 1 · S2</h4><p>VMs, networks, IPs</p></a>
     <a class="tile" href="#part2"><span class="ico">📡</span><h4>Part 2 · S2</h4><p>Splunk &amp; forwarders</p></a>
+    <a class="tile" href="#part3"><span class="ico">🔬</span><h4>Part 3 · S3</h4><p>Sysmon &amp; auditd</p></a>
     <a class="tile" href="#trouble"><span class="ico">🔧</span><h4>Troubleshooting</h4><p>When it won't work</p></a>
   </div>
 
@@ -176,6 +177,61 @@ sudo /opt/splunkforwarder/bin/splunk restart</code></pre>
 index=wineventlog EventCode=4625 | table _time, Account_Name, Source_Network_Address
 index=linux "Failed password" | stats count by host</code></pre>
 
+  <!-- PART 3 -->
+  <h2 class="sec" id="part3">Part 3 · Sysmon &amp; auditd — Deep Telemetry <span class="muted" style="font-size:13px">(Session 3)</span></h2>
+  <p>Session 2 gave you native logs. Part 3 adds the deep endpoint telemetry an analyst actually hunts in:
+     <strong>Sysmon</strong> on Windows and <strong>auditd</strong> on Linux. Snapshot both victims first
+     (<code>pre-sysmon</code>).</p>
+
+  <h3>New indexes on SOC-CORE01</h3>
+<pre><code>sudo /opt/splunk/bin/splunk add index sysmon
+sudo /opt/splunk/bin/splunk add index linux_audit</code></pre>
+
+  <h3>Sysmon on WIN-VICTIM01</h3>
+  <p>Download <strong>Sysmon</strong> (Sysinternals) and a config — the community standard is
+     <code>sysmonconfig.xml</code> (SwiftOnSecurity) or Olaf Hartong's modular config. In an <strong>admin</strong> PowerShell:</p>
+<pre><code>.\Sysmon64.exe -accepteula -i sysmonconfig.xml
+Get-Service Sysmon64          # should be Running</code></pre>
+  <p>Add the Sysmon channel to the forwarder's
+     <code>...\SplunkUniversalForwarder\etc\system\local\inputs.conf</code>:</p>
+<pre><code>[WinEventLog://Microsoft-Windows-Sysmon/Operational]
+disabled = 0
+index = sysmon
+renderXml = false</code></pre>
+<pre><code>Restart-Service SplunkForwarder</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>sysmon-ready</code></h4>
+    <ul>
+      <li><code>index=sysmon</code> returns events</li>
+      <li>Open Notepad → a Sysmon <code>EventID=1</code> appears with a full <code>CommandLine</code> and <code>Hashes</code></li>
+      <li>Open a browser → <code>index=sysmon EventID=3</code> shows a network connection</li>
+    </ul>
+  </div>
+
+  <h3>auditd on LNX-VICTIM01</h3>
+<pre><code>sudo apt-get install -y auditd
+# watch process execution and identity files
+sudo auditctl -a always,exit -F arch=b64 -S execve -k proc
+sudo auditctl -w /etc/passwd -p wa -k identity
+# forward the audit log
+sudo /opt/splunkforwarder/bin/splunk add monitor /var/log/audit/audit.log -index linux_audit
+sudo /opt/splunkforwarder/bin/splunk restart</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>L3-telemetry-ready</code></h4>
+    <ul>
+      <li><code>index=linux_audit</code> returns <code>execve</code> events after you run a command</li>
+      <li>Editing a user (<code>sudo useradd test1</code>) triggers an <code>identity</code>-keyed event</li>
+    </ul>
+  </div>
+
+  <h3>First deep-telemetry searches</h3>
+<pre><code>index=sysmon EventID=1 | stats count by ParentImage | sort -count
+index=sysmon EventID=1 ParentImage="*WINWORD*" | table _time, Image, CommandLine
+index=sysmon EventID=3 | stats count by Image, dest_ip, dest_port
+index=linux_audit event_type=execve user=root | table _time, process, command</code></pre>
+
   <!-- TROUBLE -->
   <h2 class="sec" id="trouble">Troubleshooting</h2>
   <table>
@@ -185,13 +241,15 @@ index=linux "Failed password" | stats count by host</code></pre>
       <tr><td>Web UI won't open</td><td><code>sudo /opt/splunk/bin/splunk status</code>; <code>sudo ufw allow 8000/tcp</code></td></tr>
       <tr><td>VMs can't ping</td><td>Same VMnet? Static IPs same subnet? Allow ICMP on Windows Firewall</td></tr>
       <tr><td>VMware slow</td><td>Hyper-V still on — see Part 0</td></tr>
+      <tr><td>No <code>index=sysmon</code> data</td><td>Sysmon service running? Channel name exact in <code>inputs.conf</code>? Forwarder restarted? <code>sysmon</code> index created?</td></tr>
+      <tr><td>auditd rules reset on reboot</td><td>Put rules in <code>/etc/audit/rules.d/soc.rules</code> so they persist</td></tr>
     </tbody>
   </table>
 
   <div class="box note">
     <span class="box-t">Next parts</span>
-    <p>Part 3 (Sysmon &amp; deep telemetry) is added with Session 3. Each session extends this same guide —
-       you are building one lab, not many.</p>
+    <p>Part 4 (detection engineering — Sigma, rules) is added with Session 4. Each session extends this same
+       guide — you are building one lab, not many.</p>
   </div>
 
   </div>

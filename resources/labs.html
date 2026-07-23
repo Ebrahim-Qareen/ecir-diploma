@@ -41,6 +41,7 @@
   <div class="tiles" style="margin-bottom:32px">
     <a class="tile" href="#s01"><span class="ico">✅</span><h4>Session 1</h4><p>3 rooms · SOC &amp; SIEM intro</p></a>
     <a class="tile" href="#s02"><span class="ico">✅</span><h4>Session 2</h4><p>3 rooms · Splunk &amp; logs</p></a>
+    <a class="tile" href="#s03"><span class="ico">✅</span><h4>Session 3</h4><p>6 rooms · telemetry &amp; SPL</p></a>
     <a class="tile" href="#platforms"><span class="ico">🌐</span><h4>Platforms</h4><p>THM · CyberDefenders · BTLO · LetsDefend</p></a>
     <a class="tile" href="#legend"><span class="ico">🏷️</span><h4>How to read</h4><p>Required vs optional · in-class vs home</p></a>
   </div>
@@ -101,17 +102,48 @@
       <div class="card-meta"><span class="tag ir">Optional</span><span class="tag">Go deeper</span><span class="tag">~1.5 h</span></div></a>
   </div>
 
+  <!-- SESSION 3 -->
+  <h2 class="sec" id="s03" style="margin-top:40px">Session 3 · Read the Telemetry, Speak SPL</h2>
+  <p class="sec-desc"><a href="../session-03/index.html#p20">Open Session 3 homework →</a></p>
+  <div class="grid">
+    <a class="card p-siem" href="https://tryhackme.com/room/windowsloggingforsoc" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Windows Logging for SOC</h3></div>
+      <p>Event channels, Sysmon and PowerShell logging — the live-demo room for reading Windows events.</p>
+      <div class="card-meta"><span class="tag siem">Required</span><span class="tag">In class</span><span class="tag">~1.5 h</span></div></a>
+    <a class="card p-siem" href="https://tryhackme.com/room/splunkexploringspl" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Splunk: Exploring SPL</h3></div>
+      <p>Chaining, filters and transforming commands — the SPL depth every later session relies on.</p>
+      <div class="card-meta"><span class="tag siem">Required</span><span class="tag">In class</span><span class="tag">~1 h</span></div></a>
+    <a class="card p-siem" href="https://tryhackme.com/room/sysmon" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Sysmon</h3></div>
+      <p>Install, config and key Event IDs — read the deep telemetry you deployed in the lab.</p>
+      <div class="card-meta"><span class="tag siem">Required</span><span class="tag">In class</span><span class="tag">~1 h</span></div></a>
+    <a class="card p-siem" href="https://tryhackme.com/room/windowseventlogs" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Windows Event Logs</h3></div>
+      <p>wevtutil, Get-WinEvent and Event Viewer — the foundations behind the channels.</p>
+      <div class="card-meta"><span class="tag siem">Required</span><span class="tag">Homework</span><span class="tag">~1 h</span></div></a>
+    <a class="card p-siem" href="https://tryhackme.com/room/linuxloggingforsoc" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Linux Logging for SOC</h3></div>
+      <p>auth.log, package logs, bash history and auditd — the Linux half, hands-on.</p>
+      <div class="card-meta"><span class="tag siem">Required</span><span class="tag">Homework</span><span class="tag">~1 h</span></div></a>
+    <a class="card p-ir" href="https://tryhackme.com/room/splunkdatamanipulation" target="_blank" rel="noopener">
+      <div class="card-top"><span class="snum">THM</span><h3>Splunk: Data Manipulation</h3></div>
+      <p>Field extraction and normalization — parse messy firewall/syslog data.</p>
+      <div class="card-meta"><span class="tag ir">Optional</span><span class="tag">Go deeper</span><span class="tag">~1 h</span></div></a>
+  </div>
+
     <h2 class="sec" style="margin-top:36px">Investigation Challenges</h2>
   <p class="sec-desc">Self-authored datasets to investigate in your own Splunk — answer from the evidence.</p>
   <div class="tiles">
-    <a class="tile" href="../lab/challenges/index.html"><span class="ico">🔎</span><h4>VPN · SSH · Web</h4><p>3 challenges · 14 questions · sequential</p></a>
+    <a class="tile" href="../lab/challenges/index.html#vpn"><span class="ico">🔎</span><h4>S2 · VPN · SSH · Web</h4><p>3 challenges · 16 questions · sequential</p></a>
+    <a class="tile" href="../lab/challenges/index.html#s03"><span class="ico">🔬</span><h4>S3 · Linux · Sysmon · Persistence</h4><p>3 challenges · 17 questions · sequential</p></a>
   </div>
 
   <!-- future -->
   <h2 class="sec" id="more" style="margin-top:40px">Coming as the course grows</h2>
   <p class="sec-desc">Each session's labs are added here — Splunk, ELK, Wireshark, Volatility, and the DFIR challenges.</p>
   <div class="tiles">
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 2–5</h4><p>SIEM · detection · triage · threat intel</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 4–5</h4><p>detection engineering · triage · threat intel</p></div>
     <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 6–8</h4><p>IR lifecycle · endpoint · network</p></div>
     <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 9–10</h4><p>DFIR · CyberDefenders · capstone</p></div>
   </div>

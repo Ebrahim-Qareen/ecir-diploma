@@ -1,0 +1,70 @@
+<svg viewBox="0 0 1040 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Windows and Linux telemetry map into Splunk">
+<title>Telemetry map</title>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker></defs>
+<rect width="1040" height="380" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Where the Telemetry Comes From — and Where It Lands</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- channels column -->
+<text x="150" y="70" text-anchor="middle" fill="#8ea3c8" font-size="12" font-weight="700">SOURCES (channels / files)</text>
+
+<!-- windows native -->
+<rect x="24" y="84" width="252" height="120" rx="9" fill="#15213f" stroke="#d4af37" stroke-width="1.6"/>
+<text x="40" y="106" fill="#f0d78a" font-size="12.5" font-weight="700">Windows — native channels</text>
+<text x="40" y="128" fill="#c7d3e8" font-size="11">Security  · logon/priv/account (4624…)</text>
+<text x="40" y="147" fill="#c7d3e8" font-size="11">System   · services, drivers (7045)</text>
+<text x="40" y="166" fill="#c7d3e8" font-size="11">Application · app crashes/events</text>
+<text x="40" y="190" fill="#93b0d8" font-size="10.5">shallow: no hashes, thin process detail</text>
+
+<!-- sysmon -->
+<rect x="24" y="214" width="252" height="92" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.7"/>
+<text x="40" y="236" fill="#7fe0b4" font-size="12.5" font-weight="700">Windows — Sysmon/Operational</text>
+<text x="40" y="257" fill="#c7d3e8" font-size="11">EID 1 process · 3 network · 7 image</text>
+<text x="40" y="276" fill="#c7d3e8" font-size="11">11 file · 13 registry · 22 DNS</text>
+<text x="40" y="296" fill="#8fd0b4" font-size="10.5">deep: parent, full cmdline, hashes</text>
+
+<!-- linux -->
+<rect x="24" y="316" width="252" height="48" rx="9" fill="#0e1730" stroke="#37c7d4" stroke-width="1.5"/>
+<text x="40" y="337" fill="#37c7d4" font-size="12.5" font-weight="700">Linux — files</text>
+<text x="40" y="356" fill="#c7d3e8" font-size="11">auth.log · journald · auditd (execve)</text>
+
+<!-- forwarder -->
+<rect x="392" y="176" width="176" height="108" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.7"/>
+<text x="480" y="204" text-anchor="middle" fill="#7fe0b4" font-size="13" font-weight="700">FORWARDER</text>
+<text x="480" y="226" text-anchor="middle" fill="#c7d3e8" font-size="10.5">reads channels + files</text>
+<text x="480" y="244" text-anchor="middle" fill="#c7d3e8" font-size="10.5">defined in inputs.conf</text>
+<text x="480" y="268" text-anchor="middle" fill="#6f9c89" font-size="9.5" font-family="monospace">ships → :9997</text>
+
+<!-- splunk indexes -->
+<rect x="640" y="128" width="200" height="64" rx="9" fill="#15213f" stroke="#d4af37" stroke-width="1.8"/>
+<text x="740" y="153" text-anchor="middle" fill="#f0d78a" font-size="12.5" font-weight="700">index = wineventlog</text>
+<text x="740" y="174" text-anchor="middle" fill="#c7d3e8" font-size="10.5">Security · System · Application</text>
+
+<rect x="640" y="204" width="200" height="52" rx="9" fill="#101f1a" stroke="#3fa87a" stroke-width="1.8"/>
+<text x="740" y="228" text-anchor="middle" fill="#7fe0b4" font-size="12.5" font-weight="700">index = sysmon</text>
+<text x="740" y="247" text-anchor="middle" fill="#c7d3e8" font-size="10.5">rich endpoint telemetry</text>
+
+<rect x="640" y="268" width="200" height="52" rx="9" fill="#0e1730" stroke="#37c7d4" stroke-width="1.8"/>
+<text x="740" y="292" text-anchor="middle" fill="#37c7d4" font-size="12.5" font-weight="700">index = linux_audit</text>
+<text x="740" y="311" text-anchor="middle" fill="#c7d3e8" font-size="10.5">auth · sudo · execve</text>
+
+<!-- analyst / SPL -->
+<rect x="892" y="176" width="124" height="108" rx="9" fill="#0e1730" stroke="#8b7ce8" stroke-width="1.7"/>
+<text x="954" y="214" text-anchor="middle" fill="#b6a9f2" font-size="12.5" font-weight="700">SPL</text>
+<text x="954" y="236" text-anchor="middle" fill="#c7d3e8" font-size="10">search the</text>
+<text x="954" y="252" text-anchor="middle" fill="#c7d3e8" font-size="10">telemetry</text>
+<text x="954" y="272" text-anchor="middle" fill="#8ea3c8" font-size="18">🔎</text>
+
+<!-- arrows sources->forwarder -->
+<path d="M278 150 L388 220" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#a)"/>
+<path d="M278 260 L388 235" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#a)"/>
+<path d="M278 340 L388 250" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#a)"/>
+<!-- forwarder -> indexes -->
+<path d="M570 210 L636 165" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#a)"/>
+<path d="M570 230 L636 228" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#a)"/>
+<path d="M570 250 L636 292" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#a)"/>
+<!-- indexes -> SPL -->
+<path d="M842 230 L888 230" stroke="#8b7ce8" stroke-width="1.8" marker-end="url(#a)"/>
+
+<text x="28" y="378" fill="#7e91b8" font-size="11">Same forwarder, three indexes. Native Windows logs tell you *that* something ran; Sysmon tells you *what, from where, and with which hash*.</text>
+</svg>

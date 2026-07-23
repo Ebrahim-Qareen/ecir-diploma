@@ -44,7 +44,7 @@
   <div class="tiles" style="margin-bottom:32px">
     <a class="tile" href="#s01"><span class="ico">✅</span><h4>Session 1</h4><p>SOC, roles, SIEM fundamentals</p></a>
     <a class="tile" href="#s02"><span class="ico">✅</span><h4>Session 2</h4><p>Splunk, ports, forwarders, first SPL</p></a>
-    <a class="tile" href="#s03" style="opacity:.55"><span class="ico">🔒</span><h4>Session 3</h4><p>Windows/Linux telemetry — coming soon</p></a>
+    <a class="tile" href="#s03"><span class="ico">✅</span><h4>Session 3</h4><p>Event IDs · Sysmon · Linux · SPL</p></a>
     <a class="tile" href="#topical" style="opacity:.55"><span class="ico">📇</span><h4>Topical packs</h4><p>Event IDs · SPL · Volatility · MITRE</p></a>
   </div>
 
@@ -141,13 +141,31 @@
     </div>
   </div>
 
+  <!-- SESSION 3 -->
+  <h2 class="sec" id="s03" style="margin-top:40px">Session 3 · Read the Telemetry, Speak SPL</h2>
+  <p class="sec-desc"><a href="../session-03/index.html#p18">Open in the session →</a></p>
+  <div class="cheat">
+    <div class="cheat-head"><h3>📋 Session 3 Cheat Sheet</h3>
+      <a class="btn-sm" href="../session-03/index.html" style="text-decoration:none">▶ Go to Session 3</a></div>
+    <div class="cheat-grid">
+      <div class="cheat-card"><h5>Windows Event IDs</h5><ul><li><code>4624</code>/<code>4625</code> logon ok / failed</li><li><code>4672</code> special privileges</li><li><code>4720</code>/<code>4732</code> user made / added to group</li><li><code>7045</code> service · <code>4698</code> task</li><li><code>1102</code> log cleared (⚠)</li></ul></div>
+      <div class="cheat-card"><h5>Logon types (4624)</h5><ul><li><code>2</code> interactive · <code>3</code> network</li><li><code>10</code> RDP · <code>5</code> service · <code>7</code> unlock</li></ul></div>
+      <div class="cheat-card"><h5>Sysmon Event IDs</h5><ul><li><code>1</code> process (parent, cmdline, hash)</li><li><code>3</code> network · <code>7</code> image · <code>8</code> remote thread</li><li><code>11</code> file · <code>13</code> registry · <code>22</code> DNS</li></ul></div>
+      <div class="cheat-card"><h5>Windows channels</h5><ul><li>Security · System · Application</li><li>Microsoft-Windows-Sysmon/Operational</li><li>PowerShell/Operational (<code>4104</code>)</li></ul></div>
+      <div class="cheat-card"><h5>Linux telemetry</h5><ul><li><code>/var/log/auth.log</code> — SSH, sudo</li><li><code>journalctl</code> — systemd journal</li><li><code>/var/log/audit/audit.log</code> — auditd</li><li><code>auditctl -S execve -k proc</code></li></ul></div>
+      <div class="cheat-card"><h5>SPL commands</h5><ul><li><code>| stats count by field</code></li><li><code>| table _time, a, b</code> · <code>| top field</code></li><li><code>| eval new=…</code> · <code>| rex field=… "…"</code></li><li><code>| sort -count</code> · <code>| dedup field</code></li></ul></div>
+      <div class="cheat-card"><h5>Deploy Sysmon</h5><ul><li><code>Sysmon64.exe -accepteula -i config.xml</code></li><li>Config: SwiftOnSecurity / Olaf Hartong</li><li>inputs.conf → Sysmon/Operational → <code>index=sysmon</code></li></ul></div>
+      <div class="cheat-card"><h5>Core hunts (SPL)</h5><ul><li>Office spawns shell: <code>ParentImage="*WINWORD*"</code></li><li>URLs in cmdline: <code>| rex … https?://</code></li><li>C2 pivot: <code>EventID=3 dest_ip=…</code></li></ul></div>
+    </div>
+  </div>
+
   <!-- future sessions -->
-  <h2 class="sec" id="s03" style="margin-top:40px">Coming as the course grows</h2>
+  <h2 class="sec" id="more" style="margin-top:40px">Coming as the course grows</h2>
   <p class="sec-desc">Each new session adds its cheat sheet here automatically.</p>
   <div class="tiles">
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 2</h4><p>SIEM deploy · SPL basics · forwarders</p></div>
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 3</h4><p>Windows channels · Sysmon · Event IDs</p></div>
     <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 4</h4><p>Detection rules · Sigma · MITRE</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 5</h4><p>Triage · IOCs · threat intel</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 6</h4><p>IR lifecycle · SOAR</p></div>
   </div>
 
   <!-- topical packs -->

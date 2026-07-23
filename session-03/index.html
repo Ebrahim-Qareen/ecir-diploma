@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 03 — Read the Telemetry, Speak SPL | eCIR · ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body data-session="s03">
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Session 03</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">All sessions</a>
+      <a href="../lab/index.html">SOC Lab</a>
+      <a href="../cheatsheets/index.html">Cheat Sheets</a>
+    </nav>
+  </div>
+</header>
+
+<div class="progress-wrap"><div class="wrap progress-inner" id="progressHost"></div></div>
+
+<div class="wrap section">
+<div class="page-layout">
+
+  <aside class="sidebar">
+    <h5>Session 03 · Pages</h5>
+    <ol id="sessionNav"></ol>
+  </aside>
+
+  <article>
+
+  <!-- P1 COVER -->
+  <section class="page" data-title="Cover">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03</span><span class="tag siem">SIEM 2 / 4</span><span class="time">⏱ 4 hours</span></div>
+      <h1>Read the Telemetry, Speak SPL</h1>
+      <p class="lede">Yesterday logs started flowing. Today you learn what is actually inside them — and
+         the query language that turns a million events into one answer.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">By the end of today you will know the Windows and Linux events that matter,
+        you will have deployed Sysmon for deep visibility, and you will investigate with SPL on your own.</div>
+
+      <h2>Today's agenda</h2>
+      <table>
+        <thead><tr><th>Block</th><th>Topic</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Recap Session 2</td><td>10 min</td></tr>
+          <tr><td>2</td><td>Windows telemetry · the Event IDs that matter · Sysmon</td><td>45 min</td></tr>
+          <tr><td>3</td><td>Lab — deploy Sysmon &amp; auditd, forward, verify</td><td>45 min</td></tr>
+          <tr><td>—</td><td><strong>Break</strong></td><td>15 min</td></tr>
+          <tr><td>4</td><td>Linux telemetry · SPL deep dive</td><td>45 min</td></tr>
+          <tr><td>5</td><td>SPL hands-on — Splunk: Exploring SPL</td><td>40 min</td></tr>
+          <tr><td>6</td><td>Investigation challenges · knowledge check · homework</td><td>40 min</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box warn">
+        <span class="box-t">Come prepared</span>
+        <p>Your Session 2 lab must work — <code>index=wineventlog</code> and <code>index=linux</code> both
+           returning live events. If it isn't ready, fix it in the first block or pair with a neighbour.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P2 OBJECTIVES -->
+  <section class="page" data-title="Objectives">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P02</span><span class="tag siem">Objectives</span><span class="time">⏱ 3 min</span></div>
+      <h1>What You Will Be Able To Do</h1>
+      <p class="lede">Five things — telemetry you can read, and SPL you can write.</p>
+    </div>
+    <div class="content">
+      <ul class="takeaways">
+        <li><strong>Name</strong> the Windows event channels and the ~12 Event IDs an analyst uses every day.</li>
+        <li><strong>Explain</strong> why native logs are shallow and what <strong>Sysmon</strong> adds.</li>
+        <li><strong>Deploy</strong> Sysmon on WIN-VICTIM01 and forward its channel into a new <code>sysmon</code> index.</li>
+        <li><strong>Read</strong> Linux telemetry — <code>auth.log</code>, <code>journald</code>, and <code>auditd</code>.</li>
+        <li><strong>Investigate</strong> independently with SPL: <code>stats</code>, <code>table</code>, <code>top</code>, <code>eval</code>, <code>rex</code>, and pipe chaining.</li>
+      </ul>
+      <div class="box tip">
+        <span class="box-t">Today's rule</span>
+        <p>Detection and forensics are only as good as two things: the telemetry underneath, and your
+           ability to query it. Today you fix both. Every query you write today, you reuse for the rest of the course.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P3 RECAP -->
+  <section class="page" data-title="Recap Session 2">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P03</span><span class="tag analysis">Recap</span><span class="time">⏱ 10 min</span></div>
+      <h1>Quick Recap — Session 2</h1>
+      <p class="lede">Answer before you reveal. If your lab isn't flowing, flag it now.</p>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="b"
+           data-why="inputs.conf defines WHAT the forwarder collects (which channels/files). outputs.conf defines WHERE it sends them.">
+        <p><span class="qn">Q1</span> Which forwarder file decides <strong>what</strong> gets collected?</p>
+        <ul class="opts">
+          <li data-opt="a">outputs.conf</li>
+          <li data-opt="b">inputs.conf</li>
+          <li data-opt="c">props.conf</li>
+          <li data-opt="d">server.conf</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="c"
+           data-why="Forwarders send to the indexer on 9997. 8000 is the web UI, 8089 is management.">
+        <p><span class="qn">Q2</span> Which port do forwarders ship logs to?</p>
+        <ul class="opts">
+          <li data-opt="a">8000</li>
+          <li data-opt="b">22</li>
+          <li data-opt="c">9997</li>
+          <li data-opt="d">514</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q"><p><span class="qn">Q3</span> Name the eight stages of the log pipeline in order.</p>
+        <details><summary>Show answer</summary><p>Generation → Collection → Shipping → Aggregation → Parsing → Storage → Analysis → Alerting. Today lives in <strong>Parsing</strong> (what the fields mean) and <strong>Analysis</strong> (SPL).</p></details></div>
+
+      <div class="q"><p><span class="qn">Q4</span> Session 2 said "full SPL and deep telemetry come next." Which two things do we turn on today?</p>
+        <details><summary>Show answer</summary><p><strong>Sysmon</strong> (deep endpoint telemetry) and <strong>SPL</strong> (the analyst's query language). The logs you have are shallow — today they get deep and searchable.</p></details></div>
+    </div>
+  </section>
+
+  <!-- P4 HOOK -->
+  <section class="page" data-title="Incident story">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P04</span><span class="tag analysis">Incident story</span><span class="time">⏱ 6 min</span></div>
+      <h1>Two Machines, One Attack, One Blind Spot</h1>
+      <p class="lede">The difference between seeing an attack and missing it was one piece of telemetry.</p>
+    </div>
+    <div class="content">
+      <p>An attacker ran <code>certutil.exe</code> — a trusted Windows tool — to download malware. On the first
+         machine, the Security log recorded only that "a process started." No command line. No parent. No hash.
+         The analyst saw <em>something ran</em> but never the malicious URL. The case went cold.</p>
+
+      <p>The machine next door had <strong>Sysmon</strong> installed. Same attack — but Sysmon recorded the full
+         command line, the parent process (PowerShell, spawned by Word), and the file hash. The analyst pulled
+         the whole chain in one search and shut it down in minutes.</p>
+
+      <div class="box warn">
+        <span class="box-t">The lesson for today</span>
+        <p>Native Windows logs tell you <em>that</em> something happened. Sysmon tells you <em>what, from where,
+           and with which hash</em>. Depth of telemetry decides whether you can answer the question at all.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P5 THEORY: WINDOWS CHANNELS -->
+  <section class="page" data-title="Windows channels">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P05</span><span class="tag siem">Theory</span><span class="time">⏱ 12 min</span></div>
+      <h1>Windows Telemetry — Channels &amp; Providers</h1>
+      <p class="lede">Windows logs are not one file. They are many channels, each written by a provider.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">A <strong>provider</strong> writes events into a <strong>channel</strong>. Each event has an
+        <strong>Event ID</strong>. You choose which channels to forward.</div>
+
+      <table>
+        <thead><tr><th>Channel</th><th>What lives here</th><th>Analyst value</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Security</strong></td><td>Logon, privilege, account &amp; policy changes</td><td>⭐ highest — most detections start here</td></tr>
+          <tr><td><strong>System</strong></td><td>Services, drivers, system events</td><td>Service install (7045), crashes</td></tr>
+          <tr><td><strong>Application</strong></td><td>Application errors and events</td><td>App crashes, some tool logging</td></tr>
+          <tr><td><strong>Sysmon/Operational</strong></td><td>Rich endpoint activity (add-on)</td><td>⭐ process, network, registry, DNS</td></tr>
+          <tr><td><strong>PowerShell/Operational</strong></td><td>Script block logging (4104)</td><td>What PowerShell actually ran</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>In Event Viewer these sit under <em>Windows Logs</em> (Security, System, Application) and
+           <em>Applications and Services Logs</em> (Sysmon, PowerShell). You already forward the first three —
+           today you add Sysmon.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · 3.3 — Windows event logs &amp; channels</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P6 THEORY: EVENT IDS THAT MATTER -->
+  <section class="page" data-title="Event IDs that matter">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P06</span><span class="tag siem">Theory</span><span class="time">⏱ 14 min</span></div>
+      <h1>The Event IDs That Matter</h1>
+      <p class="lede">You don't memorise thousands. You memorise about a dozen — the ones attacks touch.</p>
+    </div>
+    <div class="content">
+      <table>
+        <thead><tr><th>Event ID</th><th>Meaning</th><th>Why an attacker triggers it</th></tr></thead>
+        <tbody>
+          <tr><td><code>4624</code></td><td>Successful logon</td><td>Access — check the <strong>Logon Type</strong></td></tr>
+          <tr><td><code>4625</code></td><td>Failed logon</td><td>Brute force / password spray</td></tr>
+          <tr><td><code>4634 / 4647</code></td><td>Logoff</td><td>Session timelines</td></tr>
+          <tr><td><code>4672</code></td><td>Special privileges assigned</td><td>Admin / SYSTEM logon</td></tr>
+          <tr><td><code>4688</code></td><td>A new process was created</td><td>Execution (thin without Sysmon)</td></tr>
+          <tr><td><code>4720</code></td><td>User account created</td><td>Persistence — a new backdoor account</td></tr>
+          <tr><td><code>4724 / 4738</code></td><td>Password reset / account changed</td><td>Account takeover</td></tr>
+          <tr><td><code>4732</code></td><td>Member added to a local group</td><td>Privilege escalation (→ Administrators)</td></tr>
+          <tr><td><code>4698</code></td><td>Scheduled task created</td><td>Persistence</td></tr>
+          <tr><td><code>7045</code></td><td>Service installed</td><td>Persistence / lateral movement</td></tr>
+          <tr><td><code>4104</code></td><td>PowerShell script block</td><td>What the script actually did</td></tr>
+          <tr><td><code>1102</code></td><td>Security log cleared</td><td>Anti-forensics — attacker covering tracks</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="fig">
+        <img src="../assets/img/win-telemetry-map.svg" alt="Telemetry map: Windows native channels and Sysmon and Linux files flow through the forwarder into three Splunk indexes, then SPL">
+        <figcaption>Sources → forwarder → indexes. Native channels are shallow; Sysmon adds the depth.</figcaption>
+      </figure>
+
+      <div class="box tip">
+        <span class="box-t">Memory hook</span>
+        <p><strong>46xx = Security account/logon story.</strong> 4624 in, 4625 failed, 4672 powerful, 4720 new
+           user, 4732 made admin. <strong>7045 = new service.</strong> <strong>1102 = someone wiped the log</strong> —
+           always suspicious.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · 3.3 — Windows event logs · Module 4 · endpoint analysis</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P7 THEORY: SYSMON -->
+  <section class="page" data-title="Sysmon depth">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P07</span><span class="tag siem">Theory</span><span class="time">⏱ 14 min</span></div>
+      <h1>Sysmon — The Depth Native Logs Lack</h1>
+      <p class="lede">Free, from Microsoft Sysinternals. It turns a thin process log into a full endpoint feed.</p>
+    </div>
+    <div class="content">
+      <p>The native <code>4688</code> tells you a process started — but by default it hides the command line, and
+         it never records the file hash or a reliable parent chain. Sysmon fixes all three, and adds network,
+         registry and DNS visibility that Windows simply doesn't log on its own.</p>
+
+      <table>
+        <thead><tr><th>Sysmon Event ID</th><th>Records</th><th>Analyst use</th></tr></thead>
+        <tbody>
+          <tr><td><code>1</code></td><td>Process create — <strong>parent, full command line, hashes</strong></td><td>Rebuild the process tree</td></tr>
+          <tr><td><code>3</code></td><td>Network connection (per process)</td><td>Find C2 / beaconing</td></tr>
+          <tr><td><code>7</code></td><td>Image / DLL loaded</td><td>DLL side-loading</td></tr>
+          <tr><td><code>8</code></td><td>CreateRemoteThread</td><td>Process injection</td></tr>
+          <tr><td><code>11</code></td><td>File created</td><td>Dropped payloads</td></tr>
+          <tr><td><code>13</code></td><td>Registry value set</td><td>Run-key persistence</td></tr>
+          <tr><td><code>22</code></td><td>DNS query</td><td>Malicious domain lookups</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box note">
+        <span class="box-t">Sysmon needs a config</span>
+        <p>Out of the box Sysmon is noisy. It is driven by an XML config that filters what to keep. The community
+           standard is <strong>SwiftOnSecurity's sysmonconfig.xml</strong> (or Olaf Hartong's modular config) —
+           start there, tune later. No config = drowning in noise.</p>
+      </div>
+
+      <div class="visual">
+        <div class="v-head"><span class="v-badge">THM · capture later</span><h4>Sysmon event in Event Viewer</h4></div>
+        <dl>
+          <dt>Shows</dt><dd>One Sysmon Event ID 1 opened in Event Viewer, with ParentImage, CommandLine and Hashes highlighted.</dd>
+          <dt>Purpose</dt><dd>Prove visually how much more Sysmon EID 1 carries than a native 4688.</dd>
+          <dt>Source</dt><dd>TryHackMe · <em>Sysmon</em> room — capture during the in-class lab, drop into <code>images/thm-sysmon-eid1.png</code>.</dd>
+        </dl>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · 3.3 — endpoint telemetry (Sysmon) · Module 4 · process analysis</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P8 DEMO -->
+  <section class="page" data-title="Instructor demo">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P08</span><span class="tag analysis">Demo</span><span class="time">⏱ 12 min</span></div>
+      <h1>Watch One Event's Anatomy</h1>
+      <p class="lede">The instructor opens a single event in Splunk and reads every field that matters.</p>
+    </div>
+    <div class="content">
+      <p>Follow along. The instructor runs one search, opens one event, and names each field — then finds the
+         same event two ways. This is how you learn to <em>read</em> telemetry, not just collect it.</p>
+
+      <ol class="steps">
+        <li><strong>Find a logon.</strong> <code>index=wineventlog EventCode=4624</code> — open one event.</li>
+        <li><strong>Read the fields.</strong> Account_Name, <strong>Logon_Type</strong> (2 = local, 3 = network, 10 = RDP), Source IP.</li>
+        <li><strong>Compare a native process to Sysmon.</strong> <code>index=wineventlog EventCode=4688</code> vs
+            <code>index=sysmon EventID=1</code> — see the command line and hash only Sysmon has.</li>
+        <li><strong>Pivot.</strong> Take one field value and search it across indexes.</li>
+      </ol>
+
+      <div class="visual">
+        <div class="v-head"><span class="v-badge">THM · capture later</span><h4>Windows event anatomy</h4></div>
+        <dl>
+          <dt>Shows</dt><dd>A Windows Security event expanded, with the key fields (Account, Logon Type, Source Address) labelled.</dd>
+          <dt>Purpose</dt><dd>A reference image students keep for reading any Windows event.</dd>
+          <dt>Source</dt><dd>TryHackMe · <em>Windows Logging for SOC</em> — capture in the live demo, save to <code>images/thm-win-event-anatomy.png</code>.</dd>
+        </dl>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">Watch for</span>
+        <p>Notice the instructor never trusts one field alone — a 4624 without its Logon Type is half a story.
+           Reading events means reading the <em>combination</em> of fields.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P9 LAB: DEPLOY SYSMON + AUDITD -->
+  <section class="page" data-title="Lab · deploy Sysmon">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P09</span><span class="tag siem">SOC Lab</span><span class="time">⏱ 45 min</span></div>
+      <h1>Lab — Deploy Sysmon &amp; auditd, Forward Both</h1>
+      <p class="lede">Give your lab deep eyes. Verify every step before moving on.</p>
+    </div>
+    <div class="content">
+      <div class="box note">
+        <span class="box-t">Before you start</span>
+        <p>Snapshot WIN-VICTIM01 as <code>pre-sysmon</code> and SOC-CORE01 as <code>pre-s3</code>. Your Session 2
+           forwarders must already be running.</p>
+      </div>
+
+      <ol class="steps">
+        <li><strong>Create the Sysmon index on SOC-CORE01.</strong>
+<pre><code>sudo /opt/splunk/bin/splunk add index sysmon
+sudo /opt/splunk/bin/splunk add index linux_audit</code></pre>
+        </li>
+        <li><strong>Install Sysmon on WIN-VICTIM01</strong> with a filtering config.
+          <p class="muted">Download Sysmon (Sysinternals) and <code>sysmonconfig.xml</code> (SwiftOnSecurity). In an admin PowerShell:</p>
+<pre><code>.\Sysmon64.exe -accepteula -i sysmonconfig.xml
+# verify the service and driver are running
+Get-Service Sysmon64</code></pre>
+        </li>
+        <li><strong>Tell the forwarder to collect the Sysmon channel.</strong>
+          <p class="muted">Add to <code>...\SplunkUniversalForwarder\etc\system\local\inputs.conf</code>:</p>
+<pre><code>[WinEventLog://Microsoft-Windows-Sysmon/Operational]
+disabled = 0
+index = sysmon
+renderXml = false</code></pre>
+<pre><code>Restart-Service SplunkForwarder</code></pre>
+        </li>
+        <li><strong>Turn on auditd on LNX-VICTIM01.</strong>
+<pre><code>sudo apt-get install -y auditd
+# watch execve and identity changes
+sudo auditctl -a always,exit -F arch=b64 -S execve -k proc
+sudo auditctl -w /etc/passwd -p wa -k identity
+# forward the audit log
+sudo /opt/splunkforwarder/bin/splunk add monitor /var/log/audit/audit.log -index linux_audit
+sudo /opt/splunkforwarder/bin/splunk restart</code></pre>
+        </li>
+      </ol>
+
+      <div class="verify">
+        <h4>✅ Verification</h4>
+        <ul>
+          <li><code>index=sysmon</code> returns events; open Notepad → a Sysmon <strong>EID 1</strong> appears with a full CommandLine</li>
+          <li><code>index=sysmon EventID=3</code> shows a network connection when you open a browser</li>
+          <li><code>index=linux_audit</code> returns <code>execve</code> events after you run a command on LNX-VICTIM01</li>
+        </ul>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">Then — read what you collected (in class)</span>
+        <p>Do the TryHackMe <strong>Sysmon</strong> room now. You just produced Sysmon events; the room teaches you
+           to read them (ransomware, persistence, C2 patterns). Reading beats collecting.</p>
+      </div>
+
+      <p class="muted">Snapshot WIN-VICTIM01 as <code>sysmon-ready</code>.</p>
+    </div>
+  </section>
+
+  <!-- P10 KNOWLEDGE CHECK 1 -->
+  <section class="page" data-title="Knowledge check 1">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P10</span><span class="tag analysis">Knowledge check</span><span class="time">⏱ 8 min</span></div>
+      <h1>Knowledge Check — First Half</h1>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="c"
+           data-why="Sysmon Event ID 1 is process creation, and it records the parent image, full command line and file hashes — none of which a default 4688 gives you.">
+        <p><span class="qn">Q1</span> Which Sysmon Event ID gives you parent process, command line and file hash?</p>
+        <ul class="opts">
+          <li data-opt="a">EID 3</li>
+          <li data-opt="b">EID 13</li>
+          <li data-opt="c">EID 1</li>
+          <li data-opt="d">EID 22</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a"
+           data-why="4732 = a member was added to a local group. Added to Administrators is a classic privilege-escalation / persistence step.">
+        <p><span class="qn">Q2</span> You see Event ID <code>4732</code> adding an account to Administrators. What is it?</p>
+        <ul class="opts">
+          <li data-opt="a">Privilege escalation — account added to a group</li>
+          <li data-opt="b">A failed logon</li>
+          <li data-opt="c">A cleared log</li>
+          <li data-opt="d">A new scheduled task</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q"><p><span class="qn">Q3</span> Why is a native <code>4688</code> often not enough to investigate an execution?</p>
+        <details><summary>Show answer</summary><p>By default it hides the command line and never records the file hash or a reliable parent chain. Sysmon EID 1 (or enabling command-line auditing) fills that gap.</p></details></div>
+
+      <div class="q"><p><span class="qn">Q4</span> You find Event ID <code>1102</code>. Why should that immediately raise your attention?</p>
+        <details><summary>Show answer</summary><p>1102 = the Security log was cleared. That is anti-forensics — an attacker covering tracks. Legitimate log clears are rare and should be explainable.</p></details></div>
+    </div>
+  </section>
+
+  <!-- P11 BREAK -->
+  <section class="page" data-title="Break">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P11</span><span class="tag">Break</span><span class="time">⏱ 15 min</span></div>
+      <h1>Break</h1>
+      <p class="lede">Stretch. When we return: Linux telemetry and the SPL that ties it all together.</p>
+    </div>
+    <div class="content">
+      <div class="timer-card" data-timer="15">
+        <div class="timer-ring">
+          <svg viewBox="0 0 120 120">
+            <circle class="timer-ring-bg" cx="60" cy="60" r="54"></circle>
+            <circle class="timer-ring-fill" cx="60" cy="60" r="54"></circle>
+          </svg>
+          <div class="timer-display">15:00</div>
+        </div>
+        <h3>Break time</h3>
+        <p class="timer-note">Press start when the break begins.</p>
+        <div class="timer-btns">
+          <button class="btn primary" data-act="start">▶ Start break</button>
+          <button class="btn" data-act="reset">↺ Reset</button>
+        </div>
+        <div class="after-break"><strong>After the break:</strong> Linux logs, then SPL — the language you'll use every remaining session.</div>
+      </div>
+      <div class="box tip">
+        <span class="box-t">If Sysmon isn't flowing yet</span>
+        <p>Use the break to fix it or pair up. You need <code>index=sysmon</code> returning events for the SPL block.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P12 THEORY: LINUX TELEMETRY -->
+  <section class="page" data-title="Linux telemetry">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P12</span><span class="tag siem">Theory</span><span class="time">⏱ 12 min</span></div>
+      <h1>Linux Telemetry — auth.log, journald, auditd</h1>
+      <p class="lede">No Event Viewer. On Linux, logs are plain-text files and a query-able audit trail.</p>
+    </div>
+    <div class="content">
+      <table>
+        <thead><tr><th>Source</th><th>Where</th><th>What it answers</th></tr></thead>
+        <tbody>
+          <tr><td><strong>auth.log</strong></td><td><code>/var/log/auth.log</code></td><td>SSH logins, <code>sudo</code>, <code>su</code> — who got in and who elevated</td></tr>
+          <tr><td><strong>syslog</strong></td><td><code>/var/log/syslog</code></td><td>General system + service messages</td></tr>
+          <tr><td><strong>journald</strong></td><td><code>journalctl</code></td><td>Structured systemd journal — query by unit, time, priority</td></tr>
+          <tr><td><strong>auditd</strong></td><td><code>/var/log/audit/audit.log</code></td><td>⭐ definitive forensic trail — <code>execve</code>, file access, keyed rules</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>Triage in layers: start with <code>auth.log</code> for the high-level "who logged in and elevated",
+           then pivot to <code>auditd</code> for the exact commands (<code>execve</code>) and file touches. The
+           audit <strong>key</strong> (<code>-k</code>) you set on a rule is your fastest filter.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">Map it to Windows</span>
+        <p><code>auth.log</code> ≈ Security channel (logon story). <code>auditd execve</code> ≈ Sysmon EID 1
+           (process execution). Same questions, different operating system.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · 3.4 — Linux logs &amp; auditing</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P13 THEORY: SPL DEEP DIVE -->
+  <section class="page" data-title="SPL deep dive">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P13</span><span class="tag siem">Theory</span><span class="time">⏱ 16 min</span></div>
+      <h1>SPL — The Analyst's Query Language</h1>
+      <p class="lede">One pattern, a handful of commands. Master these and you can answer almost anything.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/spl-anatomy.svg" alt="Anatomy of an SPL search: base search, refine, transform, present, separated by pipes">
+        <figcaption>Base search → refine → transform → present. Each pipe feeds the next command.</figcaption>
+      </figure>
+
+      <h2>The commands you'll use daily</h2>
+      <table>
+        <thead><tr><th>Command</th><th>Does</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>stats</code></td><td>Count / aggregate</td><td><code>| stats count by Image</code></td></tr>
+          <tr><td><code>table</code></td><td>Pick columns to show</td><td><code>| table _time, User, CommandLine</code></td></tr>
+          <tr><td><code>top</code> / <code>rare</code></td><td>Most / least common</td><td><code>| top 10 ParentImage</code></td></tr>
+          <tr><td><code>eval</code></td><td>Build a new field</td><td><code>| eval hour=strftime(_time,"%H")</code></td></tr>
+          <tr><td><code>rex</code></td><td>Extract with regex</td><td><code>| rex field=CommandLine "http[s]?://(?&lt;url&gt;\S+)"</code></td></tr>
+          <tr><td><code>sort</code> / <code>dedup</code></td><td>Order / de-duplicate</td><td><code>| sort -count</code></td></tr>
+          <tr><td><code>timechart</code></td><td>Count over time</td><td><code>| timechart count by host</code></td></tr>
+        </tbody>
+      </table>
+
+      <div class="box note">
+        <span class="box-t">Build one pipe at a time</span>
+        <p>Write the base search, run it, look at the fields. Add one command, run again. Never write a five-pipe
+           query blind — you can't tell which stage broke. Slow is smooth, smooth is fast.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · 3.10–3.11 — Splunk Search Processing Language</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P14 HANDS-ON: SPL PRACTICE -->
+  <section class="page" data-title="Hands-on · SPL">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P14</span><span class="tag siem">Hands-on</span><span class="time">⏱ 40 min</span></div>
+      <h1>Hands-on — Speak SPL</h1>
+      <p class="lede">Query your own Sysmon and Linux data, then reinforce it in the TryHackMe room.</p>
+    </div>
+    <div class="content">
+      <p>Run these against your lab. Build each one pipe at a time and read the output before adding the next.</p>
+<pre><code># top parent processes on the endpoint — what spawns what?
+index=sysmon EventID=1 | stats count by ParentImage | sort -count
+
+# any Office app spawning a shell? (a classic red flag)
+index=sysmon EventID=1 ParentImage="*WINWORD*" OR ParentImage="*EXCEL*"
+| table _time, ParentImage, Image, CommandLine
+
+# pull URLs out of command lines with rex
+index=sysmon EventID=1 | rex field=CommandLine "(?&lt;url&gt;https?://\S+)"
+| stats count by url
+
+# outbound connections by process
+index=sysmon EventID=3 | stats count by Image, dest_ip, dest_port | sort -count
+
+# Linux: failed SSH by source IP
+index=linux_audit event_type=ssh_login result=failure
+| stats count by src_ip | sort -count
+
+# Linux: what did auditd see run as root?
+index=linux_audit event_type=execve user=root | table _time, process, command</code></pre>
+
+      <div class="visual">
+        <div class="v-head"><span class="v-badge">THM · capture later</span><h4>Splunk SPL results</h4></div>
+        <dl>
+          <dt>Shows</dt><dd>A transforming SPL search (e.g. <code>stats count by</code>) with its results table in the Splunk search app.</dd>
+          <dt>Purpose</dt><dd>Show students the shape of a good SPL result before they build their own.</dd>
+          <dt>Source</dt><dd>TryHackMe · <em>Splunk: Exploring SPL</em> — capture during the in-class room, save to <code>images/thm-spl-results.png</code>.</dd>
+        </dl>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">In class — Splunk: Exploring SPL</span>
+        <p>Work the TryHackMe <strong>Splunk: Exploring SPL</strong> room now. Its prerequisites are the exact
+           Intro to SIEM + Splunk Basics you already did — so this builds straight on them. Do the
+           transforming-command sections together.</p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>Every one of these is a real hunt. "What spawns a shell?" catches phishing payloads. "URLs in command
+           lines" catches LOLBin downloads. You're not learning syntax — you're learning questions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P15 INVESTIGATION: PROCESS TREE -->
+  <section class="page" data-title="Read a process tree">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P15</span><span class="tag analysis">Investigation</span><span class="time">⏱ 15 min</span></div>
+      <h1>Investigation — Rebuild the Process Tree</h1>
+      <p class="lede">Telemetry + SPL come together: reconstruct an attack from process-create events alone.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/process-tree.svg" alt="Malicious process tree: explorer to WINWORD to powershell to certutil to update.exe, with the C2 connection">
+        <figcaption>Follow ParentImage → Image down the chain. Office → PowerShell → certutil → payload → C2.</figcaption>
+      </figure>
+
+      <p>Each Sysmon EID 1 event names both the process and its parent. Chain them and the whole intrusion
+         appears: a Word document spawned hidden PowerShell, which used <code>certutil</code> (a trusted tool) to
+         download a payload, which then connected out to a C2 server.</p>
+
+      <div class="box soc">
+        <span class="box-t">The pivot that solves it</span>
+        <p>Once you have the payload's name or the C2 IP, pivot: <code>index=sysmon EventID=3
+           dest_ip=185.244.25.171</code> shows every process that talked to the C2. One field value opens the
+           whole case. This is the core skill for the rest of the course.</p>
+      </div>
+
+      <p style="margin:8px 0 0"><a class="btn-sm" href="../lab/challenges/index.html" style="text-decoration:none">🔎 Open the Investigation Challenges</a></p>
+    </div>
+  </section>
+
+  <!-- P16 INVESTIGATION CHALLENGES -->
+  <section class="page" data-title="Investigation challenges">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P16</span><span class="tag dfir">Challenges</span><span class="time">⏱ 20 min</span></div>
+      <h1>Investigation Challenges</h1>
+      <p class="lede">Three datasets built from today's telemetry. Ingest, investigate, answer from the evidence.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">Upload one dataset, then answer every question with SPL — no guessing. Questions are
+        sequential: a wrong answer sends the next hunt to the wrong place.</div>
+
+      <h2>Ingest (Add Data → Upload → source type <code>_json</code>)</h2>
+      <table>
+        <thead><tr><th>Challenge</th><th>Index</th><th>Telemetry</th></tr></thead>
+        <tbody>
+          <tr><td>Warm-up · Linux auth &amp; auditd</td><td><code>linux_audit</code></td><td>SSH brute force → sudo → recon</td></tr>
+          <tr><td>Scenario 1 · Windows process execution</td><td><code>sysmon</code></td><td>Phishing → LOLBin → payload → C2</td></tr>
+          <tr><td>Scenario 2 · Windows persistence</td><td><code>wineventlog</code></td><td>New admin → service → task → log wipe</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:14px">
+        <a class="btn primary" href="../lab/challenges/index.html#s03" style="text-decoration:none">🔎 Open the S3 challenges (datasets + questions)</a>
+      </p>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>Same loop as Session 2, deeper data: <strong>upload → parse → search (<code>stats</code>, <code>rex</code>)
+           → answer</strong>. Scenario 1 is the certutil chain you just studied; Scenario 2 is the persistence an
+           attacker sets up right after. Reconstruct each from the logs alone.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">In class</span>
+        <p>Do the Linux warm-up together, then race Scenario 1 in pairs. Scenario 2 (persistence) is homework.
+           Instructors: SPL solutions are hidden under each scenario on the challenges page.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 3 · 3.11 (SPL) · Module 4 · endpoint &amp; process analysis</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P17 KNOWLEDGE CHECK 2 -->
+  <section class="page" data-title="Knowledge check 2">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P17</span><span class="tag analysis">Knowledge check</span><span class="time">⏱ 8 min</span></div>
+      <h1>Knowledge Check — Second Half</h1>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="b"
+           data-why="stats aggregates — count by a field. It is the transforming command you'll reach for most.">
+        <p><span class="qn">Q1</span> Which SPL command counts events grouped by a field?</p>
+        <ul class="opts">
+          <li data-opt="a">table</li>
+          <li data-opt="b">stats count by</li>
+          <li data-opt="c">sort</li>
+          <li data-opt="d">dedup</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d"
+           data-why="auditd's audit.log is the definitive Linux forensic trail — it records execve (exact commands) and file access, tagged by the key you set.">
+        <p><span class="qn">Q2</span> Which Linux source gives the definitive record of exact commands run?</p>
+        <ul class="opts">
+          <li data-opt="a">syslog</li>
+          <li data-opt="b">auth.log</li>
+          <li data-opt="c">dmesg</li>
+          <li data-opt="d">auditd (audit.log)</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q"><p><span class="qn">Q3</span> Write an SPL search that lists the top 10 parent processes in Sysmon.</p>
+        <details><summary>Show answer</summary><p><code>index=sysmon EventID=1 | top 10 ParentImage</code> — or <code>| stats count by ParentImage | sort -count | head 10</code>.</p></details></div>
+
+      <div class="q"><p><span class="qn">Q4</span> You have a suspicious C2 IP. In one sentence, how do you find every process that contacted it?</p>
+        <details><summary>Show answer</summary><p>Pivot on the network events: <code>index=sysmon EventID=3 dest_ip=&lt;that IP&gt; | stats count by Image</code> — one field value reveals every process that talked to the C2.</p></details></div>
+    </div>
+  </section>
+
+  <!-- P18 SUMMARY + CHEAT SHEET -->
+  <section class="page" data-title="Summary &amp; cheat sheet">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P18</span><span class="tag">Summary</span><span class="time">⏱ 8 min</span></div>
+      <h1>Summary &amp; Cheat Sheet</h1>
+    </div>
+    <div class="content">
+      <h2>What we learned, in order</h2>
+      <ol>
+        <li>Windows <strong>channels</strong> and the <strong>~12 Event IDs</strong> attacks touch.</li>
+        <li>Why native logs are shallow — and what <strong>Sysmon</strong> adds.</li>
+        <li>Deployed <strong>Sysmon</strong> + <strong>auditd</strong> and forwarded both.</li>
+        <li>Read <strong>Linux telemetry</strong> — auth.log, journald, auditd.</li>
+        <li>Learned <strong>SPL</strong> — the query language for every session after this.</li>
+        <li>Rebuilt a <strong>process tree</strong> and pivoted on a C2 IP.</li>
+      </ol>
+
+      <div class="cheat">
+        <div class="cheat-head">
+          <h3>📋 Session 3 Cheat Sheet</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a class="btn-sm" href="../cheatsheets/index.html#s03" style="text-decoration:none">📚 All cheat sheets</a>
+            <button class="btn-sm" onclick="window.print()">🖨 Print / save as PDF</button>
+          </div>
+        </div>
+        <div class="cheat-grid">
+          <div class="cheat-card"><h5>Windows Event IDs</h5><ul>
+            <li><code>4624</code>/<code>4625</code> logon ok / failed</li>
+            <li><code>4672</code> special privileges</li>
+            <li><code>4720</code>/<code>4732</code> user made / added to group</li>
+            <li><code>7045</code> service · <code>4698</code> task</li>
+            <li><code>1102</code> log cleared (⚠)</li></ul></div>
+
+          <div class="cheat-card"><h5>Logon types (4624)</h5><ul>
+            <li><code>2</code> interactive (local)</li>
+            <li><code>3</code> network</li>
+            <li><code>10</code> RemoteInteractive (RDP)</li>
+            <li><code>5</code> service · <code>7</code> unlock</li></ul></div>
+
+          <div class="cheat-card"><h5>Sysmon Event IDs</h5><ul>
+            <li><code>1</code> process (parent, cmdline, hash)</li>
+            <li><code>3</code> network connection</li>
+            <li><code>7</code> image load · <code>8</code> remote thread</li>
+            <li><code>11</code> file · <code>13</code> registry · <code>22</code> DNS</li></ul></div>
+
+          <div class="cheat-card"><h5>Windows channels</h5><ul>
+            <li>Security · System · Application</li>
+            <li>Microsoft-Windows-Sysmon/Operational</li>
+            <li>PowerShell/Operational (<code>4104</code>)</li>
+            <li>inputs.conf → <code>index=sysmon</code></li></ul></div>
+
+          <div class="cheat-card"><h5>Linux telemetry</h5><ul>
+            <li><code>/var/log/auth.log</code> — SSH, sudo</li>
+            <li><code>journalctl</code> — systemd journal</li>
+            <li><code>/var/log/audit/audit.log</code> — auditd</li>
+            <li><code>auditctl -S execve -k proc</code></li></ul></div>
+
+          <div class="cheat-card"><h5>SPL commands</h5><ul>
+            <li><code>| stats count by field</code></li>
+            <li><code>| table _time, a, b</code> · <code>| top field</code></li>
+            <li><code>| eval new=…</code> · <code>| rex field=… "…"</code></li>
+            <li><code>| sort -count</code> · <code>| dedup field</code></li></ul></div>
+
+          <div class="cheat-card"><h5>Deploy Sysmon</h5><ul>
+            <li><code>Sysmon64.exe -accepteula -i config.xml</code></li>
+            <li>Config: SwiftOnSecurity / Olaf Hartong</li>
+            <li>inputs.conf → Sysmon/Operational → <code>index=sysmon</code></li>
+            <li><code>Get-Service Sysmon64</code></li></ul></div>
+
+          <div class="cheat-card"><h5>Core hunts (SPL)</h5><ul>
+            <li>Office spawns shell: <code>ParentImage="*WINWORD*"</code></li>
+            <li>URLs in cmdline: <code>| rex … https?://</code></li>
+            <li>C2 pivot: <code>EventID=3 dest_ip=…</code></li>
+            <li>Brute force: <code>4625 | stats count by src</code></li></ul></div>
+        </div>
+      </div>
+
+      <div class="box note">
+        <span class="box-t">Next session</span>
+        <p>You can read telemetry and query it. Session 4 turns that into <strong>detection engineering</strong> —
+           you write the rules (Sigma → Splunk + Wazuh) that raise the alerts you used to only receive.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P19 TAKEAWAYS -->
+  <section class="page" data-title="Key takeaways">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P19</span><span class="tag">Takeaways</span><span class="time">⏱ 3 min</span></div>
+      <h1>Key Takeaways</h1>
+    </div>
+    <div class="content">
+      <ul class="takeaways">
+        <li>Windows logs live in channels; ~12 Event IDs cover most attacks.</li>
+        <li>Native logs say <em>that</em> something ran; Sysmon says <em>what, from where, and which hash</em>.</li>
+        <li>Sysmon EID 1 = parent + command line + hash. EID 3 = network. Config tames the noise.</li>
+        <li>Linux: <code>auth.log</code> for the logon story, <code>auditd</code> for the exact commands.</li>
+        <li>SPL pattern: base search → refine → transform → present, one pipe at a time.</li>
+        <li>One field value (a hash, a C2 IP) pivots into the whole case.</li>
+        <li>Good analysts aren't memorising syntax — they're asking better questions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- P20 HOMEWORK -->
+  <section class="page" data-title="Homework">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P20</span><span class="tag dfir">Homework</span><span class="time">⏱ 5 min</span></div>
+      <h1>Homework</h1>
+      <p class="lede">Lock in the telemetry and SPL before detection engineering in Session 4.</p>
+    </div>
+    <div class="content">
+      <div class="hw-head">
+        <div class="hw-progress" id="hwProgress">Required: <b>0 / 3</b> &nbsp;·&nbsp; All tasks: <b>0 / 4</b></div>
+        <div class="hw-actions">
+          <a class="btn-sm" href="../resources/labs.html#s03" style="text-decoration:none">🧪 All practice labs</a>
+          <button class="btn-sm" id="btnNewTask">➕ Create task</button>
+          <button class="btn-sm" id="hwAddAll">📅 Add all deadlines</button>
+          <button class="btn-sm" id="hwReset">↺ Reset progress</button>
+        </div>
+      </div>
+
+      <div id="taskList">
+
+        <div class="task mandatory" data-due="2026-08-11">
+          <div class="task-top"><h3 class="task-title">Finish the lab — Sysmon &amp; auditd flowing</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 11 Aug</span></div>
+          <div class="task-body"><p><code>index=sysmon</code> must return EID 1 with command lines, and <code>index=linux_audit</code>
+             must return <code>execve</code> events. This is the telemetry every remaining session depends on.</p></div>
+          <div class="task-deliver"><b>Deliverable:</b> a screenshot of a Sysmon EID 1 event showing ParentImage + CommandLine.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task mandatory" data-due="2026-08-11">
+          <div class="task-top"><h3 class="task-title">TryHackMe — Windows Event Logs</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 11 Aug</span></div>
+          <div class="task-body"><p>Reinforces reading Windows events with <code>wevtutil</code>, <code>Get-WinEvent</code> and Event Viewer — the foundations behind the channels we covered.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/windowseventlogs" target="_blank" rel="noopener">🔗 Open the room</a></div>
+          <div class="task-deliver"><b>Bring:</b> one Event ID you didn't know before, and what it means.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task mandatory" data-due="2026-08-11">
+          <div class="task-top"><h3 class="task-title">TryHackMe — Linux Logging for SOC</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 11 Aug</span></div>
+          <div class="task-body"><p>auth.log, package logs, bash history and auditd — the Linux half of today, hands-on.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/linuxloggingforsoc" target="_blank" rel="noopener">🔗 Open the room</a></div>
+          <div class="task-deliver"><b>Bring:</b> the auditd search you'd use to find a suspicious <code>execve</code>.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task optional" data-due="2026-08-18">
+          <div class="task-top"><h3 class="task-title">Go deeper — Splunk: Data Manipulation</h3>
+            <span class="badge opt">Optional</span><span class="badge due">Due · 18 Aug</span></div>
+          <div class="task-body"><p>Field extraction and normalization — the exact skill for parsing messy firewall/syslog data in later sessions.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/splunkdatamanipulation" target="_blank" rel="noopener">🔗 THM — Splunk: Data Manipulation</a></div>
+          <div class="task-deliver"><b>Optional:</b> one field extraction you built with <code>rex</code>.</div>
+          <div class="task-btns"></div>
+        </div>
+
+      </div><!-- /taskList -->
+
+      <p class="hw-note">Also finish <strong>Scenario 2 (Windows persistence)</strong> on the challenges page.
+         Progress is saved in this browser. "Add all deadlines" downloads an .ics for your calendar.</p>
+    </div>
+  </section>
+
+  <!-- P21 REFERENCES -->
+  <section class="page" data-title="References">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S03 · P21</span><span class="tag">References</span></div>
+      <h1>References</h1>
+    </div>
+    <div class="content">
+      <h2>Primary source — INE eCIR v2</h2>
+      <table>
+        <thead><tr><th>Topic</th><th>INE module &amp; lesson</th></tr></thead>
+        <tbody>
+          <tr><td>Windows event logs &amp; channels</td><td>Module 3 · 3.3</td></tr>
+          <tr><td>Endpoint telemetry (Sysmon)</td><td>Module 3 · 3.3 · Module 4</td></tr>
+          <tr><td>Linux logs &amp; auditing</td><td>Module 3 · 3.4</td></tr>
+          <tr><td>Splunk Search Processing Language</td><td>Module 3 · 3.10–3.11</td></tr>
+          <tr><td>Process &amp; endpoint analysis</td><td>Module 4</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Supporting labs — TryHackMe</h2>
+      <ul>
+        <li><a href="https://tryhackme.com/room/windowsloggingforsoc" target="_blank" rel="noopener">Windows Logging for SOC</a> (in-class demo)</li>
+        <li><a href="https://tryhackme.com/room/sysmon" target="_blank" rel="noopener">Sysmon</a> (in-class)</li>
+        <li><a href="https://tryhackme.com/room/splunkexploringspl" target="_blank" rel="noopener">Splunk: Exploring SPL</a> (in-class)</li>
+        <li><a href="https://tryhackme.com/room/windowseventlogs" target="_blank" rel="noopener">Windows Event Logs</a> (homework)</li>
+        <li><a href="https://tryhackme.com/room/linuxloggingforsoc" target="_blank" rel="noopener">Linux Logging for SOC</a> (homework)</li>
+        <li><a href="https://tryhackme.com/room/splunkdatamanipulation" target="_blank" rel="noopener">Splunk: Data Manipulation</a> (optional)</li>
+      </ul>
+
+      <h2>Lab guide</h2>
+      <ul>
+        <li><a href="../lab/setup.html">SOC Lab setup guide — Part 3 (Sysmon &amp; auditd)</a></li>
+      </ul>
+
+      <div class="box note">
+        <span class="box-t">Reminder</span>
+        <p>INE is the primary reference for the exam. THM reinforces — where wording differs, INE wins. Sysmon
+           config credit: SwiftOnSecurity &amp; Olaf Hartong (community configs).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREATE TASK MODAL -->
+  <div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-label="Create a homework task">
+    <div class="modal-box">
+      <h3>Create a homework task</h3>
+      <p class="modal-sub">Add your own lab, reading or exercise to this session's homework list.</p>
+      <div class="field"><label for="tTitle">Task title *</label>
+        <input type="text" id="tTitle" placeholder="e.g. TryHackMe — Investigating with Splunk"></div>
+      <div class="field"><label for="tDesc">Description</label>
+        <textarea id="tDesc" placeholder="What should the student do?"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label for="tDue">Deadline</label><input type="date" id="tDue"></div>
+        <div class="field"><label>Type</label>
+          <div class="seg"><button type="button" data-type="mandatory" class="sel">Required</button>
+            <button type="button" data-type="optional">Optional</button></div></div>
+      </div>
+      <div class="field"><label>Links, labs or files</label>
+        <div id="tLinks"><div class="link-row">
+          <input type="text" placeholder="Label" class="lk-label">
+          <input type="text" placeholder="https://… or file.pdf" class="lk-url"></div></div>
+        <button type="button" class="btn-sm" id="addLink" style="margin-top:6px">＋ Add another link</button></div>
+      <div class="field"><label for="tDeliver">Deliverable</label>
+        <input type="text" id="tDeliver" placeholder="e.g. Screenshot of the completed room"></div>
+      <div class="modal-actions">
+        <button class="btn-sm" data-close>Cancel</button>
+        <button class="btn primary" id="tSave">Add to homework list</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagenav">
+    <a href="#" id="btnPrev"><small>Previous</small><span class="lbl">—</span></a>
+    <a href="#" id="btnNext" class="next"><small>Next</small><span class="lbl">—</span></a>
+  </div>
+  <p class="kbd-hint">Navigate with <span class="kbd">←</span> <span class="kbd">→</span> arrow keys</p>
+
+  </article>
+</div>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Session 03</span>
+    <span class="mono">Primary reference: INE eCIR v2</span>
+  </div>
+</footer>
+
+<script src="../assets/js/session.js"></script>
+<script src="../assets/js/homework.js"></script>
+<script src="../assets/js/quiz.js"></script>
+<script src="../assets/js/task-creator.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<svg viewBox="0 0 1040 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Malicious process tree reconstructed from Sysmon">
+<title>Process tree</title>
+<defs><marker id="p" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e0556b"/></marker></defs>
+<rect width="1040" height="420" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Reading a Process Tree from Sysmon EID 1</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Each box = one process-create event. Follow ParentImage → Image to rebuild the chain the attacker walked.</text>
+
+<!-- explorer -->
+<rect x="360" y="76" width="320" height="46" rx="8" fill="#132244" stroke="#2b3f70" stroke-width="1.4"/>
+<text x="376" y="104" fill="#c7d3e8" font-size="12.5">explorer.exe <tspan fill="#7e91b8" font-size="10.5">— normal parent (user session)</tspan></text>
+
+<!-- winword -->
+<rect x="360" y="146" width="320" height="46" rx="8" fill="#15213f" stroke="#d4af37" stroke-width="1.5"/>
+<text x="376" y="167" fill="#f0d78a" font-size="12.5" font-weight="700">WINWORD.EXE</text>
+<text x="376" y="184" fill="#93b0d8" font-size="10.5">opens Invoice_April.doc — the phishing lure</text>
+
+<!-- powershell -->
+<rect x="360" y="216" width="320" height="46" rx="8" fill="#241a2e" stroke="#8b7ce8" stroke-width="1.5"/>
+<text x="376" y="237" fill="#b6a9f2" font-size="12.5" font-weight="700">powershell.exe  -enc …  <tspan fill="#e0556b" font-size="10.5">⚠ hidden, encoded</tspan></text>
+<text x="376" y="254" fill="#93b0d8" font-size="10.5">Office spawning PowerShell = classic red flag</text>
+
+<!-- certutil -->
+<rect x="360" y="286" width="320" height="46" rx="8" fill="#2a1620" stroke="#e0556b" stroke-width="1.6"/>
+<text x="376" y="307" fill="#f2a6b4" font-size="12.5" font-weight="700">certutil.exe  -urlcache -split -f</text>
+<text x="376" y="324" fill="#c7d3e8" font-size="10.5">LOLBin downloads update.exe from update-cdn.top</text>
+
+<!-- update.exe -->
+<rect x="360" y="356" width="320" height="46" rx="8" fill="#2a1620" stroke="#e0556b" stroke-width="1.8"/>
+<text x="376" y="377" fill="#f2a6b4" font-size="12.5" font-weight="700">C:\ProgramData\update.exe</text>
+<text x="376" y="394" fill="#c7d3e8" font-size="10.5">runs → EID 3 network to 185.244.25.171:443 (C2)</text>
+
+<!-- arrows -->
+<path d="M520 122 L520 144" stroke="#7e91b8" stroke-width="1.8" marker-end="url(#p)"/>
+<path d="M520 192 L520 214" stroke="#e0556b" stroke-width="1.8" marker-end="url(#p)"/>
+<path d="M520 262 L520 284" stroke="#e0556b" stroke-width="1.8" marker-end="url(#p)"/>
+<path d="M520 332 L520 354" stroke="#e0556b" stroke-width="1.8" marker-end="url(#p)"/>
+
+<!-- side note -->
+<rect x="720" y="146" width="296" height="186" rx="9" fill="#0e1730" stroke="#2b3f70" stroke-width="1.3"/>
+<text x="738" y="172" fill="#f0d78a" font-size="12.5" font-weight="700">The SPL that rebuilds it</text>
+<text x="738" y="196" font-family="monospace" font-size="10.5" fill="#7fe0b4">index=sysmon EventID=1</text>
+<text x="738" y="214" font-family="monospace" font-size="10.5" fill="#7fe0b4">| table _time, ParentImage,</text>
+<text x="738" y="230" font-family="monospace" font-size="10.5" fill="#7fe0b4">        Image, CommandLine</text>
+<text x="738" y="248" font-family="monospace" font-size="10.5" fill="#7fe0b4">| sort _time</text>
+<text x="738" y="278" fill="#c7d3e8" font-size="10.5">Then pivot on the C2 IP:</text>
+<text x="738" y="298" font-family="monospace" font-size="10.5" fill="#37c7d4">index=sysmon EventID=3</text>
+<text x="738" y="314" font-family="monospace" font-size="10.5" fill="#37c7d4">dest_ip=185.244.25.171</text>
+</svg>

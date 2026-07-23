@@ -226,10 +226,201 @@ index=web_logs uri="*shell.php*" | sort + timestamp | table timestamp uri status
 index=web_logs uri="*shell.php*wget*" | table timestamp uri</code></pre></details>
   </div>
 
+  <!-- ============ SESSION 3 SET ============ -->
+  <div style="margin-top:48px;border-top:2px solid var(--line-soft);padding-top:8px"></div>
+  <h2 class="sec" id="s03" style="margin-top:24px">Session 3 · Windows &amp; Linux Telemetry</h2>
+  <p class="sec-desc">Built from the telemetry in Session 3 — Sysmon, Windows Security events and Linux auditd.
+     Same loop: ingest → parse → search → answer.</p>
+
+  <table class="content" style="width:100%">
+    <thead><tr><th>Challenge</th><th>File</th><th>Index</th><th>Time range</th></tr></thead>
+    <tbody>
+      <tr><td>Warm-up · Linux auth &amp; auditd</td><td><a href="data/linux-auth-audit.json" download>linux-auth-audit.json</a></td><td><code>linux_audit</code></td><td>2024-05-06 · All time</td></tr>
+      <tr><td>Scenario 1 · Windows process execution</td><td><a href="data/win-process-exec.json" download>win-process-exec.json</a></td><td><code>sysmon</code></td><td>2024-05-07 · All time</td></tr>
+      <tr><td>Scenario 2 · Windows persistence</td><td><a href="data/win-persistence.json" download>win-persistence.json</a></td><td><code>wineventlog</code></td><td>2024-05-07 · All time</td></tr>
+    </tbody>
+  </table>
+
+  <!-- WARM-UP LINUX -->
+  <h2 class="sec" id="s03-warmup" style="margin-top:32px">Warm-up · Linux Auth &amp; auditd</h2>
+  <p class="sec-desc">Host <code>web-prod-01</code> saw a burst of SSH activity overnight. Index <code>linux_audit</code>.
+     Fields: <code>timestamp, host, log_source, event_type, user, src_ip, src_country, process, command, result, auid, audit_key</code>.</p>
+  <div class="content">
+    <div class="q mcq" data-answer="b" data-why="Count failed ssh_login by src_ip — 45.137.21.88 fails across many usernames (brute force); the local IPs only succeed.">
+      <p><span class="qn">Q1</span> Which source IP is brute-forcing SSH across many usernames?</p>
+      <ul class="opts"><li data-opt="a">197.54.120.9</li><li data-opt="b">45.137.21.88</li><li data-opt="c">10.10.20.55</li><li data-opt="d">156.199.42.11</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="c" data-why="Filter result=success from 45.137.21.88 — the only success is user deploy.">
+      <p><span class="qn">Q2</span> Which account did the attacker successfully log in as from that IP?</p>
+      <ul class="opts"><li data-opt="a">root</li><li data-opt="b">admin</li><li data-opt="c">deploy</li><li data-opt="d">svc_ci</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="b" data-why="auditd execve with audit_key=recon shows nmap scanning 10.10.20.0/24 after access.">
+      <p><span class="qn">Q3</span> After gaining access, which recon tool did auditd record running as root?</p>
+      <ul class="opts"><li data-opt="a">masscan</li><li data-opt="b">nmap</li><li data-opt="c">netcat</li><li data-opt="d">hydra</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="box ine"><span class="box-t">Kill chain (MITRE)</span>
+      <p>T1110 Brute Force → T1078 Valid Accounts → T1098.004 SSH Authorized Keys → T1046 Network Service Discovery (nmap).</p></div>
+
+    <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--cyan);font-weight:600">Instructor · SPL solutions</summary>
+<pre><code># Q1 brute-force source
+index=linux_audit event_type=ssh_login result=failure | stats count by src_ip | sort - count
+# Q2 successful account from that IP
+index=linux_audit event_type=ssh_login result=success src_ip="45.137.21.88" | table timestamp user
+# Q3 recon tool (auditd execve)
+index=linux_audit event_type=execve audit_key=recon | table timestamp process command</code></pre></details>
+  </div>
+
+  <!-- SCENARIO 1 WINDOWS PROCESS EXEC -->
+  <h2 class="sec" id="s03-s1" style="margin-top:36px">Scenario 1 · Windows Process Execution (Phishing → LOLBin → C2)</h2>
+  <p class="sec-desc">Sysmon on <code>WIN-VICTIM01</code> captured a suspicious chain around 10:22. Rebuild it. Index <code>sysmon</code>.
+     Fields: <code>timestamp, host, EventID, event_type, User, Image, ParentImage, CommandLine, ProcessId, ParentProcessId, dest_ip, dest_port, Hashes</code>.</p>
+  <div class="content">
+    <div class="q mcq" data-answer="c" data-why="Sysmon EID 1 shows powershell.exe with ParentImage WINWORD.EXE — Office spawning a shell is the red flag.">
+      <p><span class="qn">Q1</span> Which parent process unusually spawned <code>powershell.exe</code>?</p>
+      <ul class="opts"><li data-opt="a">explorer.exe</li><li data-opt="b">cmd.exe</li><li data-opt="c">WINWORD.EXE</li><li data-opt="d">chrome.exe</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="b" data-why="certutil.exe -urlcache -split -f is a classic LOLBin download; it is the child of powershell here.">
+      <p><span class="qn">Q2</span> Which living-off-the-land binary (LOLBin) downloaded the payload?</p>
+      <ul class="opts"><li data-opt="a">bitsadmin.exe</li><li data-opt="b">certutil.exe</li><li data-opt="c">mshta.exe</li><li data-opt="d">regsvr32.exe</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="b" data-why="The certutil CommandLine contains the full URL http://update-cdn.top/win/update.exe.">
+      <p><span class="qn">Q3</span> What URL was the payload downloaded from?</p>
+      <ul class="opts">
+        <li data-opt="a">http://cdn-update.top/win.exe</li>
+        <li data-opt="b">http://update-cdn.top/win/update.exe</li>
+        <li data-opt="c">https://updates.microsoft.com/win/update.exe</li>
+        <li data-opt="d">http://185.244.25.171/payload.exe</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="c" data-why="certutil saved it as C:\ProgramData\update.exe, which then executes.">
+      <p><span class="qn">Q4</span> Where was the payload saved on disk?</p>
+      <ul class="opts"><li data-opt="a">C:\Temp\svchost.exe</li><li data-opt="b">C:\Users\Public\run.exe</li><li data-opt="c">C:\ProgramData\update.exe</li><li data-opt="d">C:\Windows\update.exe</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="b" data-why="The process-create event for update.exe carries the SHA256 9f2b3c8e1a77…18293a. The others are placeholder hashes of benign/parent processes.">
+      <p><span class="qn">Q5</span> What SHA-256 identifies the malicious payload (for blocklisting)?</p>
+      <ul class="opts">
+        <li data-opt="a">SHA256=aa11bb22cc33… (WINWORD)</li>
+        <li data-opt="b">SHA256=9f2b3c8e1a77…18293a</li>
+        <li data-opt="c">SHA256=cc33dd44ee55… (certutil)</li>
+        <li data-opt="d">SHA256=bb22cc33dd44… (powershell)</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="c" data-why="Sysmon EID 3 from update.exe shows the outbound connection to 185.244.25.171. The others are benign destinations in the noise.">
+      <p><span class="qn">Q6</span> Which IP did <code>update.exe</code> connect to (C2)?</p>
+      <ul class="opts"><li data-opt="a">142.250.185.68</li><li data-opt="b">13.107.42.14</li><li data-opt="c">185.244.25.171</li><li data-opt="d">10.10.20.10</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="d" data-why="The EID 3 events from update.exe use dest_port 443 to blend with normal HTTPS.">
+      <p><span class="qn">Q7</span> What port did the C2 connection use?</p>
+      <ul class="opts"><li data-opt="a">80</li><li data-opt="b">8080</li><li data-opt="c">4444</li><li data-opt="d">443</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="box ine"><span class="box-t">Kill chain (MITRE)</span>
+      <p>T1566 Phishing → T1204.002 User Execution → T1059.001 PowerShell → T1218/T1105 certutil Ingress Tool Transfer → T1071.001 C2 over HTTPS.</p></div>
+
+    <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--cyan);font-weight:600">Instructor · SPL solutions</summary>
+<pre><code># Q1 parent of powershell
+index=sysmon EventID=1 Image="*powershell.exe" | table _time ParentImage Image CommandLine
+# Q2 + Q3 LOLBin and the download URL
+index=sysmon EventID=1 Image="*certutil.exe" | table _time CommandLine
+# Q4 + Q5 payload path and hash
+index=sysmon EventID=1 Image="C:\\ProgramData\\update.exe" | table _time Image Hashes
+# Q6 + Q7 C2 destination
+index=sysmon EventID=3 Image="C:\\ProgramData\\update.exe" | stats count by dest_ip dest_port
+# rebuild the whole tree
+index=sysmon EventID=1 | table _time ParentImage Image CommandLine | sort _time</code></pre></details>
+  </div>
+
+  <!-- SCENARIO 2 WINDOWS PERSISTENCE -->
+  <h2 class="sec" id="s03-s2" style="margin-top:36px">Scenario 2 · Windows Persistence</h2>
+  <p class="sec-desc">Right after the execution, the attacker dug in on <code>WIN-VICTIM01</code> (~10:31). Index <code>wineventlog</code>.
+     Fields: <code>timestamp, host, source, EventID, event_type, SubjectUserName, TargetUserName, GroupName, ServiceName, ServiceFileName, TaskName, RegistryKey, RegistryValue</code>.</p>
+  <div class="content">
+    <div class="q mcq" data-answer="b" data-why="Event 4720 shows a new local user svc_update created by j.hassan.">
+      <p><span class="qn">Q1</span> What new local user account was created (Event ID 4720)?</p>
+      <ul class="opts"><li data-opt="a">admin2</li><li data-opt="b">svc_update</li><li data-opt="c">backupadmin</li><li data-opt="d">helpdesk</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="c" data-why="Event 4732 adds svc_update to the Administrators group — privilege escalation.">
+      <p><span class="qn">Q2</span> Which privileged group was that account added to (4732)?</p>
+      <ul class="opts"><li data-opt="a">Remote Desktop Users</li><li data-opt="b">Backup Operators</li><li data-opt="c">Administrators</li><li data-opt="d">Power Users</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="b" data-why="Event 7045 by j.hassan installs the service WinUpdateSvc (the others are benign installs by SYSTEM).">
+      <p><span class="qn">Q3</span> What is the name of the malicious service installed (7045)?</p>
+      <ul class="opts"><li data-opt="a">GoogleUpdaterService</li><li data-opt="b">WinUpdateSvc</li><li data-opt="c">edgeupdate</li><li data-opt="d">MsSqlServerOLAP</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="c" data-why="The ServiceFileName points at the earlier payload: C:\ProgramData\update.exe -svc.">
+      <p><span class="qn">Q4</span> What binary does that malicious service run?</p>
+      <ul class="opts">
+        <li data-opt="a">C:\Windows\System32\svchost.exe</li>
+        <li data-opt="b">C:\Program Files\...\legit.exe</li>
+        <li data-opt="c">C:\ProgramData\update.exe -svc</li>
+        <li data-opt="d">C:\Temp\svc.exe</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="b" data-why="Event 4698 creates the scheduled task \Microsoft\Windows\WindowsUpdateCheck for persistence.">
+      <p><span class="qn">Q5</span> What scheduled task was created (4698)?</p>
+      <ul class="opts">
+        <li data-opt="a">\Microsoft\Windows\Defrag\ScheduledDefrag</li>
+        <li data-opt="b">\Microsoft\Windows\WindowsUpdateCheck</li>
+        <li data-opt="c">\GoogleUpdateTaskMachineCore</li>
+        <li data-opt="d">\OneDriveStandaloneUpdater</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="b" data-why="Sysmon EID 13 sets a value under the Run key — the classic auto-start persistence location.">
+      <p><span class="qn">Q6</span> Which registry key was set for Run-key persistence (Sysmon 13)?</p>
+      <ul class="opts">
+        <li data-opt="a">HKLM\...\Winlogon\Shell</li>
+        <li data-opt="b">HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</li>
+        <li data-opt="c">HKCU\...\Explorer\RunMRU</li>
+        <li data-opt="d">HKLM\SYSTEM\CurrentControlSet\Services</li>
+      </ul>
+      <div class="mcq-fb"></div>
+    </div>
+    <div class="q mcq" data-answer="c" data-why="Event 1102 (Security log cleared) was generated under svc_update — the new admin account covering tracks.">
+      <p><span class="qn">Q7</span> Which account cleared the Security log (1102) to cover tracks?</p>
+      <ul class="opts"><li data-opt="a">j.hassan</li><li data-opt="b">SYSTEM</li><li data-opt="c">svc_update</li><li data-opt="d">administrator</li></ul>
+      <div class="mcq-fb"></div>
+    </div>
+
+    <div class="box ine"><span class="box-t">Kill chain (MITRE)</span>
+      <p>T1136.001 Create Local Account → T1098 / T1078 Account Manipulation → T1543.003 Windows Service →
+         T1053.005 Scheduled Task → T1547.001 Run Key → T1070.001 Clear Windows Event Logs.</p></div>
+
+    <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--cyan);font-weight:600">Instructor · SPL solutions</summary>
+<pre><code># Q1 new user
+index=wineventlog EventID=4720 | table _time SubjectUserName TargetUserName
+# Q2 added to group
+index=wineventlog EventID=4732 | table _time TargetUserName GroupName
+# Q3 + Q4 malicious service (filter out SYSTEM's benign installs)
+index=wineventlog EventID=7045 SubjectUserName="j.hassan" | table _time ServiceName ServiceFileName
+# Q5 scheduled task
+index=wineventlog EventID=4698 | table _time TaskName
+# Q6 run-key persistence
+index=wineventlog EventID=13 | table _time RegistryKey RegistryValue
+# Q7 log cleared
+index=wineventlog EventID=1102 | table _time SubjectUserName</code></pre></details>
+  </div>
+
   <div class="box tip" style="margin-top:24px"><span class="box-t">How to run this in class</span>
     <p>Give students the dataset + questions only. They ingest, investigate, and answer. Reveal the SPL
-       and the answer feedback for grading. These three challenges map to Sessions 2–4 (SIEM &amp; detection);
-       harder DFIR challenges arrive in Sessions 9–10.</p></div>
+       and the answer feedback for grading. The Session 2 set (VPN · SSH · Web) covers SIEM basics; the
+       Session 3 set (Linux auditd · Windows Sysmon · persistence) covers telemetry &amp; SPL. Harder DFIR
+       challenges arrive in Sessions 9–10.</p></div>
 
 </main>
 
