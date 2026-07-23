@@ -125,8 +125,9 @@ sudo /opt/splunk/bin/splunk add index linux</code></pre>
   </div>
 
   <h3>Forwarder — WIN-VICTIM01</h3>
-  <p>Install the Windows UF (.msi). Create these in
-     <code>...\SplunkUniversalForwarder\etc\system\local\</code>:</p>
+  <p>Install the Windows UF (.msi) — set Receiving Indexer <code>10.10.20.10:9997</code>, leave Deployment Server blank.
+     Create these in <code>...\SplunkUniversalForwarder\etc\system\local\</code>
+     (<strong>open Notepad as Administrator</strong>, and save as <code>inputs.conf</code> — <strong>not</strong> <code>inputs.conf.txt</code>):</p>
   <p><strong>inputs.conf</strong> — what to collect:</p>
 <pre><code>[WinEventLog://Security]
 disabled = 0
@@ -233,18 +234,45 @@ index=sysmon EventID=3 | stats count by Image, dest_ip, dest_port
 index=linux_audit event_type=execve user=root | table _time, process, command</code></pre>
 
   <!-- TROUBLE -->
-  <h2 class="sec" id="trouble">Troubleshooting</h2>
+  <h2 class="sec" id="trouble">Troubleshooting — real gotchas from the build</h2>
+  <p class="muted" style="margin-top:-4px">Every one of these actually happened building this lab. Match the symptom, apply the fix.</p>
   <table>
-    <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+    <thead><tr><th>Symptom</th><th>Cause → Fix</th></tr></thead>
     <tbody>
-      <tr><td>No data in Splunk</td><td>Forwarder running? <code>outputs.conf</code> server/port right? 9997 enabled? Index name matches?</td></tr>
-      <tr><td>Web UI won't open</td><td><code>sudo /opt/splunk/bin/splunk status</code>; <code>sudo ufw allow 8000/tcp</code></td></tr>
-      <tr><td>VMs can't ping</td><td>Same VMnet? Static IPs same subnet? Allow ICMP on Windows Firewall</td></tr>
+      <tr><td>Victim can't ping the SOC server</td><td>Two host-only nets don't route → put <strong>all</strong> lab adapters on the <strong>same VMnet10</strong>; allow ICMP on Windows Firewall</td></tr>
+      <tr><td><code>Invalid YAML: inconsistent indentation</code></td><td>Netplan is space-sensitive → 2-space indent, block is <code>ethernets:</code> (not <code>ethernet:</code>)</td></tr>
+      <tr><td>netplan "permissions … too open"</td><td><code>sudo chmod 600 /etc/netplan/00-installer-config.yaml</code></td></tr>
+      <tr><td>"Oh no! Something has gone wrong" (GNOME)</td><td>You installed Ubuntu <strong>Desktop</strong> → reinstall with the <strong>Server</strong> ISO</td></tr>
+      <tr><td>Splunk prints a deprecation warning, won't start</td><td>Running as root → add <code>--run-as-root</code></td></tr>
+      <tr><td><code>splunk.service: Failed … exit-code</code> on boot</td><td>Unit assumes non-root → <code>splunk enable boot-start -user root</code>, then <code>systemctl daemon-reload</code></td></tr>
+      <tr><td>Forwarder: "target machine actively refused it" (9997)</td><td>Splunk down or 9997 not listening → start Splunk, <code>splunk enable listen 9997</code>, check <code>ss -tlnp | grep 9997</code></td></tr>
+      <tr><td>"Received event for unconfigured/disabled/deleted index"</td><td>Index missing after a rebuild → recreate <code>splunk add index wineventlog</code> / <code>linux</code></td></tr>
+      <tr><td><code>Restart-Service … cannot open service</code></td><td>PowerShell not elevated → run it <strong>as Administrator</strong></td></tr>
+      <tr><td>VMware "not enough space" / NAT broken / can't reach internet</td><td>Host C: drive full → free space, keep VMs <strong>off C:/OneDrive</strong>, ensure <strong>VMware NAT Service</strong> is running</td></tr>
+      <tr><td>Web UI won't open</td><td><code>splunk status</code>; <code>sudo ufw allow 8000/tcp</code></td></tr>
       <tr><td>VMware slow</td><td>Hyper-V still on — see Part 0</td></tr>
-      <tr><td>No <code>index=sysmon</code> data</td><td>Sysmon service running? Channel name exact in <code>inputs.conf</code>? Forwarder restarted? <code>sysmon</code> index created?</td></tr>
+      <tr><td>No <code>index=sysmon</code> data</td><td>Sysmon running? exact channel in <code>inputs.conf</code>? forwarder restarted? <code>sysmon</code> index created?</td></tr>
       <tr><td>auditd rules reset on reboot</td><td>Put rules in <code>/etc/audit/rules.d/soc.rules</code> so they persist</td></tr>
     </tbody>
   </table>
+
+  <h2 class="sec" id="snapshots">Snapshots — checkpoint at every milestone</h2>
+  <p class="muted" style="margin-top:-4px">Right-click the VM → Snapshot → Take Snapshot. Never move on with a broken step.</p>
+  <div class="verify">
+    <h4>✅ Take these snapshots</h4>
+    <ul>
+      <li><code>L1-network-ready</code> — all 3 VMs ping each other <em>and</em> the internet</li>
+      <li><code>L2-splunk-ready</code> — Splunk installed, indexes created, 9997 listening</li>
+      <li><code>L2-complete</code> — <strong>both</strong> <code>wineventlog</code> and <code>linux</code> returning live events</li>
+      <li><code>sysmon-ready</code> / <code>L3-telemetry-ready</code> — Sysmon + auditd flowing (Part 3)</li>
+    </ul>
+  </div>
+
+  <div class="box tip">
+    <span class="box-t">Forwarder health check</span>
+    <p>To confirm a forwarder is talking to Splunk (even before your logs arrive):
+       <code>index=_internal host=WIN-VICTIM01</code> or <code>host=LNX-VICTIM01</code> — events here mean the pipe is up.</p>
+  </div>
 
   <div class="box note">
     <span class="box-t">Next parts</span>
