@@ -1,0 +1,69 @@
+<svg viewBox="0 0 1040 440" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Pivoting: Logon ID and Process ID link events into one story">
+<title>Pivoting methodology</title>
+<defs>
+<marker id="pv" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker>
+<marker id="pg" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#8b7ce8"/></marker>
+</defs>
+<rect width="1040" height="440" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Pivoting — Two Keys Turn Events Into a Story</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">INE: "log analysis builds a STORY, and the story dictates the response plan."</text>
+
+<!-- LEFT: Logon ID chain -->
+<rect x="24" y="76" width="470" height="150" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.4"/>
+<text x="40" y="100" fill="#f0d78a" font-size="13.5" font-weight="700">KEY 1 · Logon ID  — "who, and what did they do?"</text>
+<rect x="40" y="112" width="130" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="105" y="130" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">4624 logon</text>
+<text x="105" y="146" text-anchor="middle" fill="#8ea3c8" font-size="9.5">LogonId 0x5D6AC</text>
+<rect x="196" y="112" width="130" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="261" y="130" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">4720 / 4732</text>
+<text x="261" y="146" text-anchor="middle" fill="#8ea3c8" font-size="9.5">user made / to admins</text>
+<rect x="352" y="112" width="130" height="42" rx="7" fill="#241a2e" stroke="#8b7ce8"/>
+<text x="417" y="130" text-anchor="middle" fill="#b6a9f2" font-size="11" font-weight="700">Sysmon EID 1</text>
+<text x="417" y="146" text-anchor="middle" fill="#8ea3c8" font-size="9.5">User Context</text>
+<path d="M170 133 L194 133" stroke="#37c7d4" stroke-width="1.7" marker-end="url(#pv)"/>
+<path d="M326 133 L350 133" stroke="#37c7d4" stroke-width="1.7" marker-end="url(#pv)"/>
+<text x="40" y="182" fill="#93b0d8" font-size="11">Same <tspan fill="#f0d78a" font-weight="700">LogonId</tspan> ties a login to every action that session took.</text>
+<text x="40" y="204" fill="#8ea3c8" font-size="10.5">Filter all Security + Sysmon events with that LogonId → the account's whole story.</text>
+
+<!-- RIGHT: Process ID chain -->
+<rect x="546" y="76" width="470" height="150" rx="10" fill="#0e1730" stroke="#3fa87a" stroke-width="1.4"/>
+<text x="562" y="100" fill="#7fe0b4" font-size="13.5" font-weight="700">KEY 2 · Process ID — "what did the process touch?"</text>
+<rect x="562" y="112" width="120" height="42" rx="7" fill="#101f1a" stroke="#3fa87a"/>
+<text x="622" y="130" text-anchor="middle" fill="#8fd0b4" font-size="11" font-weight="700">Sysmon EID 1</text>
+<text x="622" y="146" text-anchor="middle" fill="#8ea3c8" font-size="9.5">ProcessId 4390</text>
+<rect x="700" y="106" width="150" height="24" rx="6" fill="#15213f" stroke="#2b3f70"/>
+<text x="775" y="122" text-anchor="middle" fill="#c7d3e8" font-size="10">EID 3 · network (C2 IP)</text>
+<rect x="700" y="134" width="150" height="24" rx="6" fill="#15213f" stroke="#2b3f70"/>
+<text x="775" y="150" text-anchor="middle" fill="#c7d3e8" font-size="10">EID 11 · file dropped</text>
+<rect x="700" y="162" width="150" height="24" rx="6" fill="#15213f" stroke="#2b3f70"/>
+<text x="775" y="178" text-anchor="middle" fill="#c7d3e8" font-size="10">EID 13 · registry Run key</text>
+<path d="M682 133 L698 118" stroke="#3fa87a" stroke-width="1.6" marker-end="url(#pv)"/>
+<path d="M682 138 L698 146" stroke="#3fa87a" stroke-width="1.6" marker-end="url(#pv)"/>
+<path d="M682 143 L698 172" stroke="#3fa87a" stroke-width="1.6" marker-end="url(#pv)"/>
+<text x="562" y="204" fill="#8fd0b4" font-size="10.5">Sysmon 3/11/13 lack Logon ID — pivot by <tspan fill="#7fe0b4" font-weight="700">ProcessId</tspan> to the EID 1 for full context.</text>
+
+<!-- BOTTOM: pivot switch -->
+<rect x="24" y="248" width="992" height="104" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.5"/>
+<text x="40" y="274" fill="#b6a9f2" font-size="13.5" font-weight="700">The pivot switch — INE: "switch pivots hash → PID → IP → user"</text>
+<rect x="60" y="288" width="150" height="44" rx="8" fill="#0e1730" stroke="#8b7ce8"/>
+<text x="135" y="315" text-anchor="middle" fill="#c7d3e8" font-size="12">hash</text>
+<rect x="270" y="288" width="150" height="44" rx="8" fill="#0e1730" stroke="#8b7ce8"/>
+<text x="345" y="315" text-anchor="middle" fill="#c7d3e8" font-size="12">PID</text>
+<rect x="480" y="288" width="150" height="44" rx="8" fill="#0e1730" stroke="#8b7ce8"/>
+<text x="555" y="315" text-anchor="middle" fill="#c7d3e8" font-size="12">IP</text>
+<rect x="690" y="288" width="150" height="44" rx="8" fill="#0e1730" stroke="#8b7ce8"/>
+<text x="765" y="315" text-anchor="middle" fill="#c7d3e8" font-size="12">user</text>
+<rect x="878" y="288" width="120" height="44" rx="8" fill="#2a1620" stroke="#e0556b"/>
+<text x="938" y="311" text-anchor="middle" fill="#f2a6b4" font-size="11" font-weight="700">patient zero</text>
+<text x="938" y="325" text-anchor="middle" fill="#8ea3c8" font-size="9">+ blast radius</text>
+<path d="M212 310 L268 310" stroke="#8b7ce8" stroke-width="1.8" marker-end="url(#pg)"/>
+<path d="M422 310 L478 310" stroke="#8b7ce8" stroke-width="1.8" marker-end="url(#pg)"/>
+<path d="M632 310 L688 310" stroke="#8b7ce8" stroke-width="1.8" marker-end="url(#pg)"/>
+<path d="M842 310 L876 310" stroke="#8b7ce8" stroke-width="1.8" marker-end="url(#pg)"/>
+
+<text x="28" y="384" fill="#f0d78a" font-size="12" font-weight="700">The golden question:</text>
+<text x="150" y="384" fill="#c7d3e8" font-size="12">"Where did it come FROM, and where did it GO?" — never stop at the first host.</text>
+<text x="28" y="410" fill="#8ea3c8" font-size="11">INE chain example: 4688 command line → Sysmon 3 destination IP → Sysmon 11 dropped file → keep pivoting until the story is complete.</text>
+<text x="28" y="430" fill="#7e91b8" font-size="10.5">This is the core analyst skill for every remaining session.</text>
+</svg>

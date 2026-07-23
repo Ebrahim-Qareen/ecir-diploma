@@ -645,3 +645,36 @@ hr{border:none;border-top:1px solid var(--line);margin:28px 0}
   .page-head h1{font-size:25px}
   .topnav{display:none}
 }
+
+/* ===== Investigation challenges — case-file design ===== */
+.chal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:20px 0 8px}
+.chal-card{display:block;text-decoration:none;background:var(--bg-alt);border:1px solid var(--line-soft);border-left-width:4px;border-radius:var(--radius);padding:15px 17px;transition:transform .12s ease,border-color .12s ease}
+.chal-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.chal-card.easy{border-left-color:var(--green)}
+.chal-card.med{border-left-color:var(--gold)}
+.chal-card.hard{border-left-color:var(--red)}
+.chal-card h4{margin:0 0 3px;color:var(--text);font-size:15px}
+.chal-card .cc-idx{font-family:var(--mono);font-size:11.5px;color:var(--cyan)}
+.chal-card .cc-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;align-items:center}
+.diff{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 9px;border-radius:20px}
+.diff.easy{background:rgba(63,168,122,.16);color:#7fe0b4}
+.diff.med{background:rgba(212,175,55,.16);color:var(--gold-soft)}
+.diff.hard{background:rgba(224,85,107,.16);color:#f2a6b4}
+.mitre{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(139,124,232,.16);color:#b6a9f2;white-space:nowrap}
+.casefile{border:1px solid var(--line-soft);border-radius:var(--radius);margin:24px 0;overflow:hidden;scroll-margin-top:80px}
+.casefile.easy{border-top:3px solid var(--green)}
+.casefile.med{border-top:3px solid var(--gold)}
+.casefile.hard{border-top:3px solid var(--red)}
+.case-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:13px 18px;background:var(--bg-alt);border-bottom:1px solid var(--line-soft)}
+.case-head h3{margin:0;font-size:16px;color:var(--text)}
+.case-head .ch-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.case-body{padding:18px}
+.brief{border-left:3px solid var(--cyan);background:rgba(55,199,212,.06);padding:12px 15px;border-radius:var(--radius-sm);margin-bottom:14px;font-size:14px}
+.brief b{color:var(--cyan)}
+.evidence{display:flex;flex-wrap:wrap;gap:12px 26px;padding:12px 15px;background:var(--panel-2);border-radius:var(--radius-sm);margin-bottom:14px}
+.evidence .ev span{display:block;font-size:10.5px;color:var(--text-4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.evidence .ev b{font-size:13.5px;color:var(--text)}
+.mitre-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0 16px}
+.mitre-row .lbl{font-size:11px;color:var(--text-4);text-transform:uppercase;letter-spacing:.5px;margin-right:2px}
+.inst-spl{margin-top:12px;border-top:1px dashed var(--line-soft);padding-top:12px}
+.inst-spl summary{cursor:pointer;color:var(--cyan);font-weight:600;font-size:13.5px}

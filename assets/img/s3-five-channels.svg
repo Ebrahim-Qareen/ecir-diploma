@@ -1,0 +1,51 @@
+<svg viewBox="0 0 1040 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="The five key DFIR Windows channels">
+<title>Five DFIR channels</title>
+<rect width="1040" height="380" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">The Five Windows Channels a Responder Lives In</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">INE M4: modern attacks (fileless, LOLBins) hide outside Security — know all five.</text>
+
+<!-- 1 Security -->
+<rect x="24" y="76" width="196" height="250" rx="10" fill="#15213f" stroke="#d4af37" stroke-width="1.6"/>
+<text x="122" y="102" text-anchor="middle" fill="#f0d78a" font-size="13" font-weight="700">Security</text>
+<text x="122" y="126" text-anchor="middle" fill="#c7d3e8" font-size="10.5">logon 4624/4625</text>
+<text x="122" y="144" text-anchor="middle" fill="#c7d3e8" font-size="10.5">accounts 4720/4732</text>
+<text x="122" y="162" text-anchor="middle" fill="#c7d3e8" font-size="10.5">process 4688</text>
+<text x="122" y="180" text-anchor="middle" fill="#c7d3e8" font-size="10.5">object access 4663</text>
+<text x="122" y="300" text-anchor="middle" fill="#bda45f" font-size="10">brute force · priv-esc</text>
+
+<!-- 2 Sysmon -->
+<rect x="228" y="76" width="196" height="250" rx="10" fill="#101f1a" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="326" y="102" text-anchor="middle" fill="#7fe0b4" font-size="13" font-weight="700">Sysmon/Operational</text>
+<text x="326" y="126" text-anchor="middle" fill="#c7d3e8" font-size="10.5">process 1 (+hash)</text>
+<text x="326" y="144" text-anchor="middle" fill="#c7d3e8" font-size="10.5">network 3</text>
+<text x="326" y="162" text-anchor="middle" fill="#c7d3e8" font-size="10.5">file 11 · registry 13</text>
+<text x="326" y="180" text-anchor="middle" fill="#c7d3e8" font-size="10.5">DNS 22</text>
+<text x="326" y="300" text-anchor="middle" fill="#8fd0b4" font-size="10">rich correlated telemetry</text>
+
+<!-- 3 PowerShell -->
+<rect x="432" y="76" width="196" height="250" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.6"/>
+<text x="530" y="102" text-anchor="middle" fill="#b6a9f2" font-size="13" font-weight="700">PowerShell/Op</text>
+<text x="530" y="128" text-anchor="middle" fill="#f2a6b4" font-size="11" font-weight="700">4104 script block</text>
+<text x="530" y="146" text-anchor="middle" fill="#c7d3e8" font-size="10.5">(the full code!)</text>
+<text x="530" y="168" text-anchor="middle" fill="#c7d3e8" font-size="10.5">4103 command invoke</text>
+<text x="530" y="300" text-anchor="middle" fill="#b0a3e8" font-size="10">fileless · LOLBins</text>
+
+<!-- 4 TaskScheduler -->
+<rect x="636" y="76" width="196" height="250" rx="10" fill="#0e1730" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="734" y="102" text-anchor="middle" fill="#37c7d4" font-size="13" font-weight="700">TaskScheduler/Op</text>
+<text x="734" y="128" text-anchor="middle" fill="#c7d3e8" font-size="10.5">106 task registered</text>
+<text x="734" y="146" text-anchor="middle" fill="#c7d3e8" font-size="10.5">200/201 started</text>
+<text x="734" y="164" text-anchor="middle" fill="#c7d3e8" font-size="10.5">102 completed</text>
+<text x="734" y="300" text-anchor="middle" fill="#93b8d8" font-size="10">persistence</text>
+
+<!-- 5 WMI -->
+<rect x="844" y="76" width="172" height="250" rx="10" fill="#0e1730" stroke="#e0556b" stroke-width="1.5"/>
+<text x="930" y="102" text-anchor="middle" fill="#f2a6b4" font-size="13" font-weight="700">WMI-Activity/Op</text>
+<text x="930" y="128" text-anchor="middle" fill="#c7d3e8" font-size="10.5">5857–5861</text>
+<text x="930" y="146" text-anchor="middle" fill="#c7d3e8" font-size="10.5">queries / consumers</text>
+<text x="930" y="300" text-anchor="middle" fill="#e0889a" font-size="10">stealthy recon</text>
+
+<text x="28" y="352" fill="#8ea3c8" font-size="11">Plus Linux: <tspan fill="#c7d3e8">auth.log / secure</tspan> (SSH, sudo) · <tspan fill="#c7d3e8">journald</tspan> · <tspan fill="#c7d3e8">audit.log</tspan> (auditd — syscalls, forensic-grade).</text>
+<text x="28" y="372" fill="#7e91b8" font-size="10.5">Common mistake (INE): reading only the Security log. Persistence and fileless attacks live in the other four.</text>
+</svg>

@@ -1,0 +1,45 @@
+<svg viewBox="0 0 1040 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Anatomy of a 4624 logon event">
+<title>4624 anatomy</title>
+<rect width="1040" height="380" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Read One Event Before You Query Thousands — the 4624 Logon</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- event card -->
+<rect x="24" y="60" width="560" height="296" rx="10" fill="#0e1730" stroke="#2b3f70" stroke-width="1.4"/>
+<rect x="24" y="60" width="560" height="34" rx="10" fill="#15213f"/>
+<text x="40" y="82" fill="#f0d78a" font-size="13" font-weight="700">Event ID 4624 — An account was successfully logged on</text>
+<text x="40" y="120" fill="#8ea3c8" font-size="11.5">Subject (who requested it)</text>
+<text x="40" y="140" fill="#c7d3e8" font-size="12" font-family="monospace">  Security ID:        SYSTEM</text>
+<text x="40" y="162" fill="#8ea3c8" font-size="11.5">New Logon (who logged on)</text>
+<text x="40" y="182" fill="#7fe0b4" font-size="12" font-family="monospace">  Account Name:       j.hassan</text>
+<text x="40" y="202" fill="#c7d3e8" font-size="12" font-family="monospace">  Account Domain:     WIN-VICTIM01</text>
+<text x="40" y="222" fill="#f2a6b4" font-size="12" font-family="monospace">  Logon ID:           0x5D6AC</text>
+<text x="40" y="248" fill="#8ea3c8" font-size="11.5">Logon Information</text>
+<text x="40" y="268" fill="#f2a6b4" font-size="12" font-family="monospace">  Logon Type:         10  (RemoteInteractive/RDP)</text>
+<text x="40" y="290" fill="#8ea3c8" font-size="11.5">Network Information</text>
+<text x="40" y="310" fill="#7fe0b4" font-size="12" font-family="monospace">  Source Network Addr: 45.137.21.88</text>
+<text x="40" y="330" fill="#c7d3e8" font-size="12" font-family="monospace">  Workstation Name:    kali</text>
+
+<!-- annotations -->
+<text x="612" y="80" fill="#f0d78a" font-size="13" font-weight="700">The 5 fields that carry the case</text>
+
+<rect x="612" y="96" width="404" height="46" rx="8" fill="#15213f" stroke="#3fa87a" stroke-width="1.3"/>
+<text x="628" y="115" fill="#7fe0b4" font-size="11.5" font-weight="700">Account Name</text>
+<text x="628" y="132" fill="#c7d3e8" font-size="10.5">Whose session is this? Off-pattern name = red flag.</text>
+
+<rect x="612" y="150" width="404" height="46" rx="8" fill="#2a1620" stroke="#e0556b" stroke-width="1.3"/>
+<text x="628" y="169" fill="#f2a6b4" font-size="11.5" font-weight="700">Logon Type</text>
+<text x="628" y="186" fill="#c7d3e8" font-size="10.5">2 local · 3 network · 10 RDP · 5 service · 7 unlock.</text>
+
+<rect x="612" y="204" width="404" height="46" rx="8" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.3"/>
+<text x="628" y="223" fill="#b6a9f2" font-size="11.5" font-weight="700">Logon ID</text>
+<text x="628" y="240" fill="#c7d3e8" font-size="10.5">The pivot key — links this login to everything it did.</text>
+
+<rect x="612" y="258" width="404" height="46" rx="8" fill="#15213f" stroke="#37c7d4" stroke-width="1.3"/>
+<text x="628" y="277" fill="#37c7d4" font-size="11.5" font-weight="700">Source Network Address</text>
+<text x="628" y="294" fill="#c7d3e8" font-size="10.5">Where from? Unexpected IP = investigate.</text>
+
+<rect x="612" y="312" width="404" height="40" rx="8" fill="#15213f" stroke="#d4af37" stroke-width="1.3"/>
+<text x="628" y="331" fill="#f0d78a" font-size="11.5" font-weight="700">Workstation Name</text>
+<text x="628" y="347" fill="#c7d3e8" font-size="10.5">`kali` instead of a corporate name = big red flag.</text>
+</svg>

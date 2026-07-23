@@ -142,20 +142,20 @@
   </div>
 
   <!-- SESSION 3 -->
-  <h2 class="sec" id="s03" style="margin-top:40px">Session 3 · Read the Telemetry, Speak SPL</h2>
-  <p class="sec-desc"><a href="../session-03/index.html#p18">Open in the session →</a></p>
+  <h2 class="sec" id="s03" style="margin-top:40px">Session 3 · Read the Telemetry, Think Like an Analyst</h2>
+  <p class="sec-desc"><a href="../session-03/index.html#p20">Open in the session →</a></p>
   <div class="cheat">
     <div class="cheat-head"><h3>📋 Session 3 Cheat Sheet</h3>
       <a class="btn-sm" href="../session-03/index.html" style="text-decoration:none">▶ Go to Session 3</a></div>
     <div class="cheat-grid">
-      <div class="cheat-card"><h5>Windows Event IDs</h5><ul><li><code>4624</code>/<code>4625</code> logon ok / failed</li><li><code>4672</code> special privileges</li><li><code>4720</code>/<code>4732</code> user made / added to group</li><li><code>7045</code> service · <code>4698</code> task</li><li><code>1102</code> log cleared (⚠)</li></ul></div>
-      <div class="cheat-card"><h5>Logon types (4624)</h5><ul><li><code>2</code> interactive · <code>3</code> network</li><li><code>10</code> RDP · <code>5</code> service · <code>7</code> unlock</li></ul></div>
-      <div class="cheat-card"><h5>Sysmon Event IDs</h5><ul><li><code>1</code> process (parent, cmdline, hash)</li><li><code>3</code> network · <code>7</code> image · <code>8</code> remote thread</li><li><code>11</code> file · <code>13</code> registry · <code>22</code> DNS</li></ul></div>
-      <div class="cheat-card"><h5>Windows channels</h5><ul><li>Security · System · Application</li><li>Microsoft-Windows-Sysmon/Operational</li><li>PowerShell/Operational (<code>4104</code>)</li></ul></div>
-      <div class="cheat-card"><h5>Linux telemetry</h5><ul><li><code>/var/log/auth.log</code> — SSH, sudo</li><li><code>journalctl</code> — systemd journal</li><li><code>/var/log/audit/audit.log</code> — auditd</li><li><code>auditctl -S execve -k proc</code></li></ul></div>
-      <div class="cheat-card"><h5>SPL commands</h5><ul><li><code>| stats count by field</code></li><li><code>| table _time, a, b</code> · <code>| top field</code></li><li><code>| eval new=…</code> · <code>| rex field=… "…"</code></li><li><code>| sort -count</code> · <code>| dedup field</code></li></ul></div>
-      <div class="cheat-card"><h5>Deploy Sysmon</h5><ul><li><code>Sysmon64.exe -accepteula -i config.xml</code></li><li>Config: SwiftOnSecurity / Olaf Hartong</li><li>inputs.conf → Sysmon/Operational → <code>index=sysmon</code></li></ul></div>
-      <div class="cheat-card"><h5>Core hunts (SPL)</h5><ul><li>Office spawns shell: <code>ParentImage="*WINWORD*"</code></li><li>URLs in cmdline: <code>| rex … https?://</code></li><li>C2 pivot: <code>EventID=3 dest_ip=…</code></li></ul></div>
+      <div class="cheat-card"><h5>Five DFIR channels</h5><ul><li><b>Security</b> — 4624/4625, 4720/4732</li><li><b>Sysmon</b> — 1/3/11/13/22</li><li><b>PowerShell</b> — 4104 (the code)</li><li><b>TaskScheduler</b> — 106/200</li><li><b>WMI-Activity</b> — 5857–5861</li></ul></div>
+      <div class="cheat-card"><h5>Windows Event IDs</h5><ul><li><code>4624</code>/<code>4625</code> logon ok / failed</li><li><code>4648</code> explicit creds (PtH)</li><li><code>4720</code>/<code>4732</code> user / to admins</li><li><code>7045</code> service · <code>4104</code> PS · <code>1102</code> log cleared</li></ul></div>
+      <div class="cheat-card"><h5>Logon types (4624)</h5><ul><li><code>2</code> local · <code>3</code> network</li><li><code>10</code> RDP · <code>5</code> service · <code>7</code> unlock</li></ul></div>
+      <div class="cheat-card"><h5>Sysmon Event IDs</h5><ul><li><code>1</code> process (parent, cmdline, hash)</li><li><code>3</code> network · <code>11</code> file · <code>13</code> registry</li><li><code>22</code> DNS · <code>23/24</code> delete/clipboard</li></ul></div>
+      <div class="cheat-card"><h5>Pivoting (the method)</h5><ul><li><b>Logon ID</b> → login ↔ account actions</li><li><b>ProcessId</b> → process ↔ net/file/reg</li><li>Switch: hash → PID → IP → user</li><li>"Where FROM, where GO?"</li></ul></div>
+      <div class="cheat-card"><h5>First response (5 min)</h5><ul><li>Orient → validate → scope</li><li>→ contain → document</li><li>Pivot once on IP/hash/user</li></ul></div>
+      <div class="cheat-card"><h5>Linux telemetry</h5><ul><li><code>/var/log/auth.log</code> — SSH, sudo</li><li><code>journalctl --since</code></li><li><code>/var/log/audit/audit.log</code> — auditd</li><li>RHEL: <code>secure</code>, <code>messages</code></li></ul></div>
+      <div class="cheat-card"><h5>Deploy Sysmon</h5><ul><li><code>Sysmon64.exe -accepteula -i config.xml</code></li><li>Config: SwiftOnSecurity (exclude noise)</li><li>inputs.conf → Sysmon/Operational → <code>index=sysmon</code></li></ul></div>
     </div>
   </div>
 

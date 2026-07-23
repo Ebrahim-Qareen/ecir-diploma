@@ -1,0 +1,49 @@
+<svg viewBox="0 0 1040 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Anatomy of a Sysmon Event ID 1 process-create record">
+<title>Sysmon EID 1 anatomy</title>
+<rect width="1040" height="400" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Anatomy of a Sysmon Event ID 1 — Four Field Groups</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">One process-create record carries what a native 4688 cannot: parent, full command line, and a hash.</text>
+
+<!-- record card -->
+<rect x="24" y="72" width="560" height="308" rx="10" fill="#0e1730" stroke="#2b3f70" stroke-width="1.4"/>
+<rect x="24" y="72" width="560" height="32" rx="10" fill="#101f1a"/>
+<text x="40" y="93" fill="#7fe0b4" font-size="13" font-weight="700">Sysmon · EventID 1 · Process Create</text>
+
+<text x="40" y="128" fill="#f0d78a" font-size="11.5" font-weight="700">① Process Info</text>
+<text x="40" y="147" fill="#c7d3e8" font-size="11.5" font-family="monospace">  Image:        C:\ProgramData\update.exe</text>
+<text x="40" y="165" fill="#c7d3e8" font-size="11.5" font-family="monospace">  CommandLine:  "C:\ProgramData\update.exe"</text>
+<text x="40" y="183" fill="#c7d3e8" font-size="11.5" font-family="monospace">  ProcessId:    4390</text>
+
+<text x="40" y="212" fill="#f0d78a" font-size="11.5" font-weight="700">② Parent Info</text>
+<text x="40" y="231" fill="#f2a6b4" font-size="11.5" font-family="monospace">  ParentImage:  ...\powershell.exe</text>
+<text x="40" y="249" fill="#c7d3e8" font-size="11.5" font-family="monospace">  ParentProcessId: 4260</text>
+
+<text x="40" y="278" fill="#f0d78a" font-size="11.5" font-weight="700">③ Binary Info</text>
+<text x="40" y="297" fill="#f2a6b4" font-size="11.5" font-family="monospace">  Hashes: SHA256=9f2b3c8e1a77…293a</text>
+<text x="40" y="315" fill="#c7d3e8" font-size="11.5" font-family="monospace">  Signed: false</text>
+
+<text x="40" y="344" fill="#f0d78a" font-size="11.5" font-weight="700">④ User Context</text>
+<text x="40" y="363" fill="#c7d3e8" font-size="11.5" font-family="monospace">  User:    WIN-VICTIM01\j.hassan</text>
+<text x="40" y="381" fill="#b6a9f2" font-size="11.5" font-family="monospace">  LogonId: 0x5D6AC</text>
+
+<!-- annotations -->
+<rect x="612" y="112" width="404" height="56" rx="8" fill="#2a1620" stroke="#e0556b" stroke-width="1.3"/>
+<text x="628" y="132" fill="#f2a6b4" font-size="11.5" font-weight="700">Parent = powershell.exe</text>
+<text x="628" y="150" fill="#c7d3e8" font-size="10.5">Spawned by Word earlier — Office → shell is a</text>
+<text x="628" y="163" fill="#c7d3e8" font-size="10.5">classic red flag. Walk UP the tree by ParentProcessId.</text>
+
+<rect x="612" y="180" width="404" height="56" rx="8" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.3"/>
+<text x="628" y="200" fill="#b6a9f2" font-size="11.5" font-weight="700">Hashes → VirusTotal</text>
+<text x="628" y="218" fill="#c7d3e8" font-size="10.5">The SHA-256 is your fleet-wide IOC — search it</text>
+<text x="628" y="231" fill="#c7d3e8" font-size="10.5">on every host and on VirusTotal.</text>
+
+<rect x="612" y="248" width="404" height="56" rx="8" fill="#15213f" stroke="#3fa87a" stroke-width="1.3"/>
+<text x="628" y="268" fill="#7fe0b4" font-size="11.5" font-weight="700">ProcessId → the pivot</text>
+<text x="628" y="286" fill="#c7d3e8" font-size="10.5">Find this process's network (EID 3), files (11),</text>
+<text x="628" y="299" fill="#c7d3e8" font-size="10.5">registry (13) by matching ProcessId 4390.</text>
+
+<rect x="612" y="316" width="404" height="52" rx="8" fill="#0e1730" stroke="#d4af37" stroke-width="1.3"/>
+<text x="628" y="336" fill="#f0d78a" font-size="11.5" font-weight="700">LogonId → the other pivot</text>
+<text x="628" y="354" fill="#c7d3e8" font-size="10.5">Same LogonId links this to the 4624 login and the account's whole session.</text>
+</svg>

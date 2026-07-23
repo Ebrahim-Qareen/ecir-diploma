@@ -1,0 +1,44 @@
+<svg viewBox="0 0 1040 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="A Splunk SPL search and its results table">
+<title>SPL results</title>
+<rect width="1040" height="380" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">What an SPL Result Looks Like — Find the Odd One Out</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- search bar -->
+<rect x="24" y="58" width="890" height="40" rx="8" fill="#0e1730" stroke="#2b3f70" stroke-width="1.3"/>
+<text x="40" y="83" font-family="monospace" font-size="13"><tspan fill="#f0d78a">index=sysmon EventID=1</tspan><tspan fill="#7e91b8"> | </tspan><tspan fill="#b6a9f2">stats count by ParentImage</tspan><tspan fill="#7e91b8"> | </tspan><tspan fill="#37c7d4">sort -count</tspan></text>
+<rect x="922" y="58" width="94" height="40" rx="8" fill="#15213f" stroke="#d4af37"/>
+<text x="969" y="83" text-anchor="middle" fill="#f0d78a" font-size="12" font-weight="700">🔎 Search</text>
+
+<!-- results table header -->
+<rect x="24" y="112" width="992" height="30" fill="#15213f"/>
+<text x="44" y="132" fill="#f0d78a" font-size="12" font-weight="700">ParentImage</text>
+<text x="820" y="132" fill="#f0d78a" font-size="12" font-weight="700">count</text>
+
+<!-- rows -->
+<rect x="24" y="142" width="992" height="30" fill="#0e1730"/>
+<text x="44" y="162" fill="#c7d3e8" font-size="12" font-family="monospace">C:\Windows\System32\services.exe</text>
+<text x="828" y="162" fill="#c7d3e8" font-size="12" font-family="monospace">1204</text>
+
+<rect x="24" y="172" width="992" height="30" fill="#0b1428"/>
+<text x="44" y="192" fill="#c7d3e8" font-size="12" font-family="monospace">C:\Windows\Explorer.EXE</text>
+<text x="828" y="192" fill="#c7d3e8" font-size="12" font-family="monospace">318</text>
+
+<rect x="24" y="202" width="992" height="30" fill="#0e1730"/>
+<text x="44" y="222" fill="#c7d3e8" font-size="12" font-family="monospace">C:\Windows\System32\svchost.exe</text>
+<text x="828" y="222" fill="#c7d3e8" font-size="12" font-family="monospace">ttl 96</text>
+
+<!-- the anomaly row highlighted -->
+<rect x="24" y="232" width="992" height="32" fill="#2a1620" stroke="#e0556b" stroke-width="1.4"/>
+<text x="44" y="253" fill="#f2a6b4" font-size="12.5" font-family="monospace" font-weight="700">...\Office16\WINWORD.EXE</text>
+<text x="828" y="253" fill="#f2a6b4" font-size="12.5" font-family="monospace" font-weight="700">1</text>
+<text x="880" y="253" fill="#e0556b" font-size="12">⚠ rare</text>
+
+<rect x="24" y="264" width="992" height="30" fill="#0b1428"/>
+<text x="44" y="284" fill="#c7d3e8" font-size="12" font-family="monospace">C:\Windows\System32\userinit.exe</text>
+<text x="828" y="284" fill="#c7d3e8" font-size="12" font-family="monospace">42</text>
+
+<text x="28" y="326" fill="#f0d78a" font-size="12" font-weight="700">Read it like an analyst:</text>
+<text x="185" y="326" fill="#c7d3e8" font-size="12">common parents are noise. <tspan fill="#f2a6b4">WINWORD spawning a process just once</tspan> is the signal.</text>
+<text x="28" y="350" fill="#8ea3c8" font-size="11">One <tspan font-family="monospace" fill="#b6a9f2">stats count by</tspan> turned thousands of events into one suspicious row. That's the power of SPL — full treatment in Session 4.</text>
+</svg>
