@@ -87,6 +87,17 @@
     </a>
   </div>
 
+  <!-- ADVANCED CAMPAIGN CARD -->
+  <h2 class="sec" id="adv" style="margin-top:34px">Advanced · Connected Campaign</h2>
+  <p class="sec-desc">One intrusion across three log sources. Correlate by Logon ID, Process ID and IP — the real analyst skill.</p>
+  <div class="chal-grid">
+    <a class="chal-card hard" href="#cf-campaign" style="grid-column:1 / -1">
+      <h4>Operation Telemetry — RDP → LOLBin → persistence → pivot to Linux → exfil</h4>
+      <span class="cc-idx">index=wineventlog + sysmon + linux_audit</span>
+      <div class="cc-meta"><span class="diff hard">Campaign</span><span class="tag">16 Q · 3 datasets</span><span class="mitre">T1110→T1048→T1070</span></div>
+    </a>
+  </div>
+
   <!-- ==================== CASE FILES ==================== -->
 
   <!-- CF: VPN -->
@@ -470,6 +481,138 @@ index=wineventlog EventID=4698 | table _time TaskName
 # Q6 run-key persistence
 index=wineventlog EventID=13 | table _time RegistryKey RegistryValue
 # Q7 log cleared
+index=wineventlog EventID=1102 | table _time SubjectUserName</code></pre></details>
+    </div>
+  </div>
+
+  <!-- CF: OPERATION TELEMETRY (connected campaign) -->
+  <div class="casefile hard" id="cf-campaign">
+    <div class="case-head"><h3>🔴 Operation Telemetry · Connected Campaign</h3>
+      <div class="ch-tags"><span class="diff hard">Campaign</span><span class="tag">16 questions</span></div></div>
+    <div class="case-body">
+      <div class="brief"><b>Brief.</b> Overnight on 2024-06-10 an attacker brute-forced RDP on the finance workstation
+        <code>WIN-FIN01</code>, ran PowerShell recon, used <code>certutil</code> to drop <code>svc.exe</code>, dumped
+        LSASS, planted four persistence mechanisms, then pivoted over SSH to the database server <code>LNX-DB01</code>,
+        exfiltrated the databases and cleared logs on both hosts. <b>No single index tells the story — you must pivot.</b></div>
+
+      <div class="evidence">
+        <div class="ev"><span>Dataset 1</span><b><a href="data/campaign-windows-security.json" download>campaign-windows-security.json</a></b> → <code>wineventlog</code></div>
+        <div class="ev"><span>Dataset 2</span><b><a href="data/campaign-sysmon.json" download>campaign-sysmon.json</a></b> → <code>sysmon</code></div>
+        <div class="ev"><span>Dataset 3</span><b><a href="data/campaign-linux.json" download>campaign-linux.json</a></b> → <code>linux_audit</code></div>
+        <div class="ev"><span>Time range</span><b>2024-06-10 · All time</b></div>
+        <div class="ev"><span>Pivot keys</span><b>LogonId 0x5D6AC · ProcessId · IP 10.10.20.50 · C2 185.244.25.171</b></div>
+      </div>
+      <div class="mitre-row"><span class="lbl">Kill chain</span><span class="mitre">T1110</span><span class="mitre">T1021.001</span><span class="mitre">T1059.001</span><span class="mitre">T1218/T1105</span><span class="mitre">T1003.001</span><span class="mitre">T1136/T1543/T1053/T1547</span><span class="mitre">T1021.004</span><span class="mitre">T1048</span><span class="mitre">T1070</span></div>
+
+      <p style="margin:16px 0 8px;color:var(--gold-soft);font-weight:700;font-size:12.5px;letter-spacing:.5px">PHASE 1 · INITIAL ACCESS &nbsp;<code>index=wineventlog</code></p>
+      <div class="q mcq" data-answer="b" data-why="Count 4625 by IpAddress — 45.137.21.88 has 120 failures across many usernames.">
+        <p><span class="qn">Q1</span> Brute-force source IP?</p>
+        <ul class="opts"><li data-opt="a">10.10.20.31</li><li data-opt="b">45.137.21.88</li><li data-opt="c">197.54.120.9</li><li data-opt="d">185.244.25.171</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="c" data-why="The 4624 success from the attacker IP is m.adel with LogonType 10 (RDP).">
+        <p><span class="qn">Q2</span> Compromised account and logon type?</p>
+        <ul class="opts"><li data-opt="a">a.kamal · Type 3</li><li data-opt="b">helpdesk · Type 2</li><li data-opt="c">m.adel · Type 10 (RDP)</li><li data-opt="d">svc_sql · Type 5</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="The 4624/4672 for that session carry TargetLogonId 0x5D6AC — your pivot key.">
+        <p><span class="qn">Q3</span> The session's Logon ID (your pivot key)?</p>
+        <ul class="opts"><li data-opt="a">0x3E7</li><li data-opt="b">0x5D6AC</li><li data-opt="c">0x40000</li><li data-opt="d">0x9F1A2</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <p style="margin:16px 0 8px;color:var(--gold-soft);font-weight:700;font-size:12.5px;letter-spacing:.5px">PHASE 2 · EXECUTION &nbsp;<code>index=sysmon</code> (pivot by LogonId 0x5D6AC / ProcessId)</p>
+      <div class="q mcq" data-answer="b" data-why="4104 script blocks show account discovery: whoami, net user, net localgroup, Get-LocalGroupMember.">
+        <p><span class="qn">Q4</span> What did the attacker run for recon (PowerShell 4104)?</p>
+        <ul class="opts"><li data-opt="a">ipconfig, ping, tracert</li><li data-opt="b">whoami, net user, net localgroup, Get-LocalGroupMember</li><li data-opt="c">tasklist, sc query, netstat</li><li data-opt="d">dir, type, copy</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="certutil (a LOLBin) with -urlcache -split -f downloads from http://cdn-update.top/win/svc.exe.">
+        <p><span class="qn">Q5</span> Which LOLBin downloaded the payload, and from what URL?</p>
+        <ul class="opts"><li data-opt="a">bitsadmin · http://update-cdn.top/svc.exe</li><li data-opt="b">certutil · http://cdn-update.top/win/svc.exe</li><li data-opt="c">mshta · http://cdn-update.top/a.hta</li><li data-opt="d">powershell IWR · http://185.244.25.171/svc.exe</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="The EID 1 for the payload carries the path C:\ProgramData\svc.exe and SHA256 e7f2a1c9…8091.">
+        <p><span class="qn">Q6</span> Payload path and SHA-256?</p>
+        <ul class="opts"><li data-opt="a">C:\Temp\svc.exe · aa11bb22…</li><li data-opt="b">C:\ProgramData\svc.exe · e7f2a1c9…8091</li><li data-opt="c">C:\Windows\svc.exe · cc33dd44…</li><li data-opt="d">C:\Users\Public\svc.exe · 9f2b3c8e…</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="Sysmon EID 3 from svc.exe → 185.244.25.171:443; EID 22 shows the DNS query cdn-update.top.">
+        <p><span class="qn">Q7</span> C2 IP:port and the DNS domain queried?</p>
+        <ul class="opts"><li data-opt="a">185.244.25.171:8080 · update-cdn.top</li><li data-opt="b">185.244.25.171:443 · cdn-update.top</li><li data-opt="c">45.137.21.88:443 · cdn-update.top</li><li data-opt="d">10.10.20.10:9997 · cdn-update.top</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="c" data-why="Sysmon EID 10 (ProcessAccess) with TargetImage lsass.exe — the SourceImage is svc.exe (credential dumping).">
+        <p><span class="qn">Q8</span> Which process accessed LSASS (credential dumping)?</p>
+        <ul class="opts"><li data-opt="a">powershell.exe</li><li data-opt="b">lsass.exe</li><li data-opt="c">svc.exe</li><li data-opt="d">certutil.exe</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <p style="margin:16px 0 8px;color:var(--gold-soft);font-weight:700;font-size:12.5px;letter-spacing:.5px">PHASE 3 · PERSISTENCE &nbsp;<code>index=wineventlog</code> + <code>index=sysmon</code></p>
+      <div class="q mcq" data-answer="b" data-why="4720 creates svc_backup; 4732 adds it to Administrators.">
+        <p><span class="qn">Q9</span> Backdoor account created, and the group it was added to?</p>
+        <ul class="opts"><li data-opt="a">svc_update · Administrators</li><li data-opt="b">svc_backup · Administrators</li><li data-opt="c">svc_backup · Backup Operators</li><li data-opt="d">dbadmin · Administrators</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="7045 by m.adel installs WinTelemetrySvc pointing at the payload C:\ProgramData\svc.exe.">
+        <p><span class="qn">Q10</span> Malicious service name and its binary?</p>
+        <ul class="opts"><li data-opt="a">WinUpdateSvc · C:\ProgramData\update.exe</li><li data-opt="b">WinTelemetrySvc · C:\ProgramData\svc.exe</li><li data-opt="c">gupdate · C:\Program Files\...\legit.exe</li><li data-opt="d">WinTelemetrySvc · C:\Windows\svc.exe</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="4698 creates the scheduled task \Microsoft\Windows\Telemetry\Refresh.">
+        <p><span class="qn">Q11</span> Scheduled task created for persistence?</p>
+        <ul class="opts"><li data-opt="a">\Microsoft\Windows\WindowsUpdateCheck</li><li data-opt="b">\Microsoft\Windows\Telemetry\Refresh</li><li data-opt="c">\GoogleUpdateTaskMachineCore</li><li data-opt="d">\Microsoft\Windows\Defrag\ScheduledDefrag</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="Sysmon EID 13 sets a value under the CurrentVersion\Run key (WinTelemetry).">
+        <p><span class="qn">Q12</span> Registry Run-key set for persistence (Sysmon 13)?</p>
+        <ul class="opts"><li data-opt="a">HKLM\...\Winlogon\Shell</li><li data-opt="b">HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WinTelemetry</li><li data-opt="c">HKCU\...\Explorer\Run</li><li data-opt="d">HKLM\SYSTEM\CurrentControlSet\Services</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <p style="margin:16px 0 8px;color:var(--gold-soft);font-weight:700;font-size:12.5px;letter-spacing:.5px">PHASE 4 · LATERAL MOVEMENT &nbsp;Windows → Linux</p>
+      <div class="q mcq" data-answer="c" data-why="4648 (explicit credentials) uses dbadmin, targeting 10.10.20.20 = LNX-DB01.">
+        <p><span class="qn">Q13</span> The 4648 explicit-credential account and target host?</p>
+        <ul class="opts"><li data-opt="a">m.adel · 10.10.20.10</li><li data-opt="b">svc_backup · 10.10.20.31</li><li data-opt="c">dbadmin · 10.10.20.20 (LNX-DB01)</li><li data-opt="d">dbadmin · 45.137.21.88</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="On Linux, the accepted SSH for dbadmin comes from 10.10.20.50 = WIN-FIN01 — proof of the pivot.">
+        <p><span class="qn">Q14</span> On Linux, SSH was accepted for dbadmin from which IP?</p>
+        <ul class="opts"><li data-opt="a">45.137.21.88</li><li data-opt="b">10.10.20.50 (WIN-FIN01)</li><li data-opt="c">10.10.20.31</li><li data-opt="d">185.244.25.171</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <p style="margin:16px 0 8px;color:var(--gold-soft);font-weight:700;font-size:12.5px;letter-spacing:.5px">PHASE 5 · OBJECTIVES &amp; ANTI-FORENSICS &nbsp;<code>index=linux_audit</code> + <code>index=wineventlog</code></p>
+      <div class="q mcq" data-answer="b" data-why="auditd shows mysqldump → tar → curl uploading /tmp/db.tgz to 185.244.25.171:8443.">
+        <p><span class="qn">Q15</span> How and where was data exfiltrated?</p>
+        <ul class="opts"><li data-opt="a">scp to 45.137.21.88:22</li><li data-opt="b">mysqldump → tar → curl to 185.244.25.171:8443</li><li data-opt="c">rsync to 10.10.20.50</li><li data-opt="d">netcat to 185.244.25.171:4444</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="Windows 1102 (Security log cleared) by svc_backup; on Linux, truncate -s0 /var/log/auth.log. Plus a UID-0 user (sysupd) and a cron job.">
+        <p><span class="qn">Q16</span> The anti-forensics actions on both hosts?</p>
+        <ul class="opts"><li data-opt="a">Windows 4688 disabled; Linux history off</li><li data-opt="b">Windows 1102 (log cleared by svc_backup); Linux truncate /var/log/auth.log</li><li data-opt="c">Windows firewall disabled; Linux iptables flush</li><li data-opt="d">Windows Defender off; Linux rm syslog</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <details class="inst-spl"><summary>Instructor · SPL solutions (all phases)</summary>
+<pre><code># P1 initial access
+index=wineventlog EventID=4625 | stats count by IpAddress | sort - count
+index=wineventlog EventID=4624 IpAddress=45.137.21.88 LogonType=10 | table _time TargetUserName TargetLogonId
+# P2 execution — pivot the whole session by Logon ID
+index=sysmon LogonId=0x5D6AC | table _time EventID Image ParentImage CommandLine dest_ip
+index=sysmon EventID=1 Image="*certutil.exe" | table _time CommandLine
+index=sysmon EventID=1 Image="C:\\ProgramData\\svc.exe" | table _time Image Hashes
+index=sysmon EventID=3 Image="C:\\ProgramData\\svc.exe" | stats count by dest_ip dest_port
+index=sysmon EventID=22 | table _time QueryName
+index=sysmon EventID=10 TargetImage="*lsass.exe" | table _time Image
+# P3 persistence
+index=wineventlog (EventID=4720 OR EventID=4732 OR EventID=7045 OR EventID=4698) | table _time EventID TargetUserName GroupName ServiceName ServiceFileName TaskName
+index=sysmon EventID=13 | table _time TargetObject
+# P4 lateral movement (Windows -> Linux)
+index=wineventlog EventID=4648 | table _time TargetUserName IpAddress
+index=linux_audit event_type=ssh_login src_ip=10.10.20.50 | table _time user result
+# P5 objectives + anti-forensics
+index=linux_audit (process=curl OR process=useradd OR audit_key=persist OR process=truncate) | table _time process command
 index=wineventlog EventID=1102 | table _time SubjectUserName</code></pre></details>
     </div>
   </div>
