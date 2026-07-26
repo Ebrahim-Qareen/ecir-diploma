@@ -1,0 +1,405 @@
+<!-- ==========================================================================
+     Operation Shadow Gate — Custom Wazuh Detection Rules
+     ITGate Academy · eCIR SOC Lab
+     Deploy to: /var/ossec/etc/rules/local_rules.xml on SOC-CORE01
+     Rule IDs: 100100–100199 (Linux) · 100200–100299 (Windows) · 100300–100399 (IOC)
+     ========================================================================== -->
+
+<!-- ==============================
+     LINUX ATTACK DETECTION
+     ============================== -->
+
+<group name="linux,attack,shadow_gate,">
+
+  <!-- === RECONNAISSANCE — Suspicious User-Agents in nginx === -->
+  <!-- T1595 — Active Scanning -->
+  <rule id="100100" level="10">
+    <if_sid>31101,31100</if_sid>
+    <field name="user_agent" type="pcre2">(?i)(nikto|sqlmap|nmap|dirbuster|gobuster|wfuzz|masscan|zgrab|nuclei)</field>
+    <description>Web recon: scanning tool detected in User-Agent — $(user_agent)</description>
+    <group>recon,web,</group>
+    <mitre>
+      <id>T1595</id>
+    </mitre>
+  </rule>
+
+  <!-- === BRUTE FORCE — SSH brute-force (10 failures in 60s) === -->
+  <!-- T1110.001 — Password Guessing -->
+  <rule id="100101" level="12" frequency="10" timeframe="60">
+    <if_matched_sid>5760</if_matched_sid>
+    <same_source_ip />
+    <description>SSH brute-force attack: 10+ failures from $(srcip) in 60 seconds</description>
+    <group>authentication_failures,brute_force,</group>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === INITIAL ACCESS — SSH success after brute-force === -->
+  <!-- T1078 — Valid Accounts -->
+  <rule id="100102" level="14">
+    <if_sid>5715</if_sid>
+    <if_matched_sid>100101</if_matched_sid>
+    <same_source_ip />
+    <description>SSH login SUCCESS after brute-force from $(srcip) — possible compromised credentials</description>
+    <group>authentication_success,brute_force,</group>
+    <mitre>
+      <id>T1078</id>
+      <id>T1110.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === WEB SHELL — File created in web directory === -->
+  <!-- T1505.003 — Server Software Component: Web Shell -->
+  <rule id="100103" level="14">
+    <if_sid>550,553,554</if_sid>
+    <field name="file" type="pcre2">(?i)/var/www/.+\.(php|jsp|asp|aspx|sh|py|cgi)$</field>
+    <description>FIM: suspicious script file created in web directory — $(file)</description>
+    <group>web_shell,integrity,</group>
+    <mitre>
+      <id>T1505.003</id>
+    </mitre>
+  </rule>
+
+  <!-- === CREDENTIAL ACCESS — /etc/shadow read === -->
+  <!-- T1003.008 — /etc/passwd and /etc/shadow -->
+  <rule id="100104" level="12">
+    <if_sid>80700,80784</if_sid>
+    <field name="audit.file.name">/etc/shadow</field>
+    <description>Sensitive file accessed: /etc/shadow read attempt</description>
+    <group>credential_access,</group>
+    <mitre>
+      <id>T1003.008</id>
+    </mitre>
+  </rule>
+
+  <!-- === PRIVILEGE ESCALATION — SUID binary modification === -->
+  <!-- T1548.001 — Setuid and Setgid -->
+  <rule id="100105" level="13">
+    <if_sid>550,553</if_sid>
+    <field name="file" type="pcre2">(?i)(chmod \+s|chmod u\+s|chmod 4[0-7]{3})</field>
+    <description>SUID bit set on binary — possible privilege escalation setup</description>
+    <group>privilege_escalation,</group>
+    <mitre>
+      <id>T1548.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === PERSISTENCE — Cron job created === -->
+  <!-- T1053.003 — Cron -->
+  <rule id="100106" level="10">
+    <if_sid>550,553,554</if_sid>
+    <field name="file" type="pcre2">/var/spool/cron/|/etc/cron\.|/etc/crontab</field>
+    <description>FIM: cron job modified — possible persistence mechanism — $(file)</description>
+    <group>persistence,</group>
+    <mitre>
+      <id>T1053.003</id>
+    </mitre>
+  </rule>
+
+  <!-- === PERSISTENCE — SSH authorized_keys modified === -->
+  <!-- T1098.004 — SSH Authorized Keys -->
+  <rule id="100107" level="12">
+    <if_sid>550,553,554</if_sid>
+    <field name="file" type="pcre2">\.ssh/authorized_keys</field>
+    <description>FIM: SSH authorized_keys modified — attacker may have planted a key</description>
+    <group>persistence,</group>
+    <mitre>
+      <id>T1098.004</id>
+    </mitre>
+  </rule>
+
+  <!-- === PERSISTENCE — New user created === -->
+  <!-- T1136.001 — Local Account -->
+  <rule id="100108" level="10">
+    <if_sid>5901,5902</if_sid>
+    <description>New user account created — check if authorized</description>
+    <group>persistence,account_creation,</group>
+    <mitre>
+      <id>T1136.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === C2 — curl/wget to external IP === -->
+  <!-- T1071.001 — Application Layer Protocol: Web -->
+  <rule id="100109" level="11">
+    <if_sid>80700,80784</if_sid>
+    <field name="audit.exe" type="pcre2">(?i)(curl|wget)</field>
+    <description>Outbound HTTP tool execution: $(audit.exe) — possible C2 callback or data exfil</description>
+    <group>c2,exfiltration,</group>
+    <mitre>
+      <id>T1071.001</id>
+      <id>T1041</id>
+    </mitre>
+  </rule>
+
+  <!-- === WEB ATTACK — Path traversal in URL === -->
+  <!-- T1190 — Exploit Public-Facing Application -->
+  <rule id="100110" level="12">
+    <if_sid>31101,31100</if_sid>
+    <url type="pcre2">(\.\./|\.\.\\|%2e%2e|%252e)</url>
+    <description>Path traversal attempt detected in URL — $(url)</description>
+    <group>web,attack,injection,</group>
+    <mitre>
+      <id>T1190</id>
+    </mitre>
+  </rule>
+
+  <!-- === WEB ATTACK — SQL injection attempt === -->
+  <!-- T1190 — Exploit Public-Facing Application -->
+  <rule id="100111" level="12">
+    <if_sid>31101,31100</if_sid>
+    <url type="pcre2">(?i)(union\s+select|or\s+1\s*=\s*1|drop\s+table|;\s*select|'\s*or\s*')</url>
+    <description>SQL injection attempt detected in URL — $(url)</description>
+    <group>web,attack,sqli,</group>
+    <mitre>
+      <id>T1190</id>
+    </mitre>
+  </rule>
+
+  <!-- === EXFILTRATION — Sensitive file content in command === -->
+  <!-- T1041 — Exfiltration Over C2 Channel -->
+  <rule id="100112" level="13">
+    <if_sid>80700,80784</if_sid>
+    <field name="audit.execve.a1" type="pcre2">(?i)(/etc/passwd|/etc/shadow|\.ssh/id_rsa)</field>
+    <description>Sensitive file referenced in command execution — possible exfiltration</description>
+    <group>exfiltration,</group>
+    <mitre>
+      <id>T1041</id>
+    </mitre>
+  </rule>
+
+</group>
+
+
+<!-- ==============================
+     WINDOWS ATTACK DETECTION
+     ============================== -->
+
+<group name="windows,attack,shadow_gate,">
+
+  <!-- === EXECUTION — Encoded PowerShell === -->
+  <!-- T1059.001 — PowerShell -->
+  <rule id="100200" level="14">
+    <if_sid>92000,92100</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(-enc\s|-encodedcommand\s|-e\s+[A-Za-z0-9+/=]{20,})</field>
+    <description>Encoded PowerShell execution detected — likely obfuscated payload</description>
+    <group>execution,powershell,</group>
+    <mitre>
+      <id>T1059.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === EXECUTION — PowerShell download cradle === -->
+  <!-- T1105 — Ingress Tool Transfer -->
+  <rule id="100201" level="13">
+    <if_sid>92000,92100</if_sid>
+    <field name="win.eventdata.scriptBlockText" type="pcre2">(?i)(Net\.WebClient|DownloadString|DownloadFile|Invoke-WebRequest|IWR\s|iex\s*\(|Start-BitsTransfer|Invoke-RestMethod)</field>
+    <description>PowerShell download cradle detected — possible payload staging</description>
+    <group>execution,download,</group>
+    <mitre>
+      <id>T1105</id>
+      <id>T1059.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === PERSISTENCE — Scheduled task created === -->
+  <!-- T1053.005 — Scheduled Task -->
+  <rule id="100202" level="10">
+    <if_sid>60009</if_sid>
+    <field name="win.system.eventID">^4698$</field>
+    <description>Scheduled task created — check for persistence: $(win.eventdata.taskName)</description>
+    <group>persistence,scheduled_task,</group>
+    <mitre>
+      <id>T1053.005</id>
+    </mitre>
+  </rule>
+
+  <!-- === PERSISTENCE — Suspicious scheduled task (points to temp/appdata) === -->
+  <!-- T1053.005 — Scheduled Task -->
+  <rule id="100203" level="14">
+    <if_sid>100202</if_sid>
+    <field name="win.eventdata.taskContent" type="pcre2">(?i)(\\temp\\|\\appdata\\|\\public\\|powershell|cmd\.exe.*/c)</field>
+    <description>Scheduled task with suspicious path/command — high-confidence persistence</description>
+    <group>persistence,scheduled_task,</group>
+    <mitre>
+      <id>T1053.005</id>
+    </mitre>
+  </rule>
+
+  <!-- === CREDENTIAL ACCESS — LSASS process access (Mimikatz-style) === -->
+  <!-- T1003.001 — LSASS Memory -->
+  <rule id="100204" level="15">
+    <if_sid>61600,61603</if_sid>
+    <field name="win.eventdata.targetImage" type="pcre2">(?i)lsass\.exe$</field>
+    <field name="win.eventdata.grantedAccess" type="pcre2">(0x1010|0x1410|0x1438|0x143a|0x1fffff)</field>
+    <description>CRITICAL: LSASS memory access with suspicious permissions — credential dumping (Mimikatz-style)</description>
+    <group>credential_access,mimikatz,</group>
+    <mitre>
+      <id>T1003.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === DEFENSE EVASION — Security event log cleared === -->
+  <!-- T1070.001 — Clear Windows Event Logs -->
+  <rule id="100205" level="14">
+    <if_sid>60009</if_sid>
+    <field name="win.system.eventID">^1102$</field>
+    <description>Security audit log was cleared — anti-forensics / evidence tampering</description>
+    <group>defense_evasion,log_clearing,</group>
+    <mitre>
+      <id>T1070.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === DEFENSE EVASION — Windows Defender disabled === -->
+  <!-- T1562.001 — Disable or Modify Tools -->
+  <rule id="100206" level="14">
+    <if_sid>92000,92100</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(Set-MpPreference\s+-DisableRealtimeMonitoring\s+\$true|sc\s+stop\s+WinDefend|DisableAntiSpyware)</field>
+    <description>Windows Defender disabled via command — defense evasion</description>
+    <group>defense_evasion,</group>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === IMPACT — Shadow copy deletion (pre-ransomware) === -->
+  <!-- T1490 — Inhibit System Recovery -->
+  <rule id="100207" level="15">
+    <if_sid>92000,92100,61603</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(vssadmin\s+delete\s+shadows|wmic\s+shadowcopy\s+delete|bcdedit.*recoveryenabled.*no)</field>
+    <description>CRITICAL: Shadow copy deletion / recovery disabled — ransomware indicator</description>
+    <group>impact,ransomware,</group>
+    <mitre>
+      <id>T1490</id>
+    </mitre>
+  </rule>
+
+  <!-- === IMPACT — Mass file encryption (ransomware behavior) === -->
+  <!-- T1486 — Data Encrypted for Impact -->
+  <rule id="100208" level="15" frequency="15" timeframe="30">
+    <if_matched_sid>550,553,554</if_matched_sid>
+    <field name="file" type="pcre2">\.(encrypted|locked|crypt|enc|ransom)$</field>
+    <description>CRITICAL: Mass file extension change — active ransomware encryption</description>
+    <group>impact,ransomware,</group>
+    <mitre>
+      <id>T1486</id>
+    </mitre>
+  </rule>
+
+  <!-- === LATERAL MOVEMENT — RDP login from internal host === -->
+  <!-- T1021.001 — Remote Desktop Protocol -->
+  <rule id="100209" level="10">
+    <if_sid>60009</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.logonType">^10$</field>
+    <description>RDP login detected — Logon Type 10 from $(win.eventdata.ipAddress)</description>
+    <group>lateral_movement,rdp,</group>
+    <mitre>
+      <id>T1021.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === EXECUTION — Suspicious process from Office/browser === -->
+  <!-- T1204.002 — User Execution: Malicious File -->
+  <rule id="100210" level="12">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.parentImage" type="pcre2">(?i)(WINWORD|EXCEL|POWERPNT|OUTLOOK|chrome|msedge|firefox)\.exe$</field>
+    <field name="win.eventdata.image" type="pcre2">(?i)(cmd|powershell|wscript|cscript|mshta|certutil|bitsadmin)\.exe$</field>
+    <description>Suspicious child process from Office/browser: $(win.eventdata.parentImage) spawned $(win.eventdata.image)</description>
+    <group>execution,initial_access,</group>
+    <mitre>
+      <id>T1204.002</id>
+    </mitre>
+  </rule>
+
+  <!-- === CREDENTIAL ACCESS — SAM/SYSTEM registry hive access === -->
+  <!-- T1003.002 — Security Account Manager -->
+  <rule id="100211" level="13">
+    <if_sid>92000,92100,61603</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(reg\s+save\s+hklm\\sam|reg\s+save\s+hklm\\system|reg\s+save\s+hklm\\security)</field>
+    <description>Registry hive export (SAM/SYSTEM/SECURITY) — offline credential extraction</description>
+    <group>credential_access,</group>
+    <mitre>
+      <id>T1003.002</id>
+    </mitre>
+  </rule>
+
+  <!-- === PERSISTENCE — Registry Run key modified === -->
+  <!-- T1547.001 — Registry Run Keys / Startup Folder -->
+  <rule id="100212" level="11">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.targetObject" type="pcre2">(?i)(CurrentVersion\\Run|CurrentVersion\\RunOnce)</field>
+    <description>Registry Run key modified — persistence mechanism: $(win.eventdata.targetObject)</description>
+    <group>persistence,registry,</group>
+    <mitre>
+      <id>T1547.001</id>
+    </mitre>
+  </rule>
+
+</group>
+
+
+<!-- ==============================
+     IOC-BASED DETECTION (CDB lists)
+     ============================== -->
+
+<group name="threat_intel,ioc,shadow_gate,">
+
+  <!-- === Known malicious IP — srcip match === -->
+  <rule id="100300" level="14">
+    <if_sid>5760,5715,31101,31100,100100</if_sid>
+    <list field="srcip" lookup="address_match_key">etc/lists/malicious-ips</list>
+    <description>THREAT INTEL: Connection from known malicious IP $(srcip) — matched CDB list</description>
+    <group>threat_intel,malicious_ip,</group>
+    <mitre>
+      <id>T1071</id>
+    </mitre>
+  </rule>
+
+  <!-- === Known malicious domain in URL === -->
+  <rule id="100301" level="14">
+    <if_sid>31101,31100</if_sid>
+    <list field="url" lookup="match_key">etc/lists/malicious-domains</list>
+    <description>THREAT INTEL: Request to known malicious domain detected — $(url)</description>
+    <group>threat_intel,malicious_domain,</group>
+    <mitre>
+      <id>T1071.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === Known malicious hash — FIM match === -->
+  <rule id="100302" level="15">
+    <if_sid>550,553,554</if_sid>
+    <list field="sha256" lookup="match_key">etc/lists/malicious-hashes</list>
+    <description>CRITICAL THREAT INTEL: File with known malicious hash detected — $(sha256)</description>
+    <group>threat_intel,malicious_hash,</group>
+    <mitre>
+      <id>T1204</id>
+    </mitre>
+  </rule>
+
+  <!-- === C2 IP in SSH brute-force === -->
+  <rule id="100303" level="15">
+    <if_sid>100101</if_sid>
+    <list field="srcip" lookup="address_match_key">etc/lists/malicious-ips</list>
+    <description>CRITICAL: SSH brute-force from KNOWN C2/THREAT IP $(srcip)</description>
+    <group>threat_intel,brute_force,</group>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+  </rule>
+
+  <!-- === Known malicious UA string (Cobalt Strike beacon patterns) === -->
+  <rule id="100304" level="13">
+    <if_sid>31101,31100</if_sid>
+    <field name="user_agent" type="pcre2">(?i)(Mozilla/5\.0 \(compatible; MSIE 10\.0;.*Cobalt|Mozilla/4\.0.*compatible.*MSIE 8\.0|Apache HttpClient)</field>
+    <description>THREAT INTEL: Suspicious User-Agent matches known C2 beacon pattern</description>
+    <group>threat_intel,c2,</group>
+    <mitre>
+      <id>T1071.001</id>
+    </mitre>
+  </rule>
+
+</group>

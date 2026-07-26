@@ -45,6 +45,7 @@
     <a class="tile" href="#s01"><span class="ico">✅</span><h4>Session 1</h4><p>SOC, roles, SIEM fundamentals</p></a>
     <a class="tile" href="#s02"><span class="ico">✅</span><h4>Session 2</h4><p>Splunk, ports, forwarders, first SPL</p></a>
     <a class="tile" href="#s03"><span class="ico">✅</span><h4>Session 3</h4><p>Event IDs · Sysmon · Linux · SPL</p></a>
+    <a class="tile" href="#s04"><span class="ico">✅</span><h4>Session 4</h4><p>Wazuh · Sigma · triage · intel</p></a>
     <a class="tile" href="#topical" style="opacity:.55"><span class="ico">📇</span><h4>Topical packs</h4><p>Event IDs · SPL · Volatility · MITRE</p></a>
   </div>
 
@@ -159,13 +160,30 @@
     </div>
   </div>
 
+  <h2 class="sec" id="s04" style="margin-top:40px">Session 4 · Detect, Triage, Enrich</h2>
+  <p class="sec-desc"><a href="../session-04/index.html#p23">Open in the session →</a></p>
+  <div class="cheat">
+    <div class="cheat-head"><h3>📋 Session 4 Cheat Sheet</h3>
+      <a class="btn-sm" href="../session-04/index.html" style="text-decoration:none">▶ Go to Session 4</a></div>
+    <div class="cheat-grid">
+      <div class="cheat-card"><h5>Wazuh rule anatomy</h5><ul><li><code>id</code> · <code>level</code> 0–15</li><li><code>if_group</code> / <code>if_sid</code> parent</li><li><code>field name</code> = decoded field</li><li><code>mitre</code> · <code>description</code></li></ul></div>
+      <div class="cheat-card"><h5>Custom Wazuh rules</h5><ul><li>File: <code>local_rules.xml</code></li><li>IDs: <b>≥ 100000</b></li><li><code>if_sid</code> → child of a parent</li><li><code>level 0</code> = mute (exception)</li><li>Restart <code>wazuh-manager</code></li></ul></div>
+      <div class="cheat-card"><h5>Ruleset Test phases</h5><ul><li>P1 pre-decode (timestamp, host)</li><li>P2 decode (extracted fields)</li><li>P3 filter (which rule fired)</li></ul></div>
+      <div class="cheat-card"><h5>Sigma fields</h5><ul><li><code>title · id · status</code></li><li><code>logsource</code> (WHERE)</li><li><code>detection + condition</code> (WHAT)</li><li><code>level · tags</code> (MITRE)</li></ul></div>
+      <div class="cheat-card"><h5>Sigma logic</h5><ul><li>List = OR · Map = AND</li><li><code>contains · startswith · endswith</code></li><li><code>|all</code> = every value · <code>|re</code> = regex</li><li><code>condition: selection and not filter</code></li></ul></div>
+      <div class="cheat-card"><h5>Alert triage</h5><ul><li>Filter → sort severity → sort time</li><li>Assign → In Progress → investigate</li><li>Verdict TP/FP → comment → escalate/tune</li></ul></div>
+      <div class="cheat-card"><h5>IP / domain intel</h5><ul><li>Domain: DNS, TXT, WHOIS age, look-alike</li><li>IP: VirusTotal, AbuseIPDB, ASN, geo</li><li>Exposure: Shodan, Censys, crt.sh</li><li>VPN: IP2Proxy, Spur</li></ul></div>
+      <div class="cheat-card"><h5>Verdicts</h5><ul><li>TP = real threat → escalate</li><li>FP = benign → tune rule</li><li>FN = missed attack → write a rule</li></ul></div>
+    </div>
+  </div>
+
   <!-- future sessions -->
   <h2 class="sec" id="more" style="margin-top:40px">Coming as the course grows</h2>
   <p class="sec-desc">Each new session adds its cheat sheet here automatically.</p>
   <div class="tiles">
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 4</h4><p>Detection rules · Sigma · MITRE</p></div>
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 5</h4><p>Triage · IOCs · threat intel</p></div>
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 6</h4><p>IR lifecycle · SOAR</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 5</h4><p>IR lifecycle · forensic readiness</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 6</h4><p>malware IR + DF</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 7</h4><p>email / phishing IR + DF</p></div>
   </div>
 
   <!-- topical packs -->

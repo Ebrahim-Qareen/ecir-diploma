@@ -1,0 +1,25 @@
+# Malicious IP CDB List — Operation Shadow Gate
+# Deploy to: /var/ossec/etc/lists/malicious-ips
+# Format: IP:category
+#
+# NOTE FOR INSTRUCTORS — the LIVE section below is pulled from abuse.ch Feodo
+# Tracker. Because AbuseIPDB, ThreatFox, AlienVault OTX and VirusTotal all
+# ingest abuse.ch, these IPs WILL show as malicious when students look them up.
+# abuse.ch rotates them, so RE-PULL before each class:
+#   curl -s https://feodotracker.abuse.ch/downloads/ipblocklist.txt
+#
+# --- LIVE Feodo Tracker botnet C2 (verified flagging, refresh before class) ---
+162.243.103.246:Feodo-C2
+178.62.3.223:Feodo-C2
+27.133.154.218:Feodo-C2
+34.204.119.63:Feodo-C2
+50.16.16.211:Feodo-C2
+#
+# --- LAB-ONLY attacker IPs (RFC5737 documentation ranges — NOT real) ---
+# Used only for the internal simulation so lab traffic is self-contained.
+# These will NOT flag on TI platforms — that's intentional: students learn to
+# tell "known-bad from feed" apart from "unknown, investigate further".
+203.0.113.50:LAB-Recon
+198.51.100.23:LAB-BruteForce
+198.51.100.24:LAB-C2
+192.0.2.100:LAB-Exfil

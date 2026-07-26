@@ -1,0 +1,27 @@
+# Malicious Domain CDB List — Operation Shadow Gate
+# Deploy to: /var/ossec/etc/lists/malicious-domains
+# Format: domain:category
+#
+# NOTE FOR INSTRUCTORS — the LIVE section is pulled from abuse.ch URLhaus
+# (active malware distribution / C2). These flag on VirusTotal + URLhaus.
+# URLhaus rotates fast, so RE-PULL a fresh handful before each class:
+#   curl -s https://urlhaus.abuse.ch/downloads/text_recent/ | grep -oP 'https?://[a-z0-9.-]+\.[a-z]{2,}' | sort -u
+#
+# --- SAFE detection-test domain (resolves, never harmful) ---
+# Emerging Threats / IDS test domain. Returns a fake "uid=0(root)" response so
+# an HTTP request to it trips IDS signatures without any real risk. Perfect for
+# a guaranteed, safe C2-callback demo.
+testmynids.org:IDS-Test-Callback
+#
+# --- LIVE URLhaus malware domains (verified flagging, REFRESH before class) ---
+# Snapshot pulled 2026-07-26 — replace with a fresh pull for each cohort.
+always-undetected.com:URLhaus-Malware
+api.recapcha.space:URLhaus-Malware
+airtickts.com:URLhaus-Phishing
+awarenessexhibition.com:URLhaus-Malware
+#
+# --- LAB-ONLY campaign domains (fake — internal simulation, will NOT flag) ---
+# Intentionally non-resolving so lab C2 traffic stays inside the network.
+shadowgate-c2.evil.corp:LAB-C2
+exfil-drop.evil.corp:LAB-Exfil
+update-service.evil.corp:LAB-Staging

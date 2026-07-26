@@ -43,6 +43,7 @@
     <a class="tile" href="#part1"><span class="ico">🖧</span><h4>Part 1 · S2</h4><p>VMs, networks, IPs</p></a>
     <a class="tile" href="#part2"><span class="ico">📡</span><h4>Part 2 · S2</h4><p>Splunk &amp; forwarders</p></a>
     <a class="tile" href="#part3"><span class="ico">🔬</span><h4>Part 3 · S3</h4><p>Sysmon &amp; auditd</p></a>
+    <a class="tile" href="#part4"><span class="ico">🛡️</span><h4>Part 4</h4><p>Wazuh SIEM/XDR</p></a>
     <a class="tile" href="#trouble"><span class="ico">🔧</span><h4>Troubleshooting</h4><p>When it won't work</p></a>
   </div>
 
@@ -233,6 +234,204 @@ index=sysmon EventID=1 ParentImage="*WINWORD*" | table _time, Image, CommandLine
 index=sysmon EventID=3 | stats count by Image, dest_ip, dest_port
 index=linux_audit event_type=execve user=root | table _time, process, command</code></pre>
 
+  <!-- PART 4 -->
+  <h2 class="sec" id="part4">Part 4 · Wazuh SIEM/XDR <span class="muted" style="font-size:13px">(Lab Extension)</span></h2>
+  <p>Splunk gives you a hand-built SIEM pipeline — you control every index, forwarder, and search.
+     Wazuh adds a production-grade open-source XDR agent that does FIM, vulnerability detection,
+     SCA (CIS benchmarks), active response, and ships with a ruleset already mapped to MITRE ATT&amp;CK.
+     You now see both worlds — exactly what real SOCs run.</p>
+
+  <h3>Requirements</h3>
+  <table>
+    <thead><tr><th>Agents</th><th>CPU</th><th>RAM</th><th>Storage (90 days)</th></tr></thead>
+    <tbody>
+      <tr><td>1–25</td><td>4 vCPU</td><td>8 GiB</td><td>50 GB</td></tr>
+    </tbody>
+  </table>
+  <p>SOC-CORE01 already meets this. OS must be 64-bit Linux (Ubuntu 20.04/22.04/24.04, RHEL 8/9).
+     The VM needs outbound internet to <code>packages.wazuh.com</code> during install.</p>
+
+  <h3>Install Wazuh all-in-one on SOC-CORE01</h3>
+  <p>This installs the indexer, server, and dashboard on a single host:</p>
+<pre><code>curl -sO https://packages.wazuh.com/4.14/wazuh-install.sh &amp;&amp; sudo bash ./wazuh-install.sh -a</code></pre>
+  <p>Takes 5–15 minutes. When it finishes:</p>
+<pre><code>INFO: --- Summary ---
+INFO: You can access the web interface https://&lt;WAZUH_DASHBOARD_IP&gt;
+    User: admin
+    Password: &lt;ADMIN_PASSWORD&gt;
+INFO: Installation finished.</code></pre>
+  <p><strong>Copy that password now</strong> — it appears once. To recover later:</p>
+<pre><code>sudo tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt</code></pre>
+
+  <div class="box warn">
+    <span class="box-t">Credential hygiene</span>
+    <p><code>wazuh-install-files.tar</code> contains plaintext credentials. Keep it on the lab VM only —
+       never commit it to a repo or upload it anywhere. Same rule as the Splunk lab credentials.</p>
+  </div>
+
+  <h3>Access the dashboard</h3>
+  <p>Open <code>https://10.10.20.10</code> → login <code>admin</code> / the password from above.
+     The browser warns the certificate is not trusted — expected (self-signed). Accept the exception.</p>
+
+  <h3>Disable auto-updates</h3>
+  <p>Prevents an unattended upgrade from breaking the lab mid-course:</p>
+<pre><code># Debian/Ubuntu
+sudo sed -i "s/^enabled=1/enabled=0/" /etc/apt/sources.list.d/wazuh.list 2>/dev/null
+# RHEL/CentOS
+sudo sed -i "s/^enabled=1/enabled=0/" /etc/yum.repos.d/wazuh.repo</code></pre>
+
+  <h3>Stop Splunk (free up resources)</h3>
+  <p>Wazuh's indexer (OpenSearch) is memory-hungry. If you're tight on RAM, stop Splunk while working with Wazuh:</p>
+<pre><code>sudo /opt/splunk/bin/splunk stop
+# optional: wipe old data to reclaim disk
+sudo /opt/splunk/bin/splunk clean all -f</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>L4-wazuh-installed</code></h4>
+    <ul>
+      <li><code>sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard</code> — all three <code>active (running)</code></li>
+      <li>Dashboard loads at <code>https://10.10.20.10</code> and you can log in</li>
+    </ul>
+  </div>
+
+  <h3>Deploy agent — LNX-VICTIM01</h3>
+  <p>On LNX-VICTIM01:</p>
+<pre><code>wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.14.6-1_amd64.deb
+sudo WAZUH_MANAGER='10.10.20.10' WAZUH_AGENT_NAME='soc-linux-victim01' dpkg -i ./wazuh-agent_4.14.6-1_amd64.deb
+sudo systemctl daemon-reload
+sudo systemctl enable wazuh-agent
+sudo systemctl start wazuh-agent</code></pre>
+
+  <h3>Deploy agent — WIN-VICTIM01</h3>
+  <p>In an <strong>Administrator</strong> PowerShell on WIN-VICTIM01:</p>
+<pre><code>Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.14.6-1.msi -OutFile $env:tmp\wazuh-agent.msi
+msiexec.exe /i $env:tmp\wazuh-agent.msi /q WAZUH_MANAGER='10.10.20.10' WAZUH_AGENT_NAME='soc-win-victim01'
+NET START WazuhSvc</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>L4-agents-enrolled</code></h4>
+    <ul>
+      <li>Dashboard → <strong>Agents management</strong>: both <code>soc-linux-victim01</code> and <code>soc-win-victim01</code> show <code>Active</code> (green)</li>
+      <li><code>sudo systemctl status wazuh-agent</code> on LNX-VICTIM01 = <code>active (running)</code></li>
+      <li><code>Get-Service WazuhSvc</code> on WIN-VICTIM01 = <code>Running</code></li>
+    </ul>
+  </div>
+
+  <h3>Configure Windows agent — collect Security, Sysmon, PowerShell, Task Scheduler</h3>
+  <p>Run in an <strong>Administrator</strong> PowerShell on WIN-VICTIM01:</p>
+<pre><code>Stop-Service WazuhSvc
+$conf = "C:\Program Files (x86)\ossec-agent\ossec.conf"
+Copy-Item $conf "$conf.bak"
+[xml]$xml = Get-Content $conf
+
+# Remove old entries to avoid duplicates
+$targets = @("Security","Microsoft-Windows-Sysmon/Operational","Microsoft-Windows-PowerShell/Operational","Microsoft-Windows-TaskScheduler/Operational")
+$xml.ossec_config.localfile | Where-Object { $targets -contains $_.location } |
+    ForEach-Object { $xml.ossec_config.RemoveChild($_) }
+
+foreach ($loc in $targets) {
+    $lf = $xml.CreateElement("localfile")
+    $lf.InnerXml = "&lt;location&gt;$loc&lt;/location&gt;&lt;log_format&gt;eventchannel&lt;/log_format&gt;"
+    $xml.ossec_config.AppendChild($lf) | Out-Null
+}
+
+$xml.Save($conf)
+Start-Service WazuhSvc
+Get-Service WazuhSvc</code></pre>
+  <p>This forwards: all Security events, Sysmon (process/network/file), PowerShell script block logging
+     (enable via GPO first — T1059.001), and Task Scheduler (persistence — T1053.005).</p>
+
+  <h3>Configure Linux agent — auth.log + nginx JSON logs</h3>
+  <p>First, install nginx and configure JSON logging on LNX-VICTIM01:</p>
+<pre><code>sudo apt update &amp;&amp; sudo apt install -y nginx
+sudo systemctl enable nginx &amp;&amp; sudo systemctl start nginx</code></pre>
+<pre><code>sudo tee /etc/nginx/conf.d/json_log.conf > /dev/null &lt;&lt;'EOF'
+log_format json_combined escape=json
+  '{'
+    '"srcip":"$remote_addr",'
+    '"time":"$time_local",'
+    '"method":"$request_method",'
+    '"url":"$request_uri",'
+    '"status":$status,'
+    '"size":$body_bytes_sent,'
+    '"referer":"$http_referer",'
+    '"user_agent":"$http_user_agent"'
+  '}';
+
+access_log /var/log/nginx/access-json.log json_combined;
+EOF
+sudo nginx -t &amp;&amp; sudo systemctl reload nginx</code></pre>
+  <p>Then add log sources to the Wazuh agent config (<code>/var/ossec/etc/ossec.conf</code>):</p>
+<pre><code>sudo sed -i '/&lt;\/ossec_config&gt;/i \
+  &lt;localfile&gt;\
+    &lt;log_format&gt;syslog&lt;/log_format&gt;\
+    &lt;location&gt;/var/log/auth.log&lt;/location&gt;\
+  &lt;/localfile&gt;\
+  &lt;localfile&gt;\
+    &lt;log_format&gt;json&lt;/log_format&gt;\
+    &lt;location&gt;/var/log/nginx/access-json.log&lt;/location&gt;\
+  &lt;/localfile&gt;' /var/ossec/etc/ossec.conf
+
+sudo systemctl restart wazuh-agent</code></pre>
+  <p>Nginx logs arrive as structured JSON — every field (<code>srcip</code>, <code>method</code>, <code>url</code>,
+     <code>status</code>, <code>user_agent</code>) is automatically searchable in the dashboard. No custom decoder needed.</p>
+
+  <h3>Custom decoders — SSH field extraction</h3>
+  <p>On <strong>SOC-CORE01</strong> (the manager), add child decoders to extract SSH and nginx UA fields:</p>
+<pre><code>sudo tee /var/ossec/etc/decoders/local_decoder.xml > /dev/null &lt;&lt;'EOF'
+&lt;decoder name="sshd-custom"&gt;
+  &lt;program_name&gt;^sshd&lt;/program_name&gt;
+&lt;/decoder&gt;
+
+&lt;decoder name="sshd-failed-password"&gt;
+  &lt;parent&gt;sshd-custom&lt;/parent&gt;
+  &lt;prematch&gt;Failed password&lt;/prematch&gt;
+  &lt;regex offset="after_prematch"&gt;for (\S+) from (\S+) port (\d+)&lt;/regex&gt;
+  &lt;order&gt;dstuser, srcip, srcport&lt;/order&gt;
+&lt;/decoder&gt;
+
+&lt;decoder name="sshd-accepted"&gt;
+  &lt;parent&gt;sshd-custom&lt;/parent&gt;
+  &lt;prematch&gt;Accepted \S+ for&lt;/prematch&gt;
+  &lt;regex offset="after_prematch"&gt;for (\S+) from (\S+) port (\d+)&lt;/regex&gt;
+  &lt;order&gt;dstuser, srcip, srcport&lt;/order&gt;
+&lt;/decoder&gt;
+
+&lt;decoder name="web-accesslog-ua"&gt;
+  &lt;parent&gt;web-accesslog&lt;/parent&gt;
+  &lt;prematch type="pcre2"&gt;HTTP/\d.\d"&lt;/prematch&gt;
+  &lt;regex type="pcre2" offset="after_prematch"&gt; (\d+) \d+ "([^"]*)" "([^"]*)"$&lt;/regex&gt;
+  &lt;order&gt;id, referer, user_agent&lt;/order&gt;
+&lt;/decoder&gt;
+EOF
+sudo /var/ossec/bin/wazuh-control restart</code></pre>
+
+  <div class="verify">
+    <h4>✅ Verify — then snapshot <code>L4-wazuh-complete</code></h4>
+    <ul>
+      <li>Dashboard → <strong>Threat Hunting</strong>: filter by <code>soc-linux-victim01</code> — <code>curl http://localhost</code> on the victim generates an nginx event with <code>data.srcip</code>, <code>data.url</code>, <code>data.user_agent</code> fields</li>
+      <li>Intentional failed SSH → alert with <code>srcip</code>, <code>dstuser</code>, MITRE T1110.001 mapped</li>
+      <li>Filter by <code>soc-win-victim01</code> → Security + Sysmon + PowerShell events flowing</li>
+      <li><code>sudo /var/ossec/bin/wazuh-logtest</code> — paste a sample log, confirm fields extract cleanly</li>
+    </ul>
+  </div>
+
+  <h3>Agent naming convention</h3>
+  <table>
+    <thead><tr><th>Agent name</th><th>Machine</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><code>soc-linux-victim01</code></td><td>LNX-VICTIM01</td><td>Linux target (nginx, SSH)</td></tr>
+      <tr><td><code>soc-win-victim01</code></td><td>WIN-VICTIM01</td><td>Windows endpoint (Sysmon, Security)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Uninstall (if you need to rebuild)</h3>
+<pre><code># remove all central components from SOC-CORE01
+sudo bash ./wazuh-install.sh -u
+# remove agent from any endpoint
+sudo apt remove --purge wazuh-agent   # Linux
+msiexec.exe /x $env:tmp\wazuh-agent.msi /q   # Windows</code></pre>
+
   <!-- TROUBLE -->
   <h2 class="sec" id="trouble">Troubleshooting — real gotchas from the build</h2>
   <p class="muted" style="margin-top:-4px">Every one of these actually happened building this lab. Match the symptom, apply the fix.</p>
@@ -253,6 +452,11 @@ index=linux_audit event_type=execve user=root | table _time, process, command</c
       <tr><td>VMware slow</td><td>Hyper-V still on — see Part 0</td></tr>
       <tr><td>No <code>index=sysmon</code> data</td><td>Sysmon running? exact channel in <code>inputs.conf</code>? forwarder restarted? <code>sysmon</code> index created?</td></tr>
       <tr><td>auditd rules reset on reboot</td><td>Put rules in <code>/etc/audit/rules.d/soc.rules</code> so they persist</td></tr>
+      <tr><td>Wazuh install hangs or fails</td><td>Not enough RAM (need 8 GB) or no internet to <code>packages.wazuh.com</code> — check <code>free -h</code> and <code>curl -I https://packages.wazuh.com</code></td></tr>
+      <tr><td>Wazuh agent stays <code>Never connected</code></td><td>Firewall blocking port 1514/1515 → <code>sudo ufw allow 1514,1515/tcp</code> on SOC-CORE01; or wrong manager IP in agent config</td></tr>
+      <tr><td>Wazuh decoder error 1113 / XML syntax</td><td>Don't use the dashboard uploader for <code>local_decoder.xml</code> — edit via <code>nano</code> on the CLI. Use <code>sudo tee ... &lt;&lt;'EOF'</code> to avoid shell quote mangling</td></tr>
+      <tr><td><code>NET START Wazuh</code> fails on Windows</td><td>Service name is <code>WazuhSvc</code>, not <code>Wazuh</code> → <code>NET START WazuhSvc</code></td></tr>
+      <tr><td>No nginx events in Wazuh dashboard</td><td>Check <code>/var/log/nginx/access-json.log</code> exists and has data; verify <code>log_format json</code> in agent's <code>ossec.conf</code></td></tr>
     </tbody>
   </table>
 
@@ -265,6 +469,9 @@ index=linux_audit event_type=execve user=root | table _time, process, command</c
       <li><code>L2-splunk-ready</code> — Splunk installed, indexes created, 9997 listening</li>
       <li><code>L2-complete</code> — <strong>both</strong> <code>wineventlog</code> and <code>linux</code> returning live events</li>
       <li><code>sysmon-ready</code> / <code>L3-telemetry-ready</code> — Sysmon + auditd flowing (Part 3)</li>
+      <li><code>L4-wazuh-installed</code> — Wazuh manager/indexer/dashboard running on SOC-CORE01</li>
+      <li><code>L4-agents-enrolled</code> — both agents Active in dashboard</li>
+      <li><code>L4-wazuh-complete</code> — log channels configured, decoders working, events flowing</li>
     </ul>
   </div>
 
@@ -276,7 +483,7 @@ index=linux_audit event_type=execve user=root | table _time, process, command</c
 
   <div class="box note">
     <span class="box-t">Next parts</span>
-    <p>Part 4 (detection engineering — Sigma, rules) is added with Session 4. Each session extends this same
+    <p>Part 5 (detection engineering — custom Wazuh rules, Sigma) is added with Session 5. Each session extends this same
        guide — you are building one lab, not many.</p>
   </div>
 

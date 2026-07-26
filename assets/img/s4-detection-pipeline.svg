@@ -1,0 +1,58 @@
+<svg viewBox="0 0 1040 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="The detection-to-decision pipeline: log, decode, detect, alert, prioritise, triage, enrich, verdict">
+<title>Detection to decision pipeline</title>
+<defs>
+<marker id="d4a" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker>
+</defs>
+<rect width="1040" height="300" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Session 4 — From a Raw Log to a Decision</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Detection engineering writes the rule; triage works the alert; threat intel enriches the indicator. One pipeline.</text>
+
+<!-- stage boxes -->
+<!-- 1 log -->
+<rect x="24" y="86" width="132" height="70" rx="10" fill="#0e1730" stroke="#2b3f70" stroke-width="1.3"/>
+<text x="90" y="116" text-anchor="middle" fill="#c7d3e8" font-size="13" font-weight="700">Raw log</text>
+<text x="90" y="136" text-anchor="middle" fill="#8ea3c8" font-size="10">Sysmon, auditd,</text>
+<text x="90" y="150" text-anchor="middle" fill="#8ea3c8" font-size="10">firewall, cloud</text>
+<!-- 2 decode -->
+<rect x="176" y="86" width="132" height="70" rx="10" fill="#0e1730" stroke="#3fa87a" stroke-width="1.3"/>
+<text x="242" y="112" text-anchor="middle" fill="#7fe0b4" font-size="13" font-weight="700">Decode</text>
+<text x="242" y="132" text-anchor="middle" fill="#8ea3c8" font-size="10">extract fields</text>
+<text x="242" y="146" text-anchor="middle" fill="#8ea3c8" font-size="10">(Wazuh decoder)</text>
+<!-- 3 detect -->
+<rect x="328" y="86" width="132" height="70" rx="10" fill="#101f1a" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="394" y="112" text-anchor="middle" fill="#7fe0b4" font-size="13" font-weight="700">Detect</text>
+<text x="394" y="132" text-anchor="middle" fill="#8ea3c8" font-size="10">rule matches</text>
+<text x="394" y="146" text-anchor="middle" fill="#8ea3c8" font-size="10">Wazuh rule / Sigma</text>
+<!-- 4 alert -->
+<rect x="480" y="86" width="132" height="70" rx="10" fill="#2a1620" stroke="#e0556b" stroke-width="1.4"/>
+<text x="546" y="112" text-anchor="middle" fill="#f2a6b4" font-size="13" font-weight="700">Alert</text>
+<text x="546" y="132" text-anchor="middle" fill="#8ea3c8" font-size="10">+ severity</text>
+<text x="546" y="146" text-anchor="middle" fill="#8ea3c8" font-size="10">+ MITRE ATT&amp;CK</text>
+<!-- 5 triage -->
+<rect x="632" y="86" width="132" height="70" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.4"/>
+<text x="698" y="112" text-anchor="middle" fill="#f0d78a" font-size="13" font-weight="700">Triage</text>
+<text x="698" y="132" text-anchor="middle" fill="#8ea3c8" font-size="10">assign, prioritise,</text>
+<text x="698" y="146" text-anchor="middle" fill="#8ea3c8" font-size="10">investigate</text>
+<!-- 6 enrich -->
+<rect x="784" y="86" width="132" height="70" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.4"/>
+<text x="850" y="112" text-anchor="middle" fill="#b6a9f2" font-size="13" font-weight="700">Enrich</text>
+<text x="850" y="132" text-anchor="middle" fill="#8ea3c8" font-size="10">IP / domain</text>
+<text x="850" y="146" text-anchor="middle" fill="#8ea3c8" font-size="10">threat intel</text>
+
+<!-- arrows -->
+<path d="M156 121 L174 121" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#d4a)"/>
+<path d="M308 121 L326 121" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#d4a)"/>
+<path d="M460 121 L478 121" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#d4a)"/>
+<path d="M612 121 L630 121" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#d4a)"/>
+<path d="M764 121 L782 121" stroke="#37c7d4" stroke-width="1.8" marker-end="url(#d4a)"/>
+
+<!-- verdict -->
+<rect x="360" y="200" width="320" height="60" rx="10" fill="#101f1a" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="520" y="226" text-anchor="middle" fill="#7fe0b4" font-size="14" font-weight="700">Verdict &amp; Response</text>
+<text x="520" y="246" text-anchor="middle" fill="#8ea3c8" font-size="11">True Positive → escalate  ·  False Positive → tune the rule</text>
+<path d="M850 156 C850 190, 690 180, 682 200" stroke="#8b7ce8" stroke-width="1.6" fill="none" marker-end="url(#d4a)"/>
+<path d="M360 230 C200 230, 176 180, 300 156" stroke="#3fa87a" stroke-width="1.4" fill="none" stroke-dasharray="5 4" marker-end="url(#d4a)"/>
+<text x="150" y="205" fill="#7fb59a" font-size="10">FP feedback loop —</text>
+<text x="150" y="219" fill="#7fb59a" font-size="10">fine-tune the rule</text>
+</svg>

@@ -1,0 +1,24 @@
+# Malicious Hash CDB List — Operation Shadow Gate
+# Deploy to: /var/ossec/etc/lists/malicious-hashes
+# Format: sha256:malware_family
+#
+# NOTE FOR INSTRUCTORS — every hash below is CONFIRMED to flag on VirusTotal
+# right now. Students will get real detections when they look these up. All are
+# either safe test files or famous, permanently-catalogued malware.
+#
+# --- EICAR test file (SAFE — flags on 60+ AV engines on VirusTotal, forever) ---
+# The universal antivirus test string. 100% safe to drop in the lab. Best
+# teaching hash: students see a wall of red detections with zero risk.
+275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f:EICAR-Test-File
+#
+# --- WannaCry ransomware worm (permanently flagged, heavily documented) ---
+# SHA256 of the primary WannaCry dropper. Never leave the lab network with this.
+ed01ebfbc9eb5bbea545af4d01bf5f1071661840480439c6e5babe8e080e41aa:WannaCry-Ransomware
+#
+# --- Cobalt Strike beacons (MalwareBazaar — still flag on VT/MalwareBazaar) ---
+669fcafcaf217a0ae7776d1c98b6cbb4fd75fb97b12965185136a09c7bfc0ef2:CobaltStrike-Beacon
+080c2647fb26ac8576014a21591465eba5b0ee03475f70e95bc3a4caa8d3642e:CobaltStrike-Beacon
+d43bc481741731957b6ebc7c78a37e8344c9199ac2ed0f7f3500a417d4b7cd36:CobaltStrike-Beacon
+#
+# HOW STUDENTS VERIFY:  VirusTotal (search hash) → MalwareBazaar → look at
+# detection count, family label, first-seen date, and behaviour report.

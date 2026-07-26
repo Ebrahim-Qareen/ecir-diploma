@@ -1,0 +1,59 @@
+<svg viewBox="0 0 1040 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Threat intel workflow: verify, enrich, decide for domains and IPs">
+<title>IP and domain threat intel workflow</title>
+<defs>
+<marker id="ti" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker>
+</defs>
+<rect width="1040" height="400" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">IP &amp; Domain Enrichment — Verify → Enrich → Decide</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Never trust one source. Correlate signals, then decide malicious or benign.</text>
+
+<!-- domain column -->
+<rect x="24" y="80" width="300" height="284" rx="10" fill="#0e1730" stroke="#3fa87a" stroke-width="1.4"/>
+<text x="40" y="106" fill="#7fe0b4" font-size="13.5" font-weight="700">Investigate the DOMAIN</text>
+<text x="40" y="132" fill="#c7d3e8" font-size="11">• DNS A / AAAA — where it resolves</text>
+<text x="40" y="154" fill="#c7d3e8" font-size="11">• TXT / SPF / DKIM — mail &amp; tooling</text>
+<text x="40" y="176" fill="#c7d3e8" font-size="11">• WHOIS / RDAP — age &amp; registrar</text>
+<text x="40" y="198" fill="#c7d3e8" font-size="11">• Look-alike? typosquat / IDN / punycode</text>
+<text x="40" y="220" fill="#c7d3e8" font-size="11">• Reputation — known bad?</text>
+<rect x="40" y="238" width="268" height="52" rx="8" fill="#101f1a" stroke="#3fa87a"/>
+<text x="56" y="260" fill="#8fd0b4" font-size="10.5">Red flags: registered days ago,</text>
+<text x="56" y="278" fill="#8fd0b4" font-size="10.5">empty TXT, look-alike of a brand.</text>
+<text x="40" y="318" fill="#8ea3c8" font-size="10.5">Tools: nslookup.io, dnschecker,</text>
+<text x="40" y="336" fill="#8ea3c8" font-size="10.5">whois.domaintools, punycoder.com</text>
+<text x="40" y="356" fill="#f0d78a" font-size="10.5" font-weight="700">→ resolve to IP, then investigate it.</text>
+
+<!-- IP column -->
+<rect x="370" y="80" width="300" height="284" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.4"/>
+<text x="386" y="106" fill="#f0d78a" font-size="13.5" font-weight="700">Investigate the IP</text>
+<text x="386" y="132" fill="#c7d3e8" font-size="11">• CDN range? if yes — stop, it's shared</text>
+<text x="386" y="154" fill="#c7d3e8" font-size="11">• Reputation — VirusTotal, AbuseIPDB</text>
+<text x="386" y="176" fill="#c7d3e8" font-size="11">• ASN — hosting vs residential vs cloud</text>
+<text x="386" y="198" fill="#c7d3e8" font-size="11">• GeoIP — does it match the user?</text>
+<text x="386" y="220" fill="#c7d3e8" font-size="11">• VPN / proxy / Tor exit node?</text>
+<rect x="386" y="238" width="268" height="52" rx="8" fill="#2a1620" stroke="#e0556b"/>
+<text x="402" y="260" fill="#e6a9b4" font-size="10.5">Red flags: server-hosting ASN,</text>
+<text x="402" y="278" fill="#e6a9b4" font-size="10.5">geo mismatch, VPN behind a "normal" login.</text>
+<text x="386" y="318" fill="#8ea3c8" font-size="10.5">Tools: VirusTotal, AbuseIPDB, bgp.tools,</text>
+<text x="386" y="336" fill="#8ea3c8" font-size="10.5">ipinfo.io, Shodan, Censys, Spur, IP2Proxy</text>
+<text x="386" y="356" fill="#f0d78a" font-size="10.5" font-weight="700">→ what services are exposed?</text>
+
+<!-- decide column -->
+<rect x="716" y="80" width="300" height="284" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.5"/>
+<text x="732" y="106" fill="#b6a9f2" font-size="13.5" font-weight="700">Service exposure &amp; Decide</text>
+<text x="732" y="132" fill="#c7d3e8" font-size="11">• Shodan / Censys — open ports</text>
+<text x="732" y="154" fill="#c7d3e8" font-size="11">• Service banners — old = vulnerable</text>
+<text x="732" y="176" fill="#c7d3e8" font-size="11">• TLS cert — self-signed? new? subject?</text>
+<text x="732" y="204" fill="#b6a9f2" font-size="12" font-weight="700">Correlate all signals</text>
+<rect x="732" y="216" width="130" height="44" rx="8" fill="#2a1620" stroke="#e0556b"/>
+<text x="797" y="243" text-anchor="middle" fill="#f2a6b4" font-size="12" font-weight="700">Malicious</text>
+<rect x="878" y="216" width="120" height="44" rx="8" fill="#101f1a" stroke="#3fa87a"/>
+<text x="938" y="243" text-anchor="middle" fill="#7fe0b4" font-size="12" font-weight="700">Benign</text>
+<text x="732" y="286" fill="#8ea3c8" font-size="10.5">One detection outside a CDN range</text>
+<text x="732" y="303" fill="#8ea3c8" font-size="10.5">is already worth a closer look.</text>
+<text x="732" y="332" fill="#f0d78a" font-size="10.5" font-weight="700">Feed the verdict back into triage:</text>
+<text x="732" y="350" fill="#c7d3e8" font-size="10.5">it decides the alert's True/False Positive.</text>
+
+<path d="M324 220 L368 220" stroke="#37c7d4" stroke-width="1.9" marker-end="url(#ti)"/>
+<path d="M670 220 L714 220" stroke="#37c7d4" stroke-width="1.9" marker-end="url(#ti)"/>
+</svg>

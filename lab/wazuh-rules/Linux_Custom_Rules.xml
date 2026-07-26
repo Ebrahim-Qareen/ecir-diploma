@@ -1,0 +1,192 @@
+<!-- ==========================================================================
+     Linux_Custom_Rules.xml  —  Operation Shadow Gate (Linux scenario)
+     ITGate Academy · eCIR SOC Lab · deploy to /var/ossec/etc/rules/
+     Detects the attack windows produced by attack-linux.sh:
+       A 09:15 recon + SSH brute-force   B 13:40 exploit + malware from C2
+       C 16:05 privesc + persistence + exfil
+     nginx is JSON (log_format json) → web rules match decoded JSON fields.
+     Rule IDs: 100100–100160
+     ========================================================================== -->
+
+<group name="linux,shadow_gate,web,">
+
+  <!-- Base: identify our nginx JSON access events (has url+status+user_agent) -->
+  <rule id="100100" level="0">
+    <decoded_as>json</decoded_as>
+    <field name="url">\.+</field>
+    <field name="status">\.+</field>
+    <field name="user_agent">\.+</field>
+    <description>nginx JSON access log event</description>
+  </rule>
+
+  <!-- WINDOW A — Reconnaissance: scanner User-Agents (T1595) -->
+  <rule id="100101" level="12">
+    <if_sid>100100</if_sid>
+    <field name="user_agent" type="pcre2">(?i)(sqlmap|nikto|nmap|dirbuster|gobuster|wfuzz|masscan|nuclei|acunetix)</field>
+    <description>Web recon: scanning tool in User-Agent - $(user_agent) from $(srcip)</description>
+    <group>recon,attack,</group>
+    <mitre><id>T1595</id></mitre>
+  </rule>
+
+  <!-- WINDOW A — sensitive path probing bursts (404/403 to admin/git/backup) -->
+  <rule id="100102" level="12">
+    <if_sid>100100</if_sid>
+    <field name="url" type="pcre2">(?i)(/\.git|/wp-login|/phpmyadmin|/admin|/backup|/\.env|/config)</field>
+    <field name="status" type="pcre2">^(401|403|404)$</field>
+    <description>Sensitive path probe: $(url) returned $(status) from $(srcip)</description>
+    <group>recon,attack,</group>
+    <mitre><id>T1595</id></mitre>
+  </rule>
+
+  <!-- WINDOW A — 6+ probes from same IP in 60s = active scan -->
+  <rule id="100103" level="14" frequency="6" timeframe="60">
+    <if_matched_sid>100102</if_matched_sid>
+    <same_field>srcip</same_field>
+    <description>Active web scan: 6+ sensitive-path probes from $(srcip) in 60s</description>
+    <group>recon,attack,</group>
+    <mitre><id>T1595</id></mitre>
+  </rule>
+
+  <!-- WINDOW B — SQL injection in URL (T1190) -->
+  <rule id="100104" level="14">
+    <if_sid>100100</if_sid>
+    <field name="url" type="pcre2">(?i)(union\s+select|or\s+1\s*=\s*1|'\s*or\s*'|;\s*select|drop\s+table|%27|information_schema)</field>
+    <description>SQL injection attempt: $(url) from $(srcip)</description>
+    <group>attack,sqli,web_appsec,</group>
+    <mitre><id>T1190</id></mitre>
+  </rule>
+
+  <!-- WINDOW B — Path traversal / LFI (T1190) -->
+  <rule id="100105" level="14">
+    <if_sid>100100</if_sid>
+    <field name="url" type="pcre2">(\.\./|\.\.%2f|%2e%2e|/etc/passwd|/etc/shadow)</field>
+    <description>Path traversal / LFI attempt: $(url) from $(srcip)</description>
+    <group>attack,web_appsec,</group>
+    <mitre><id>T1190</id></mitre>
+  </rule>
+
+  <!-- WINDOW B — Cobalt Strike-shaped User-Agent (C2 beacon) -->
+  <rule id="100106" level="13">
+    <if_sid>100100</if_sid>
+    <field name="user_agent" type="pcre2">(?i)(CobaltStrike|MSIE 10\.0;.*Trident|python-requests|curl/|Wget/)</field>
+    <description>Suspicious/automation User-Agent (possible C2 or tooling): $(user_agent) from $(srcip)</description>
+    <group>c2,attack,</group>
+    <mitre><id>T1071.001</id></mitre>
+  </rule>
+
+  <!-- WINDOW B — web shell request (?cmd=) -->
+  <rule id="100107" level="15">
+    <if_sid>100100</if_sid>
+    <field name="url" type="pcre2">(?i)(shell\.php|cmd=|c99\.php|r57\.php|/upload\.php)</field>
+    <description>Possible web shell access: $(url) from $(srcip)</description>
+    <group>attack,web_shell,</group>
+    <mitre><id>T1505.003</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="linux,shadow_gate,authentication,">
+
+  <!-- WINDOW A — SSH brute-force: 8+ failures from same IP in 90s (T1110.001)
+       5760 = sshd authentication failed (verify on your box with logtest) -->
+  <rule id="100110" level="13" frequency="8" timeframe="90">
+    <if_matched_sid>5760</if_matched_sid>
+    <same_source_ip />
+    <description>SSH brute-force: 8+ failures from $(srcip) in 90s</description>
+    <group>authentication_failures,brute_force,</group>
+    <mitre><id>T1110.001</id></mitre>
+  </rule>
+
+  <!-- WINDOW A — successful SSH login right after brute-force (T1078) -->
+  <rule id="100111" level="14">
+    <if_sid>5715</if_sid>
+    <if_matched_sid>100110</if_matched_sid>
+    <same_source_ip />
+    <description>SSH login SUCCESS after brute-force from $(srcip) - likely compromised creds</description>
+    <group>authentication_success,brute_force,</group>
+    <mitre><id>T1078</id><id>T1110.001</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="linux,shadow_gate,host,">
+
+  <!-- WINDOW C — /etc/shadow read (auditd watch key; base 80784 read-access) -->
+  <rule id="100120" level="14">
+    <if_sid>80784</if_sid>
+    <field name="audit.file.name" type="pcre2">/etc/shadow</field>
+    <description>Sensitive file read: /etc/shadow accessed</description>
+    <group>credential_access,</group>
+    <mitre><id>T1003.008</id></mitre>
+  </rule>
+
+  <!-- WINDOW C — SUID bit set on a binary (FIM add/modify 550/554) -->
+  <rule id="100121" level="13">
+    <if_sid>550,554</if_sid>
+    <field name="file" type="pcre2">^/tmp/\..+</field>
+    <description>Hidden file created/modified in /tmp (possible SUID dropper): $(file)</description>
+    <group>privilege_escalation,</group>
+    <mitre><id>T1548.001</id></mitre>
+  </rule>
+
+  <!-- WINDOW C — cron persistence (FIM on cron paths) -->
+  <rule id="100122" level="13">
+    <if_sid>550,554</if_sid>
+    <field name="file" type="pcre2">(/etc/cron\.|/etc/crontab|/var/spool/cron)</field>
+    <description>Cron job created/modified - persistence: $(file)</description>
+    <group>persistence,</group>
+    <mitre><id>T1053.003</id></mitre>
+  </rule>
+
+  <!-- WINDOW C — SSH authorized_keys tampering -->
+  <rule id="100123" level="13">
+    <if_sid>550,554</if_sid>
+    <field name="file" type="pcre2">\.ssh/authorized_keys</field>
+    <description>SSH authorized_keys modified - attacker key planted: $(file)</description>
+    <group>persistence,</group>
+    <mitre><id>T1098.004</id></mitre>
+  </rule>
+
+  <!-- WINDOW C — new user account created (5902 useradd) -->
+  <rule id="100124" level="12">
+    <if_sid>5902</if_sid>
+    <description>New user account created - verify authorization</description>
+    <group>persistence,account_creation,</group>
+    <mitre><id>T1136.001</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="linux,shadow_gate,threat_intel,">
+
+  <!-- Any web hit from a KNOWN malicious IP (CDB list match) -->
+  <rule id="100150" level="14">
+    <if_sid>100100</if_sid>
+    <list field="srcip" lookup="address_match_key">etc/lists/malicious-ips</list>
+    <description>THREAT INTEL: web request from known malicious IP $(srcip)</description>
+    <group>threat_intel,malicious_ip,</group>
+    <mitre><id>T1071</id></mitre>
+  </rule>
+
+  <!-- Brute-force specifically from a known malicious IP = critical -->
+  <rule id="100151" level="15">
+    <if_sid>100110</if_sid>
+    <list field="srcip" lookup="address_match_key">etc/lists/malicious-ips</list>
+    <description>CRITICAL: SSH brute-force from KNOWN malicious IP $(srcip)</description>
+    <group>threat_intel,brute_force,</group>
+    <mitre><id>T1110.001</id></mitre>
+  </rule>
+
+  <!-- Known malicious file hash dropped (FIM sha256 vs CDB list) -->
+  <rule id="100152" level="15">
+    <if_sid>550,554</if_sid>
+    <list field="sha256" lookup="match_key">etc/lists/malicious-hashes</list>
+    <description>CRITICAL THREAT INTEL: file with known malicious hash dropped - $(file)</description>
+    <group>threat_intel,malicious_hash,</group>
+    <mitre><id>T1204</id></mitre>
+  </rule>
+
+</group>

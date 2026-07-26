@@ -1,0 +1,55 @@
+<svg viewBox="0 0 1040 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Alert triage lifecycle: prioritise, assign, investigate, verdict, close">
+<title>Alert triage lifecycle</title>
+<defs>
+<marker id="tr" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker>
+</defs>
+<rect width="1040" height="380" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">The L1 Alert Triage Loop</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Millions of logs → dozens of alerts. The L1 analyst decides: real threat, or noise?</text>
+
+<!-- prioritise -->
+<rect x="24" y="86" width="300" height="118" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.4"/>
+<text x="40" y="110" fill="#f0d78a" font-size="13" font-weight="700">1 · Prioritise the queue</text>
+<text x="40" y="132" fill="#c7d3e8" font-size="11">① Filter — take only New / unassigned</text>
+<text x="40" y="152" fill="#c7d3e8" font-size="11">② Sort by severity — Critical first</text>
+<text x="40" y="172" fill="#c7d3e8" font-size="11">③ Sort by time — oldest first</text>
+<text x="40" y="194" fill="#8ea3c8" font-size="10">Don't grab an alert a teammate owns.</text>
+
+<!-- initial -->
+<rect x="370" y="86" width="300" height="118" rx="10" fill="#0e1730" stroke="#2b3f70"/>
+<text x="386" y="110" fill="#c7d3e8" font-size="13" font-weight="700">2 · Take ownership</text>
+<text x="386" y="132" fill="#93b0d8" font-size="11">Assign the alert to yourself</text>
+<text x="386" y="152" fill="#93b0d8" font-size="11">Set status → In Progress</text>
+<text x="386" y="172" fill="#93b0d8" font-size="11">Read name, description, key fields</text>
+<text x="386" y="194" fill="#8ea3c8" font-size="10">Avoid two analysts on one alert.</text>
+
+<!-- investigate -->
+<rect x="716" y="86" width="300" height="118" rx="10" fill="#101f1a" stroke="#3fa87a" stroke-width="1.5"/>
+<text x="732" y="110" fill="#7fe0b4" font-size="13" font-weight="700">3 · Investigate</text>
+<text x="732" y="132" fill="#8fd0b4" font-size="11">Who / what is under threat?</text>
+<text x="732" y="152" fill="#8fd0b4" font-size="11">Review surrounding events (pivot)</text>
+<text x="732" y="172" fill="#8fd0b4" font-size="11">Enrich indicators (threat intel)</text>
+<text x="732" y="194" fill="#8ea3c8" font-size="10">Use a workbook / playbook if one exists.</text>
+
+<path d="M324 145 L368 145" stroke="#37c7d4" stroke-width="1.9" marker-end="url(#tr)"/>
+<path d="M670 145 L714 145" stroke="#37c7d4" stroke-width="1.9" marker-end="url(#tr)"/>
+
+<!-- verdict row -->
+<rect x="716" y="240" width="300" height="112" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.4"/>
+<text x="732" y="264" fill="#f0d78a" font-size="13" font-weight="700">4 · Verdict &amp; close</text>
+<rect x="732" y="278" width="130" height="30" rx="6" fill="#2a1620" stroke="#e0556b"/>
+<text x="797" y="298" text-anchor="middle" fill="#f2a6b4" font-size="11" font-weight="700">True Positive</text>
+<rect x="878" y="278" width="120" height="30" rx="6" fill="#101f1a" stroke="#3fa87a"/>
+<text x="938" y="298" text-anchor="middle" fill="#7fe0b4" font-size="11" font-weight="700">False Positive</text>
+<text x="732" y="328" fill="#c7d3e8" font-size="10.5">TP → comment + escalate to L2</text>
+<text x="732" y="344" fill="#c7d3e8" font-size="10.5">FP → comment reason → tune the rule</text>
+<path d="M866 204 L866 238" stroke="#3fa87a" stroke-width="1.7" marker-end="url(#tr)"/>
+
+<!-- comment / audit -->
+<rect x="24" y="240" width="640" height="112" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.3"/>
+<text x="40" y="264" fill="#b6a9f2" font-size="13" font-weight="700">Always: comment your reasoning</text>
+<text x="40" y="288" fill="#c7d3e8" font-size="11">A short note — what you checked, what you found, why the verdict — is the audit trail.</text>
+<text x="40" y="310" fill="#c7d3e8" font-size="11">It lets L2 continue instantly and lets the SOC manager measure triage quality.</text>
+<text x="40" y="334" fill="#8ea3c8" font-size="10.5">Closing an alert doesn't stop the attack — escalation and response do. But it's where it starts.</text>
+</svg>

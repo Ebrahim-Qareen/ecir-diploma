@@ -1,0 +1,182 @@
+<!-- ==========================================================================
+     Windows_Custom_Rules.xml  —  Operation Shadow Gate (Windows scenario)
+     ITGate Academy · eCIR SOC Lab · deploy to /var/ossec/etc/rules/
+     Detects the attack windows produced by attack-windows.ps1:
+       A 09:20 logon brute-force + success
+       B 13:30 scheduled task + registry Run key + PowerShell malware download
+       C 16:10 credential theft + Defender off + shadow delete + ransomware
+     Levels: high (12-14) / critical (15).
+     Base SIDs (60009 win eventchannel, 61603 sysmon EID1, 92xxx powershell)
+     may vary by ruleset version — confirm each with wazuh-logtest.
+     Rule IDs: 100200-100230
+     ========================================================================== -->
+
+<group name="windows,shadow_gate,authentication,">
+
+  <!-- WINDOW A - failed logon (Event 4625) base classifier -->
+  <rule id="100200" level="5">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4625$</field>
+    <description>Windows failed logon (4625) for $(win.eventdata.targetUserName) from $(win.eventdata.ipAddress)</description>
+    <group>authentication_failed,</group>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+
+  <!-- WINDOW A - logon brute-force: 8+ failures in 120s -->
+  <rule id="100201" level="13" frequency="8" timeframe="120">
+    <if_matched_sid>100200</if_matched_sid>
+    <description>Windows logon brute-force: 8+ failed logons in 120s (account $(win.eventdata.targetUserName))</description>
+    <group>authentication_failed,brute_force,</group>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+
+  <!-- WINDOW A - successful logon right after brute-force (T1078) -->
+  <rule id="100202" level="15">
+    <if_sid>60009,18152</if_sid>
+    <if_matched_sid>100201</if_matched_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <description>CRITICAL: successful logon after brute-force - likely compromised account $(win.eventdata.targetUserName)</description>
+    <group>authentication_success,brute_force,</group>
+    <mitre><id>T1078</id><id>T1110</id></mitre>
+  </rule>
+
+  <!-- WINDOW A - remote-interactive (RDP) logon, type 10 -->
+  <rule id="100203" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.logonType">^10$</field>
+    <description>RDP / RemoteInteractive logon (type 10) from $(win.eventdata.ipAddress)</description>
+    <group>lateral_movement,rdp,</group>
+    <mitre><id>T1021.001</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="windows,shadow_gate,persistence,">
+
+  <!-- WINDOW B - scheduled task created (Event 4698 / T1053.005) -->
+  <rule id="100210" level="13">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4698$</field>
+    <description>Scheduled task created: $(win.eventdata.taskName) - possible persistence</description>
+    <group>persistence,scheduled_task,</group>
+    <mitre><id>T1053.005</id></mitre>
+  </rule>
+
+  <!-- WINDOW B - registry Run key modified (Sysmon EID 13 / T1547.001) -->
+  <rule id="100211" level="13">
+    <if_sid>61614,61615,92200</if_sid>
+    <field name="win.eventdata.targetObject" type="pcre2">(?i)\\CurrentVersion\\Run(Once)?\\</field>
+    <description>Registry Run key set for persistence: $(win.eventdata.targetObject)</description>
+    <group>persistence,registry,</group>
+    <mitre><id>T1547.001</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="windows,shadow_gate,execution,">
+
+  <!-- WINDOW B - encoded PowerShell (T1059.001) -->
+  <rule id="100215" level="14">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(-enc\s|-encodedcommand\s|-e\s+[A-Za-z0-9+/=]{20,})</field>
+    <description>Encoded PowerShell execution - obfuscated payload</description>
+    <group>execution,powershell,</group>
+    <mitre><id>T1059.001</id></mitre>
+  </rule>
+
+  <!-- WINDOW B - PowerShell download cradle pulling malware (T1105) -->
+  <rule id="100216" level="14">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(Net\.WebClient|DownloadString|DownloadFile|Invoke-WebRequest|iwr\s|IEX\s*\(|Invoke-RestMethod|Start-BitsTransfer)</field>
+    <description>PowerShell download cradle - malware staging from remote host</description>
+    <group>execution,download,c2,</group>
+    <mitre><id>T1105</id><id>T1059.001</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="windows,shadow_gate,credential_access,">
+
+  <!-- WINDOW C - SAM/SYSTEM hive export (T1003.002) -->
+  <rule id="100220" level="15">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)reg(\.exe)?\s+save\s+hklm\\(sam|system|security)</field>
+    <description>CRITICAL: registry hive export (SAM/SYSTEM/SECURITY) - credential theft</description>
+    <group>credential_access,</group>
+    <mitre><id>T1003.002</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="windows,shadow_gate,defense_evasion,">
+
+  <!-- WINDOW C - Windows Defender realtime disabled (T1562.001) -->
+  <rule id="100222" level="14">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(Set-MpPreference\s+-DisableRealtimeMonitoring\s+\$?true|sc\s+stop\s+WinDefend|DisableAntiSpyware)</field>
+    <description>Windows Defender realtime protection disabled - defense evasion</description>
+    <group>defense_evasion,</group>
+    <mitre><id>T1562.001</id></mitre>
+  </rule>
+
+  <!-- WINDOW C - Security event log cleared (Event 1102 / T1070.001) -->
+  <rule id="100223" level="14">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^1102$</field>
+    <description>Security event log cleared - anti-forensics</description>
+    <group>defense_evasion,log_clearing,</group>
+    <mitre><id>T1070.001</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="windows,shadow_gate,impact,">
+
+  <!-- WINDOW C - shadow copy / backup deletion (T1490) -->
+  <rule id="100225" level="15">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(vssadmin(\.exe)?\s+delete\s+shadows|wmic\s+shadowcopy\s+delete|wbadmin\s+delete\s+catalog|bcdedit.*recoveryenabled\s+no)</field>
+    <description>CRITICAL: shadow copy / backup deletion - ransomware inhibiting recovery</description>
+    <group>impact,ransomware,</group>
+    <mitre><id>T1490</id></mitre>
+  </rule>
+
+  <!-- WINDOW C - mass file encryption: 12+ files renamed to ransom ext in 30s -->
+  <rule id="100226" level="15" frequency="12" timeframe="30">
+    <if_matched_sid>61613,61614,554</if_matched_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)\.(shadowlock|encrypted|locked|crypt|enc)$</field>
+    <description>CRITICAL: mass file encryption in progress - active ransomware (.shadowlock)</description>
+    <group>impact,ransomware,</group>
+    <mitre><id>T1486</id></mitre>
+  </rule>
+
+  <!-- WINDOW C - ransom note dropped -->
+  <rule id="100227" level="14">
+    <if_sid>61613,61614,554</if_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)(HOW_TO_DECRYPT|READ_ME|_RECOVER_|RANSOM|DECRYPT_INSTRUCTION)</field>
+    <description>Ransom note file created: $(win.eventdata.targetFilename)</description>
+    <group>impact,ransomware,</group>
+    <mitre><id>T1486</id></mitre>
+  </rule>
+
+</group>
+
+
+<group name="windows,shadow_gate,threat_intel,">
+
+  <!-- Known malicious file hash dropped (Sysmon EID 15 sha256 vs CDB list) -->
+  <rule id="100230" level="15">
+    <if_sid>61613,61614</if_sid>
+    <list field="win.eventdata.hashes" lookup="match_key">etc/lists/malicious-hashes</list>
+    <description>CRITICAL THREAT INTEL: file with known malicious hash written - $(win.eventdata.targetFilename)</description>
+    <group>threat_intel,malicious_hash,</group>
+    <mitre><id>T1204</id></mitre>
+  </rule>
+
+</group>

@@ -1,0 +1,49 @@
+<svg viewBox="0 0 1040 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Anatomy of a Sigma rule: title, id, status, logsource, detection, condition, level, tags">
+<title>Sigma rule anatomy</title>
+<defs>
+<marker id="sg" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 Z" fill="#37c7d4"/></marker>
+</defs>
+<rect width="1040" height="420" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Anatomy of a Sigma Rule (YAML)</text>
+<text x="1012" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">"Sigma is to logs what Snort is to traffic and YARA is to files." One rule, any SIEM.</text>
+
+<!-- YAML block -->
+<rect x="24" y="76" width="560" height="316" rx="10" fill="#0e1730" stroke="#2b3f70"/>
+<text x="44" y="104" fill="#f0d78a" font-size="11.5" font-family="monospace">title: AnyDesk Silent Installation</text>
+<text x="44" y="126" fill="#93b0d8" font-size="11.5" font-family="monospace">id: 0f06a3a5-6a09-...   # UUID</text>
+<text x="44" y="148" fill="#93b0d8" font-size="11.5" font-family="monospace">status: experimental</text>
+<text x="44" y="170" fill="#93b0d8" font-size="11.5" font-family="monospace">description: silent remote-tool install</text>
+<text x="44" y="196" fill="#7fe0b4" font-size="11.5" font-family="monospace">logsource:</text>
+<text x="60" y="214" fill="#8fd0b4" font-size="11.5" font-family="monospace">product: windows</text>
+<text x="60" y="232" fill="#8fd0b4" font-size="11.5" font-family="monospace">category: process_creation</text>
+<text x="44" y="258" fill="#f2a6b4" font-size="11.5" font-family="monospace">detection:</text>
+<text x="60" y="276" fill="#e6a9b4" font-size="11.5" font-family="monospace">selection:</text>
+<text x="76" y="294" fill="#e6a9b4" font-size="11.5" font-family="monospace">CommandLine|contains|all:</text>
+<text x="92" y="312" fill="#e6a9b4" font-size="11.5" font-family="monospace">- '--install'</text>
+<text x="92" y="330" fill="#e6a9b4" font-size="11.5" font-family="monospace">- '--start-with-win'</text>
+<text x="60" y="352" fill="#b6a9f2" font-size="11.5" font-family="monospace">condition: selection</text>
+<text x="44" y="376" fill="#93b0d8" font-size="11.5" font-family="monospace">level: high</text>
+
+<!-- callouts -->
+<rect x="620" y="80" width="396" height="46" rx="8" fill="#0e1730" stroke="#d4af37"/>
+<text x="636" y="100" fill="#f0d78a" font-size="11.5" font-weight="700">Identity</text>
+<text x="636" y="117" fill="#8ea3c8" font-size="10.5">title, id (UUID), status, description</text>
+<path d="M584 120 L618 103" stroke="#d4af37" stroke-width="1.4" marker-end="url(#sg)"/>
+
+<rect x="620" y="176" width="396" height="46" rx="8" fill="#101f1a" stroke="#3fa87a"/>
+<text x="636" y="196" fill="#7fe0b4" font-size="11.5" font-weight="700">Log source — WHERE to look</text>
+<text x="636" y="213" fill="#8ea3c8" font-size="10.5">product / category / service</text>
+<path d="M584 210 L618 199" stroke="#3fa87a" stroke-width="1.4" marker-end="url(#sg)"/>
+
+<rect x="620" y="258" width="396" height="64" rx="8" fill="#2a1620" stroke="#e0556b"/>
+<text x="636" y="278" fill="#f2a6b4" font-size="11.5" font-weight="700">Detection — WHAT to match</text>
+<text x="636" y="296" fill="#8ea3c8" font-size="10.5">selection (search identifiers) + modifiers</text>
+<text x="636" y="312" fill="#8ea3c8" font-size="10.5">contains · all · endswith · startswith · base64 · re</text>
+<path d="M584 300 L618 290" stroke="#e0556b" stroke-width="1.4" marker-end="url(#sg)"/>
+
+<rect x="620" y="344" width="396" height="48" rx="8" fill="#1a1533" stroke="#8b7ce8"/>
+<text x="636" y="364" fill="#b6a9f2" font-size="11.5" font-weight="700">Condition &amp; metadata</text>
+<text x="636" y="381" fill="#8ea3c8" font-size="10.5">condition · level · tags (MITRE) · falsepositives</text>
+<path d="M584 360 L618 366" stroke="#8b7ce8" stroke-width="1.4" marker-end="url(#sg)"/>
+</svg>

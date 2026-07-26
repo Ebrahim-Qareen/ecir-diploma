@@ -87,6 +87,40 @@
     </a>
   </div>
 
+  <!-- ============ SESSION 4 CARDS ============ -->
+  <h2 class="sec" id="s04" style="margin-top:34px">Session 4 · Detection, Triage &amp; Threat Intel</h2>
+  <p class="sec-desc">A live case, not a dataset. You <strong>run the attack</strong> yourself, let your Session-4 rules fire in Wazuh,
+     then triage the alerts and enrich the IOCs — exactly the loop the session taught.</p>
+  <div class="chal-grid">
+    <a class="chal-card hard" href="#cf-sg-linux">
+      <h4>Operation Shadow Gate · Linux</h4>
+      <span class="cc-idx">Wazuh · soc-linux-victim01</span>
+      <div class="cc-meta"><span class="diff hard">Scenario 1</span><span class="tag">7 Q</span><span class="mitre">T1595→T1041</span></div>
+    </a>
+    <a class="chal-card hard" href="#cf-sg-win">
+      <h4>Operation Shadow Gate · Windows</h4>
+      <span class="cc-idx">Wazuh · soc-win-victim01</span>
+      <div class="cc-meta"><span class="diff hard">Scenario 2</span><span class="tag">7 Q</span><span class="mitre">T1110→T1486</span></div>
+    </a>
+    <a class="chal-card med" href="#cf-sg-intel">
+      <h4>Shadow Gate · Threat-Intel Pivot</h4>
+      <span class="cc-idx">VirusTotal · AbuseIPDB · URLhaus</span>
+      <div class="cc-meta"><span class="diff med">Enrichment</span><span class="tag">6 Q</span><span class="mitre">IOC → verdict</span></div>
+    </a>
+  </div>
+
+  <div class="box tip" id="run-shadowgate" style="margin-top:16px">
+    <span class="box-t">How to run &amp; investigate (Session 4)</span>
+    <p>These cases are live. On the lab victims, run the attack, then work it in Wazuh:</p>
+<pre><code># LNX-VICTIM01 (root)
+sudo bash attack-linux.sh
+# WIN-VICTIM01 (Administrator PowerShell)
+Set-ExecutionPolicy -Scope Process Bypass -Force ; .\attack-windows.ps1</code></pre>
+    <p>Then open Wazuh → <strong>Threat Hunting</strong>, set the time range to today, and group alerts by <code>agent.name</code>
+       and <code>rule.id</code>. Answer every question <strong>from the alerts</strong> — then pivot the IOCs to threat-intel platforms.
+       Scripts &amp; deploy guide: <code>docs/lab/attack-scripts/</code> and <code>docs/lab/wazuh-rules/</code>.</p>
+  </div>
+
   <!-- ADVANCED CAMPAIGN CARD -->
   <h2 class="sec" id="adv" style="margin-top:34px">Advanced · Connected Campaign</h2>
   <p class="sec-desc">One intrusion across three log sources. Correlate by Logon ID, Process ID and IP — the real analyst skill.</p>
@@ -482,6 +516,233 @@ index=wineventlog EventID=4698 | table _time TaskName
 index=wineventlog EventID=13 | table _time RegistryKey RegistryValue
 # Q7 log cleared
 index=wineventlog EventID=1102 | table _time SubjectUserName</code></pre></details>
+    </div>
+  </div>
+
+  <!-- CF: SHADOW GATE LINUX (S4) -->
+  <div class="casefile hard" id="cf-sg-linux">
+    <div class="case-head"><h3>🔴 Scenario 1 · Operation Shadow Gate — Linux</h3>
+      <div class="ch-tags"><span class="diff hard">Live case</span><span class="tag">7 questions</span></div></div>
+    <div class="case-body">
+      <div class="brief"><b>Brief.</b> You run <code>attack-linux.sh</code> on <code>soc-linux-victim01</code>. It replays a full business
+        day of normal nginx traffic with <strong>three attack windows</strong> hidden inside. The windows share no single indicator —
+        different IPs, User-Agents and times — so build a timeline from the Wazuh alerts, then enrich the IOCs.</div>
+      <div class="evidence">
+        <div class="ev"><span>Run</span><b><code>sudo bash attack-linux.sh</code></b></div>
+        <div class="ev"><span>Investigate</span><b>Wazuh → Threat Hunting</b></div>
+        <div class="ev"><span>Agent</span><b><code>soc-linux-victim01</code></b></div>
+        <div class="ev"><span>Pivot on</span><b>rule.id, srcip, url, user_agent, hash, dest IP</b></div>
+      </div>
+      <div class="mitre-row"><span class="lbl">Kill chain</span><span class="mitre">T1595 Recon</span><span class="mitre">T1110 Brute Force</span><span class="mitre">T1190 Exploit</span><span class="mitre">T1505.003 Web Shell</span><span class="mitre">T1105 Ingress Tool</span><span class="mitre">T1548.001 SUID</span><span class="mitre">T1041 Exfil</span></div>
+
+      <div class="q mcq" data-answer="b" data-why="Window A (~09:15): the recon paths and SSH brute-force all come from 198.51.100.23 with sqlmap/Nikto User-Agents. 203.0.113.50 is the Window B web-exploit IP; 162.243.103.246 is the C2; 192.0.2.100 is the exfil target.">
+        <p><span class="qn">Q1</span> Which source IP ran the web recon and SSH brute-force in Window A?</p>
+        <ul class="opts"><li data-opt="a">203.0.113.50</li><li data-opt="b">198.51.100.23</li><li data-opt="c">162.243.103.246</li><li data-opt="d">192.0.2.100</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="c" data-why="The auth log records 'Accepted password for socadmin' from the attacker IP after the brute-force burst — that account was compromised.">
+        <p><span class="qn">Q2</span> Which account did the attacker successfully authenticate as over SSH?</p>
+        <ul class="opts"><li data-opt="a">root</li><li data-opt="b">svc_backup</li><li data-opt="c">socadmin</li><li data-opt="d">deploy</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="a" data-why="Window B reads the passwd file via a directory-traversal request: GET /../../../../etc/passwd (200). SQLi and the web shell are separate steps.">
+        <p><span class="qn">Q3</span> How did the attacker read <code>/etc/passwd</code> through the web server?</p>
+        <ul class="opts"><li data-opt="a">Path traversal (../../../../etc/passwd)</li><li data-opt="b">UNION SQL injection</li><li data-opt="c">SSH as root</li><li data-opt="d">Reflected XSS</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="The attacker drops shell.php into /var/www/html and runs it as shell.php?cmd=id. beacon.bin is the downloaded EICAR payload, not the shell.">
+        <p><span class="qn">Q4</span> What file was dropped as the web shell?</p>
+        <ul class="opts"><li data-opt="a">beacon.bin</li><li data-opt="b">shell.php</li><li data-opt="c">upload.php</li><li data-opt="d">index.html</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="d" data-why="The second-stage payload is pulled from the Feodo C2 IP 162.243.103.246 (/beacon.bin). 203.0.113.50 is the attacker's web IP and testmynids.org is the safe test callback — both are distractors.">
+        <p><span class="qn">Q5</span> From which C2 IP did the malware (beacon) download come?</p>
+        <ul class="opts"><li data-opt="a">203.0.113.50</li><li data-opt="b">198.51.100.23</li><li data-opt="c">testmynids.org</li><li data-opt="d">162.243.103.246</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="Window C sets Linux persistence + privesc: a SUID bash (/tmp/.bash-suid), a cron file (/etc/cron.d/sysupd), an attacker SSH key in /root/.ssh/authorized_keys, and a backdoor user svc_backup. Registry Run keys are Windows — wrong OS.">
+        <p><span class="qn">Q6</span> Which set of persistence / privilege-escalation artifacts appeared in Window C?</p>
+        <ul class="opts">
+          <li data-opt="a">Registry Run key + scheduled task</li>
+          <li data-opt="b">SUID bash + cron + SSH key + backdoor user svc_backup</li>
+          <li data-opt="c">New sudoers entry + WMI subscription</li>
+          <li data-opt="d">Modified /etc/hosts + systemd timer</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="c" data-why="Exfil is a POST of /etc/passwd to 192.0.2.100. The other IPs are the recon, exploit and C2 hosts from earlier windows.">
+        <p><span class="qn">Q7</span> To which IP was <code>/etc/passwd</code> exfiltrated?</p>
+        <ul class="opts"><li data-opt="a">198.51.100.23</li><li data-opt="b">162.243.103.246</li><li data-opt="c">192.0.2.100</li><li data-opt="d">203.0.113.50</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <details class="inst-spl"><summary>Instructor · Wazuh hunt &amp; expected rules</summary>
+<pre><code># All Shadow Gate alerts on the Linux agent, newest first
+agent.name:soc-linux-victim01 AND rule.id:[100100 TO 100112]
+# Window A — recon + brute force (198.51.100.23)
+rule.id:(100100 OR 100101 OR 100102 OR 100110 OR 100111)   # srcip 198.51.100.23
+# Window B — traversal, web shell, malware pull (203.0.113.50 -> 162.243.103.246)
+rule.id:(100103 OR 100109 OR 100300 OR 100302 OR 100304)
+# Window C — SUID, shadow read, cron, SSH key, backdoor user, exfil (192.0.2.100)
+rule.id:(100104 OR 100105 OR 100106 OR 100107 OR 100108 OR 100112)
+# Q2 successful SSH account
+full_log:"Accepted password"    # -> socadmin from 198.51.100.23
+# IOCs to pivot: 198.51.100.23, 203.0.113.50, 162.243.103.246, 192.0.2.100, EICAR hash</code></pre></details>
+    </div>
+  </div>
+
+  <!-- CF: SHADOW GATE WINDOWS (S4) -->
+  <div class="casefile hard" id="cf-sg-win">
+    <div class="case-head"><h3>🔴 Scenario 2 · Operation Shadow Gate — Windows</h3>
+      <div class="ch-tags"><span class="diff hard">Live case</span><span class="tag">7 questions</span></div></div>
+    <div class="case-body">
+      <div class="brief"><b>Brief.</b> You run <code>attack-windows.ps1</code> on <code>soc-win-victim01</code>. A normal day hides three
+        windows: an account brute-force, persistence + a PowerShell malware download, and finally credential theft, recovery
+        sabotage and ransomware. Correlate on time + account + IP + process in Wazuh.</div>
+      <div class="evidence">
+        <div class="ev"><span>Run</span><b><code>.\attack-windows.ps1</code> (Admin)</b></div>
+        <div class="ev"><span>Investigate</span><b>Wazuh → Threat Hunting</b></div>
+        <div class="ev"><span>Agent</span><b><code>soc-win-victim01</code></b></div>
+        <div class="ev"><span>Pivot on</span><b>rule.id, Account, SourceAddress, Image, CommandLine, hash</b></div>
+      </div>
+      <div class="mitre-row"><span class="lbl">Kill chain</span><span class="mitre">T1110 Brute Force</span><span class="mitre">T1021.001 RDP</span><span class="mitre">T1547.001 Run Key</span><span class="mitre">T1053.005 Task</span><span class="mitre">T1105 Download</span><span class="mitre">T1003.002 SAM</span><span class="mitre">T1490 Inhibit Recovery</span><span class="mitre">T1486 Ransomware</span></div>
+
+      <div class="q mcq" data-answer="c" data-why="Window A fires 15 failed logons (4625) from 198.51.100.24 immediately before the success. 198.51.100.23 is the Linux attacker IP — a cross-case distractor.">
+        <p><span class="qn">Q1</span> How many failed logons preceded the success, and from which IP?</p>
+        <ul class="opts">
+          <li data-opt="a">12 from 198.51.100.23</li>
+          <li data-opt="b">20 from 192.0.2.100</li>
+          <li data-opt="c">15 from 198.51.100.24</li>
+          <li data-opt="d">5 from 198.51.100.24</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="The brute-force targets and then succeeds as the 'administrator' account (4624 from the same source IP).">
+        <p><span class="qn">Q2</span> Which account was compromised?</p>
+        <ul class="opts"><li data-opt="a">emp01</li><li data-opt="b">administrator</li><li data-opt="c">svc_backup</li><li data-opt="d">socadmin</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="d" data-why="The success is a 4624 with LogonType 10 (RemoteInteractive) — remote access, consistent with an RDP-style compromise.">
+        <p><span class="qn">Q3</span> What logon type marked the successful compromise?</p>
+        <ul class="opts"><li data-opt="a">Type 2 (interactive)</li><li data-opt="b">Type 3 (network)</li><li data-opt="c">Type 5 (service)</li><li data-opt="d">Type 10 (remote interactive)</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="a" data-why="Window B sets two persistence mechanisms: a Run key 'ShadowGateLoader' and a scheduled task 'ShadowGate-Update'. Cron + SSH key are the Linux case.">
+        <p><span class="qn">Q4</span> Which two persistence mechanisms were created in Window B?</p>
+        <ul class="opts">
+          <li data-opt="a">Run key ShadowGateLoader + scheduled task ShadowGate-Update</li>
+          <li data-opt="b">Cron job + SSH authorized_key</li>
+          <li data-opt="c">New service + WMI subscription</li>
+          <li data-opt="d">Startup folder shortcut + BITS job</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="c" data-why="The download cradle fetches payload.exe from the Feodo C2 IP 162.243.103.246. testmynids.org is the safe IDS test callback — contacted, but not the malware host.">
+        <p><span class="qn">Q5</span> The PowerShell download cradle pulled the payload from which C2 IP?</p>
+        <ul class="opts"><li data-opt="a">198.51.100.24</li><li data-opt="b">192.0.2.100</li><li data-opt="c">162.243.103.246</li><li data-opt="d">testmynids.org</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="Deleting shadow copies with vssadmin (T1490) inhibits recovery. Disabling Defender is defense evasion; reg-saving SAM is credential theft; renaming files is the encryption itself.">
+        <p><span class="qn">Q6</span> In Window C, which action specifically inhibited recovery before encryption?</p>
+        <ul class="opts">
+          <li data-opt="a">Set-MpPreference disabling Defender</li>
+          <li data-opt="b">vssadmin delete shadows /all</li>
+          <li data-opt="c">reg save HKLM\SAM</li>
+          <li data-opt="d">Renaming files to .shadowlock</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="a" data-why="The ransomware appends .shadowlock and drops HOW_TO_DECRYPT.txt as the ransom note.">
+        <p><span class="qn">Q7</span> What extension did the ransomware append, and what was the ransom-note filename?</p>
+        <ul class="opts">
+          <li data-opt="a">.shadowlock + HOW_TO_DECRYPT.txt</li>
+          <li data-opt="b">.locked + README.txt</li>
+          <li data-opt="c">.encrypted + DECRYPT.hta</li>
+          <li data-opt="d">.shadowlock + RECOVER_FILES.txt</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <details class="inst-spl"><summary>Instructor · Wazuh hunt &amp; expected rules</summary>
+<pre><code># All Shadow Gate alerts on the Windows agent
+agent.name:soc-win-victim01 AND rule.id:[100200 TO 100230]
+# Window A — brute force -> success (198.51.100.24, administrator)
+rule.id:(100200 OR 100201 OR 100202 OR 100203)
+# Window B — Run key + scheduled task + encoded PS + download (162.243.103.246)
+rule.id:(100210 OR 100211 OR 100215 OR 100216 OR 100230)
+# Window C — SAM export, Defender off, shadow delete, .shadowlock, ransom note
+rule.id:(100220 OR 100222 OR 100223 OR 100225 OR 100226 OR 100227)
+# IOCs to pivot: 198.51.100.24, 162.243.103.246, EICAR hash 275a021b...fd0f</code></pre></details>
+    </div>
+  </div>
+
+  <!-- CF: SHADOW GATE THREAT-INTEL PIVOT (S4) -->
+  <div class="casefile med" id="cf-sg-intel">
+    <div class="case-head"><h3>🟠 Enrichment · Shadow Gate — Threat-Intel Pivot</h3>
+      <div class="ch-tags"><span class="diff med">Enrichment</span><span class="tag">6 questions</span></div></div>
+    <div class="case-body">
+      <div class="brief"><b>Brief.</b> You have your IOC list from the two live cases. Now enrich each one on public threat intel and
+        reach a verdict. The key lesson: some IOCs are <strong>known-bad in a feed</strong>, others are <strong>unknown but still
+        malicious in context</strong> — "not in a feed" never means "safe".</div>
+      <div class="evidence">
+        <div class="ev"><span>Tools</span><b>VirusTotal · AbuseIPDB · URLhaus · Feodo Tracker</b></div>
+        <div class="ev"><span>From</span><b>the IOCs you pulled in both cases</b></div>
+        <div class="ev"><span>Goal</span><b>malicious vs benign · in-feed vs unknown</b></div>
+        <div class="ev"><span>Output</span><b>a blocklist for Wazuh CDB lists</b></div>
+      </div>
+      <div class="mitre-row"><span class="lbl">Skill</span><span class="mitre">IOC enrichment</span><span class="mitre">Reputation</span><span class="mitre">ASN / GeoIP</span><span class="mitre">Verdict</span></div>
+
+      <div class="q mcq" data-answer="c" data-why="SHA256 275a021b...fd0f is the EICAR anti-virus test file — it shows 60+ AV detections on VirusTotal by design. It flags heavily but is technically a harmless test string.">
+        <p><span class="qn">Q1</span> The dropped payload's SHA256 <code>275a021b…fd0f</code> shows 60+ AV hits on VirusTotal. What is it?</p>
+        <ul class="opts"><li data-opt="a">WannaCry dropper</li><li data-opt="b">Cobalt Strike beacon</li><li data-opt="c">EICAR test file</li><li data-opt="d">A benign installer</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="162.243.103.246 is a Feodo Tracker C2 IP — malicious on AbuseIPDB, VirusTotal and OTX. That is your highest-confidence external IOC.">
+        <p><span class="qn">Q2</span> How does the C2 IP <code>162.243.103.246</code> resolve on AbuseIPDB / Feodo Tracker?</p>
+        <ul class="opts"><li data-opt="a">A clean residential IP</li><li data-opt="b">A known botnet C2 (malicious)</li><li data-opt="c">A CDN edge node</li><li data-opt="d">Not found anywhere</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="d" data-why="198.51.100.x is TEST-NET (RFC 5737) so it will never appear in a public feed — but in THIS investigation it is the confirmed attacker source. 'Not in a feed' is not 'safe'; you weight it on your own evidence.">
+        <p><span class="qn">Q3</span> The attacker IPs <code>198.51.100.23/24</code> return "no results" on VirusTotal and AbuseIPDB. Correct read?</p>
+        <ul class="opts">
+          <li data-opt="a">They're safe — close the alert</li>
+          <li data-opt="b">They're CDN infrastructure</li>
+          <li data-opt="c">They're internal assets</li>
+          <li data-opt="d">Still malicious here — feeds just don't list them</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="a" data-why="testmynids.org is a well-known safe IDS/IPS test callback. The malware contacted it, but the domain itself is benign — not everything an attack touches is malicious.">
+        <p><span class="qn">Q4</span> The download cradle contacted <code>testmynids.org</code>. Threat intel says it is…</p>
+        <ul class="opts"><li data-opt="a">A well-known safe IDS test callback</li><li data-opt="b">An active ransomware C2</li><li data-opt="c">A phishing domain</li><li data-opt="d">A Tor exit node</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="b" data-why="AbuseIPDB is the source for an IP's history of scanning / brute-force / abuse reports. Shodan shows exposed services, crt.sh shows certificates, punycoder decodes IDN domains.">
+        <p><span class="qn">Q5</span> Which source best confirms whether an IP has a history of scanning / brute-force abuse?</p>
+        <ul class="opts"><li data-opt="a">crt.sh</li><li data-opt="b">AbuseIPDB</li><li data-opt="c">Shodan</li><li data-opt="d">punycoder.com</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+      <div class="q mcq" data-answer="c" data-why="Confirmed-malicious IPs/domains go into the Wazuh CDB lists (malicious-ips.txt / malicious-domains.txt) that the threat-intel rules match against — turning your enrichment into automated detection.">
+        <p><span class="qn">Q6</span> To turn confirmed IOCs into automated Wazuh detection, where do they go?</p>
+        <ul class="opts">
+          <li data-opt="a">Straight into the decoder file</li>
+          <li data-opt="b">The public SigmaHQ repo</li>
+          <li data-opt="c">The Wazuh CDB lists (malicious-ips.txt / malicious-domains.txt)</li>
+          <li data-opt="d">The agent's ossec.log</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <details class="inst-spl"><summary>Instructor · IOC verdict key</summary>
+<pre><code># External hits (WILL flag on public TI):
+#   162.243.103.246, 178.62.3.223 ....... Feodo C2 (malicious)
+#   EICAR 275a021b...fd0f ................ 60+ AV (test file, flags by design)
+#   WannaCry ed01ebfb..., CobaltStrike 669fcafc... . malicious on VT/MalwareBazaar
+#   always-undetected.com, api.recapcha.space ... URLhaus malicious
+#   testmynids.org ....................... benign (safe IDS test callback)
+# Lab-only (will NOT flag — still malicious in context):
+#   198.51.100.23/24 (attacker), 192.0.2.100 (exfil), shadowgate-c2.evil.corp
+# Teaching point: weight IOCs on your own evidence, not only on feed presence.</code></pre></details>
     </div>
   </div>
 
