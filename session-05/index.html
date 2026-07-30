@@ -346,6 +346,46 @@
         <li><strong>Tested backups</strong> — a backup you never restored is not a backup.</li>
       </ul>
 
+      <h2>🧰 Tools you use in this phase</h2>
+      <p>Preparation is where tools get <em>installed and configured</em>. Nothing here is used to chase an attacker —
+         everything here exists so that when the attack comes, the evidence is already being collected.</p>
+      <table class="toolbox">
+        <thead><tr><th>Tool</th><th>What it is</th><th>What you do with it here</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Splunk</strong> <span class="tag siem">SIEM</span></td>
+              <td>A log search platform. Every machine sends its logs to it, and you query them with SPL.</td>
+              <td>Confirm the right log sources are actually arriving <em>before</em> an incident. A log you did not collect yesterday cannot be investigated today.</td></tr>
+          <tr><td><strong>Sysmon</strong> / <strong>auditd</strong></td>
+              <td>Free logging agents for Windows / Linux that record process creation, network connections and file changes.</td>
+              <td>Install and tune them on every endpoint. Native Windows logs alone are not enough for IR.</td></tr>
+          <tr><td><strong>Wazuh</strong> <span class="tag siem">Detection</span></td>
+              <td>An open-source agent + manager that reads logs and raises alerts on rules.</td>
+              <td>Deploy the agents and load the rule set. This is what will wake you up in Phase 2.</td></tr>
+          <tr><td><strong>Sigma</strong></td>
+              <td>A vendor-neutral YAML format for writing detection rules once and converting them to SPL, KQL, Elastic, etc.</td>
+              <td>Write and store your detection logic in a portable way, so changing SIEM does not mean losing your rules.</td></tr>
+          <tr><td><strong>TheHive</strong> <span class="tag ir">Case mgmt</span></td>
+              <td>An incident case management platform — the digital case file for every incident.</td>
+              <td>Install it, create the org and analyst accounts, and build <strong>case templates</strong> so your playbook tasks appear automatically.</td></tr>
+          <tr><td><strong>MISP</strong></td>
+              <td>A threat intelligence platform that stores and shares IOCs (hashes, IPs, domains) from other organisations.</td>
+              <td>Connect the feeds now, so enrichment in Phase 2 takes seconds instead of hours.</td></tr>
+          <tr><td><strong>IR jump bag</strong></td>
+              <td>Physical kit: write blocker, imaging drives, clean USBs, a paper notebook.</td>
+              <td>Pack it and keep it ready. You cannot go shopping in the middle of a breach.</td></tr>
+          <tr><td><strong>Backup system</strong></td>
+              <td>Whatever creates and restores your snapshots (Veeam, VM snapshots, cloud backup).</td>
+              <td>Test a real restore. An untested backup is a guess, not a recovery plan.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">The rule that ties this together</span>
+        <p>Every tool in the later phases only works because of something you did here. No Sysmon in Preparation →
+           no process tree in Analysis. No case template → no consistent response. <strong>Preparation is the tooling
+           phase.</strong></p>
+      </div>
+
       <div class="box ine">
         <span class="box-t">INE Reference</span>
         <p>Module 2 — Preparation phase, PPT framework, policy/plan/playbook trio, IR toolkit</p>
@@ -603,6 +643,48 @@
            "I think I called someone" is not an answer.</p>
       </div>
 
+      <h2>🧰 Tools you use in this phase</h2>
+      <p>This is the phase with the most tools, because it has the most questions: <em>is it real, what did it do,
+         who else is affected, is this actor known?</em> Each tool answers one of those.</p>
+      <table class="toolbox">
+        <thead><tr><th>Tool</th><th>What it is</th><th>What you do with it here</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Wazuh</strong> <span class="tag siem">Alerting</span></td>
+              <td>Agent + manager that matches your rules against incoming logs and fires alerts.</td>
+              <td>This is where the incident <em>starts</em>. You read the alert, its rule ID and its severity.</td></tr>
+          <tr><td><strong>Splunk / SPL</strong> <span class="tag siem">SIEM</span></td>
+              <td>The searchable copy of every log in the environment.</td>
+              <td>Pivot from the alert: same user, same host, same IP, same hour. This is how one alert becomes a timeline.</td></tr>
+          <tr><td><strong>TheHive</strong> <span class="tag ir">Case mgmt</span></td>
+              <td>The case file — tasks, notes, observables, timeline, who did what and when.</td>
+              <td>Open the case the moment you believe it is real, and record every observable (IP, hash, domain, user).</td></tr>
+          <tr><td><strong>Cortex</strong></td>
+              <td>TheHive's automation engine. It runs "analyzers" against an observable.</td>
+              <td>Click one observable → it queries VirusTotal, AbuseIPDB and MISP at once and writes the answer back into the case.</td></tr>
+          <tr><td><strong>VirusTotal</strong></td>
+              <td>Multi-engine scanner for file hashes, URLs and domains.</td>
+              <td>Answer "is this file known malware?" Judge by <em>which</em> engines detect it, not just the count.</td></tr>
+          <tr><td><strong>AbuseIPDB</strong></td>
+              <td>A community database of IP addresses reported for abuse, with a confidence score.</td>
+              <td>Answer "is this IP already known bad?" Useful for scanning, brute force and C2 addresses.</td></tr>
+          <tr><td><strong>URLScan.io</strong></td>
+              <td>Opens a URL safely in a sandbox and shows the page, redirects and requests.</td>
+              <td>Inspect a phishing link <strong>without</strong> clicking it on your own machine.</td></tr>
+          <tr><td><strong>MISP</strong></td>
+              <td>Threat intel platform holding IOCs grouped into events and campaigns.</td>
+              <td>Answer "has anyone seen this before?" — and whether your IOC belongs to a known campaign.</td></tr>
+          <tr><td><strong>MITRE ATT&amp;CK Navigator</strong></td>
+              <td>A visual matrix of attacker techniques with IDs (T1059, T1078…).</td>
+              <td>Give the behaviour its official name so everyone — analyst, manager, report — means the same thing.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box warn">
+        <span class="box-t">Order matters</span>
+        <p>Never enrich first. <strong>Read the alert → pivot in the SIEM → then enrich.</strong> Analysts who start on
+           VirusTotal end up investigating an IOC that had nothing to do with their alert.</p>
+      </div>
+
       <div class="box ine">
         <span class="box-t">INE Reference</span>
         <p>Module 2 — detection &amp; analysis phase · Module 3 · 3.7 triage workflow and escalation</p>
@@ -846,6 +928,54 @@
            report → bad decision.</p>
       </div>
 
+      <h2>🧰 Tools you use in this phase</h2>
+      <p>Here the tools <em>change</em> the environment, so every one of them can destroy evidence if used in the wrong
+         order. Capture first, then contain, then clean, then restore.</p>
+      <table class="toolbox">
+        <thead><tr><th>Tool</th><th>What it is</th><th>What you do with it here</th></tr></thead>
+        <tbody>
+          <tr><td><strong>DumpIt</strong> <span class="tag dfir">Capture</span></td>
+              <td>A tiny Windows tool that writes all of RAM to a file.</td>
+              <td><strong>Run before you isolate or reboot.</strong> RAM holds the running malware, keys and connections — and it dies with the power.</td></tr>
+          <tr><td><strong>FTK Imager</strong> <span class="tag dfir">Capture</span></td>
+              <td>Creates a forensic image (bit-for-bit copy) of a disk, and can also capture memory.</td>
+              <td>Take the disk image before you wipe or rebuild the machine. Once it is reimaged, the evidence is gone forever.</td></tr>
+          <tr><td><strong>Write blocker</strong></td>
+              <td>Hardware or software that allows reading a drive but physically blocks writing to it.</td>
+              <td>Attach the suspect disk through it so your own investigation cannot alter the evidence.</td></tr>
+          <tr><td><code>sha256sum</code> / <code>Get-FileHash</code></td>
+              <td>Command-line hashing tools.</td>
+              <td>Hash the image immediately, and again later, to prove nothing changed. This is what makes evidence admissible.</td></tr>
+          <tr><td><strong>Wazuh Active Response</strong> / EDR isolation</td>
+              <td>A feature that runs a command on the endpoint automatically when a rule fires — e.g. block an IP or quarantine the host.</td>
+              <td>Isolate the machine from the network while leaving it powered on, so memory survives.</td></tr>
+          <tr><td><strong>Firewall / proxy</strong></td>
+              <td>The network chokepoint you control.</td>
+              <td>Block the C2 IP or domain organisation-wide — this contains hosts you have not even found yet.</td></tr>
+          <tr><td><strong>Active Directory</strong> (<code>Disable-ADAccount</code>, revoke sessions)</td>
+              <td>The identity system — where accounts, groups and sessions live.</td>
+              <td>Disable the compromised account and force a password reset. Remember to kill live sessions too; disabling alone does not log them out.</td></tr>
+          <tr><td><strong>SOAR</strong> (Shuffle / Cortex responders)</td>
+              <td>Automation that chains those actions into one click or one trigger.</td>
+              <td>Run isolate + block + notify as a single playbook, so containment takes seconds instead of minutes.</td></tr>
+          <tr><td><strong>Patch management</strong> (WSUS, Intune, apt/yum)</td>
+              <td>The system that pushes updates.</td>
+              <td>Eradication step: close the vulnerability that was actually used — not just the malware that used it.</td></tr>
+          <tr><td><strong>Backup / restore</strong></td>
+              <td>Veeam, VM snapshots, cloud backup.</td>
+              <td>Restore from a point <em>older than the intrusion</em>, using the timeline you built in Analysis.</td></tr>
+          <tr><td><strong>Splunk</strong></td>
+              <td>The SIEM again — but now for verification.</td>
+              <td>Confirm the malicious behaviour actually stopped, and watch for the attacker returning through another door.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box warn">
+        <span class="box-t">The one mistake that ends a case</span>
+        <p>Rebooting or reimaging before capturing memory and disk. It feels like fixing the problem — it is destroying
+           the evidence. <strong>Capture → contain → eradicate → recover.</strong> Never reorder those.</p>
+      </div>
+
       <div class="box ine">
         <span class="box-t">INE Reference</span>
         <p>Module 2 — containment, eradication &amp; recovery · technical / management / legal containment</p>
@@ -881,6 +1011,32 @@
           <tr><td><strong>New detection rule</strong></td><td>so the same attack alerts <em>earlier</em> next time (back to Session 4!)</td></tr>
           <tr><td><strong>Updated playbook</strong></td><td>whatever was missing or wrong during the response</td></tr>
           <tr><td><strong>Training / awareness</strong></td><td>for staff or for the analysts</td></tr>
+        </tbody>
+      </table>
+
+      <h2>🧰 Tools you use in this phase</h2>
+      <p>No new attacker to chase here — these tools turn what happened into something the SOC keeps.</p>
+      <table class="toolbox">
+        <thead><tr><th>Tool</th><th>What it is</th><th>What you do with it here</th></tr></thead>
+        <tbody>
+          <tr><td><strong>TheHive</strong> <span class="tag ir">Case mgmt</span></td>
+              <td>The case file, with every task and note timestamped.</td>
+              <td>Export the timeline for the report, then formally close the case. A case with no closure never really ended.</td></tr>
+          <tr><td><strong>Sigma → Wazuh / Splunk</strong></td>
+              <td>Your detection rule format and the platforms that run it.</td>
+              <td>Write the rule that would have caught this <em>earlier</em>, and deploy it. This is the single most valuable output of any incident.</td></tr>
+          <tr><td><strong>MISP</strong></td>
+              <td>The threat intel platform — it shares as well as receives.</td>
+              <td>Publish your IOCs back so the next organisation detects this attacker faster.</td></tr>
+          <tr><td><strong>MITRE ATT&amp;CK Navigator</strong></td>
+              <td>The technique matrix, colourable as a heatmap.</td>
+              <td>Mark which techniques you detected and which you missed. The uncoloured squares are your next detection project.</td></tr>
+          <tr><td><strong>Splunk dashboards</strong></td>
+              <td>Saved searches turned into charts.</td>
+              <td>Track <strong>MTTD</strong> (time to detect) and <strong>MTTR</strong> (time to respond). This is how management sees the SOC improving.</td></tr>
+          <tr><td><strong>Report template</strong> + wiki / Git</td>
+              <td>Wherever your plan and playbooks are stored and versioned.</td>
+              <td>Update the playbook step that failed during the response, while it is still fresh.</td></tr>
         </tbody>
       </table>
 
@@ -1472,6 +1628,12 @@
             <li>Notification · Containment</li>
             <li>Evidence · Eradication</li>
             <li>Recovery · Post-Incident</li></ul></div>
+
+          <div class="cheat-card"><h5>🧰 Tools per phase</h5><ul>
+            <li><b>1 Prep</b> — Splunk, Sysmon, Wazuh, Sigma, TheHive, MISP, jump bag</li>
+            <li><b>2 Detect</b> — Wazuh, SPL, TheHive, Cortex, VT/AbuseIPDB, ATT&amp;CK</li>
+            <li><b>3 Respond</b> — DumpIt, FTK Imager, write blocker, AD, firewall, SOAR, backups</li>
+            <li><b>4 Post</b> — TheHive report, new Sigma rule, MISP, MTTD/MTTR</li></ul></div>
 
           <div class="cheat-card"><h5>Document trio</h5><ul>
             <li><b>Policy</b> = the rule (what/why)</li>

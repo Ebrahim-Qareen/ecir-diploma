@@ -240,6 +240,11 @@ h2.sec{
 .content td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--text-2);vertical-align:top}
 .content tr:hover td{background:rgba(255,255,255,.02)}
 
+/* tool tables — first column is the tool name, keep it tight and gold */
+.content table.toolbox td:first-child{color:var(--gold-soft);width:20%;min-width:150px}
+.content table.toolbox td:nth-child(2){width:34%;color:var(--text-3)}
+.content table.toolbox td:first-child .tag{margin-left:6px;vertical-align:middle}
+
 /* code */
 code{font-family:var(--mono);font-size:13px;background:var(--panel-2);
   border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--gold-soft)}
