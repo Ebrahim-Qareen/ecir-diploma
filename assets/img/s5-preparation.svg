@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1020 600" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Preparation phase flowchart: established IH and R processes decision leading to evaluate or create IH and R processes, then implement, evaluate posture and harden security">
+<title>Preparation — process flow</title>
+<defs>
+  <marker id="pA" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#8ea3c8"/></marker>
+  <marker id="pG" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#3fa87a"/></marker>
+  <marker id="pR" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#e0556b"/></marker>
+</defs>
+<rect width="1020" height="600" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Preparation</text>
+<text x="992" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- ============ COLUMN A (green) ============ -->
+<polygon points="150,62 268,110 150,158 32,110" fill="#10241c" stroke="#3fa87a" stroke-width="2"/>
+<text x="150" y="105" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Established</text>
+<text x="150" y="121" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">IH&amp;R Processes?</text>
+
+<circle cx="122" cy="176" r="9" fill="#3fa87a"/><path d="M117 176 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="136" y="181" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+
+<rect x="32" y="204" width="236" height="42" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="150" y="230" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Evaluate Current IH&amp;R Processes</text>
+<path d="M150 158 L150 202" stroke="#3fa87a" stroke-width="1.6" marker-end="url(#pG)"/>
+
+<rect x="32" y="298" width="236" height="52" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="150" y="320" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Determine the Need for Changes</text>
+<text x="150" y="337" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">in IH&amp;R Processes</text>
+<path d="M150 246 L150 296" stroke="#3fa87a" stroke-width="1.6" marker-end="url(#pG)"/>
+
+<rect x="32" y="398" width="236" height="52" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="150" y="420" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Identify Necessary Changes in</text>
+<text x="150" y="437" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">IH&amp;R Processes</text>
+<path d="M150 350 L150 396" stroke="#3fa87a" stroke-width="1.6" marker-end="url(#pG)"/>
+
+<rect x="32" y="498" width="236" height="42" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="150" y="524" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Update the Existing IH&amp;R Processes</text>
+<path d="M150 450 L150 496" stroke="#3fa87a" stroke-width="1.6" marker-end="url(#pG)"/>
+
+<!-- ============ COLUMN B (cyan) ============ -->
+<circle cx="300" cy="86" r="9" fill="#e0556b"/><path d="M296 82 l8 8 M304 82 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="314" y="91" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+<path d="M268 110 L340 110 L340 86 L392 86" stroke="#e0556b" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#pR)"/>
+
+<rect x="394" y="62" width="252" height="52" rx="6" fill="#0d2030" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="520" y="84" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Determine the Need For Incident</text>
+<text x="520" y="101" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Handling &amp; Response (IH&amp;R) Processes</text>
+
+<rect x="394" y="152" width="252" height="42" rx="6" fill="#0d2030" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="520" y="178" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Define IH&amp;R Vision and Mission</text>
+<path d="M520 114 L520 150" stroke="#37c7d4" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pA)"/>
+
+<rect x="394" y="232" width="252" height="52" rx="6" fill="#0d2030" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="520" y="254" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Obtain Management Approvals</text>
+<text x="520" y="271" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">and Funding</text>
+<path d="M520 194 L520 230" stroke="#37c7d4" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pA)"/>
+
+<rect x="394" y="322" width="252" height="52" rx="6" fill="#0d2030" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="520" y="344" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Develop IH&amp;R Plan, Policies, and</text>
+<text x="520" y="361" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Procedures</text>
+<path d="M520 284 L520 320" stroke="#37c7d4" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pA)"/>
+
+<rect x="394" y="412" width="252" height="52" rx="6" fill="#0d2030" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="520" y="434" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Define Criteria for Handling</text>
+<text x="520" y="451" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Incidents</text>
+<path d="M520 374 L520 410" stroke="#37c7d4" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pA)"/>
+
+<rect x="394" y="502" width="252" height="52" rx="6" fill="#0d2030" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="520" y="524" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Create IH&amp;R Team and</text>
+<text x="520" y="541" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Organize Resources</text>
+<path d="M520 464 L520 500" stroke="#37c7d4" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pA)"/>
+
+<!-- ============ COLUMN C (red/maroon) ============ -->
+<rect x="700" y="62" width="286" height="42" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="843" y="88" text-anchor="middle" fill="#f2a6b4" font-size="11.5" font-weight="700">Implement IH&amp;R Plan</text>
+
+<rect x="700" y="152" width="286" height="42" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="843" y="178" text-anchor="middle" fill="#f2a6b4" font-size="11.5" font-weight="700">Evaluate the Updated Security Posture</text>
+<path d="M843 104 L843 150" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pR)"/>
+
+<polygon points="843,222 986,278 843,334 700,278" fill="#2a1420" stroke="#e0556b" stroke-width="2"/>
+<text x="843" y="272" text-anchor="middle" fill="#f7c2cc" font-size="11.5" font-weight="700">Additional Controls</text>
+<text x="843" y="289" text-anchor="middle" fill="#f7c2cc" font-size="11.5" font-weight="700">Required?</text>
+<path d="M843 194 L843 220" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pR)"/>
+
+<circle cx="810" cy="352" r="9" fill="#3fa87a"/><path d="M805 352 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="824" y="357" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+
+<rect x="700" y="376" width="286" height="52" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="843" y="398" text-anchor="middle" fill="#f2a6b4" font-size="11.5" font-weight="700">Obtain Management Approvals</text>
+<text x="843" y="415" text-anchor="middle" fill="#f2a6b4" font-size="11.5" font-weight="700">and Funding</text>
+<path d="M843 334 L843 374" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pG)"/>
+
+<rect x="700" y="462" width="286" height="42" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="843" y="488" text-anchor="middle" fill="#f2a6b4" font-size="11.5" font-weight="700">Harden Information System Security</text>
+<path d="M843 428 L843 460" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pR)"/>
+
+<!-- NO branch from Additional Controls -->
+<circle cx="1002" cy="252" r="9" fill="#e0556b"/><path d="M998 248 l8 8 M1006 248 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="1002" y="234" text-anchor="middle" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+
+<!-- END connector -->
+<circle cx="843" cy="556" r="17" fill="#d4af37"/>
+<text x="843" y="562" text-anchor="middle" fill="#0a1226" font-size="15" font-weight="700">…</text>
+<path d="M843 504 L843 537" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#pR)"/>
+<path d="M986 278 L1002 278 L1002 556 L862 556" stroke="#e0556b" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#pR)"/>
+
+<!-- cross-column feed lines -->
+<path d="M646 528 L672 528 L672 83 L698 83" stroke="#8ea3c8" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#pA)"/>
+<path d="M150 540 L150 578 L676 578 L676 173 L698 173" stroke="#8ea3c8" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#pA)"/>
+</svg>

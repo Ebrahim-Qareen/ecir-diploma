@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 05 — Incident Response: Lifecycle, Platform &amp; Forensic Readiness | eCIR · ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+</head>
+<body data-session="s05">
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Session 05</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">All sessions</a>
+      <a href="../lab/index.html">SOC Lab</a>
+      <a href="../cheatsheets/index.html">Cheat Sheets</a>
+    </nav>
+  </div>
+</header>
+
+<div class="progress-wrap"><div class="wrap progress-inner" id="progressHost"></div></div>
+
+<div class="wrap section">
+<div class="page-layout">
+
+  <aside class="sidebar">
+    <h5>Session 05 · Pages</h5>
+    <ol id="sessionNav"></ol>
+  </aside>
+
+  <article>
+
+  <!-- P1 COVER -->
+  <section class="page" data-title="Cover">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05</span><span class="tag ir">Incident Response</span><span class="time">⏱ 4 hours</span></div>
+      <h1>Incident Response — Lifecycle, Platform &amp; Forensic Readiness</h1>
+      <p class="lede">In Session 4 you said "yes, this is a real attack." Today you learn what a professional team does
+         next — step by step, with a written plan, a proper case file, and evidence that still counts tomorrow.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">One sentence for the whole session:
+        <strong>Prepare → Detect &amp; Analyse → Contain, Eradicate, Recover → Learn.</strong></div>
+
+      <figure class="fig">
+        <img src="../assets/img/s5-ir-roadmap.svg" alt="The IR journey: from a confirmed true positive through prepare, detect and analyse, contain eradicate recover, post-incident, to a stronger SOC">
+        <figcaption>Today's road. Every stop has a written procedure — that is what makes it "incident response" and not panic.</figcaption>
+      </figure>
+
+      <h2>Today's agenda</h2>
+      <table>
+        <thead><tr><th>Block</th><th>Topic</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Recap Session 4</td><td>10 min</td></tr>
+          <tr><td>2</td><td>Event vs incident · the three frameworks (NIST · SANS · EC-Council)</td><td>35 min</td></tr>
+          <tr><td>3</td><td>Phase 1 Preparation — team, policy, plan, playbooks</td><td>45 min</td></tr>
+          <tr><td>4</td><td>Phase 2 Detection &amp; Analysis — record, triage, notify</td><td>30 min</td></tr>
+          <tr><td>—</td><td><strong>Break</strong></td><td>15 min</td></tr>
+          <tr><td>5</td><td>Phase 3 Contain · Eradicate · Recover &nbsp;+&nbsp; Phase 4 Post-Incident</td><td>40 min</td></tr>
+          <tr><td>6</td><td>TheHive — run a real case (lab)</td><td>35 min</td></tr>
+          <tr><td>7</td><td>SOAR — automate the boring part</td><td>20 min</td></tr>
+          <tr><td>8</td><td>Forensic readiness — evidence that still counts</td><td>30 min</td></tr>
+          <tr><td>9</td><td>Knowledge check · homework</td><td>10 min</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">Why this session matters for your job</span>
+        <p>Detection skills get you hired as L1. <strong>Process skills</strong> get you promoted to L2 and IR. In a real
+           breach, the team that wins is not the smartest — it is the one that already knew who does what.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 (Preparation &amp; IR fundamentals) · Module 5 (Digital forensics foundations)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P2 OBJECTIVES -->
+  <section class="page" data-title="Objectives">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P02</span><span class="tag ir">Objectives</span><span class="time">⏱ 3 min</span></div>
+      <h1>What You Will Be Able To Do</h1>
+      <p class="lede">Turn a confirmed attack into a controlled, documented response.</p>
+    </div>
+    <div class="content">
+      <ul class="takeaways">
+        <li><strong>Explain</strong> the difference between an event, an alert and an incident.</li>
+        <li><strong>Compare</strong> the NIST, SANS and EC-Council lifecycles — and know which one we use.</li>
+        <li><strong>Walk</strong> every phase: preparation → detection &amp; analysis → containment, eradication, recovery → post-incident.</li>
+        <li><strong>Write</strong> the difference between a policy, a plan and a playbook, and read a real playbook.</li>
+        <li><strong>Run</strong> a case in <strong>TheHive</strong> — tasks, observables, TLP/PAP, MITRE TTPs.</li>
+        <li><strong>Describe</strong> how <strong>SOAR</strong> automates a playbook, and where a human must stay.</li>
+        <li><strong>Collect</strong> evidence properly — order of volatility, chain of custody, write blockers.</li>
+      </ul>
+      <div class="box tip">
+        <span class="box-t">Today's rule</span>
+        <p>Two sentences to memorise: <em>"Contain before you clean. Collect before you contain."</em> Everything else
+           in incident response is detail.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P3 RECAP -->
+  <section class="page" data-title="Recap Session 4">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P03</span><span class="tag analysis">Recap</span><span class="time">⏱ 10 min</span></div>
+      <h1>Quick Recap — Session 4</h1>
+      <p class="lede">Answer before you reveal.</p>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="b"
+           data-why="Decoders pull named fields out of a raw log; rules then test those fields and raise an alert with a severity level and MITRE mapping.">
+        <p><span class="qn">Q1</span> In Wazuh, what is a decoder's job?</p>
+        <ul class="opts">
+          <li data-opt="a">Decide the alert severity</li>
+          <li data-opt="b">Extract named fields from a raw log</li>
+          <li data-opt="c">Block the attacker</li>
+          <li data-opt="d">Store logs long-term</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="c"
+           data-why="Sigma is a generic YAML rule format you convert into any SIEM's language — write once, run anywhere.">
+        <p><span class="qn">Q2</span> What is the main advantage of Sigma?</p>
+        <ul class="opts">
+          <li data-opt="a">It runs faster than a SIEM</li>
+          <li data-opt="b">It blocks attacks automatically</li>
+          <li data-opt="c">One rule converts to any SIEM</li>
+          <li data-opt="d">It needs no log source</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a"
+           data-why="Triage order: take only new/unassigned alerts, sort by severity (critical first), then oldest first.">
+        <p><span class="qn">Q3</span> Two new alerts are waiting. Which do you take first?</p>
+        <ul class="opts">
+          <li data-opt="a">Higher severity; if equal, the older one</li>
+          <li data-opt="b">The newest one</li>
+          <li data-opt="c">The one assigned to a teammate</li>
+          <li data-opt="d">Any — order doesn't matter</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d"
+           data-why="A True Positive means the alert is a real threat. Session 5 starts exactly here — the incident response process takes over.">
+        <p><span class="qn">Q4</span> You closed an alert as <strong>True Positive</strong>. What happens next?</p>
+        <ul class="opts">
+          <li data-opt="a">Nothing — the case is finished</li>
+          <li data-opt="b">Delete the logs</li>
+          <li data-opt="c">Tune the detection rule</li>
+          <li data-opt="d">Escalate — the IR process begins</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P4 HOOK -->
+  <section class="page" data-title="Incident story">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P04</span><span class="tag analysis">Incident story</span><span class="time">⏱ 6 min</span></div>
+      <h1>Two Companies, One Ransomware</h1>
+      <p class="lede">Same attack, same day. One lost two weeks. One lost two hours.</p>
+    </div>
+    <div class="content">
+      <p><strong>Company A</strong> saw the alert at 02:00. Nobody knew who to call. The IT engineer rebooted the
+         server "to clean it" — destroying the memory evidence. No one wrote anything down. Management heard about it
+         two days later from a customer. Recovery took <strong>two weeks</strong>, and they could never prove what was
+         stolen.</p>
+
+      <p><strong>Company B</strong> saw the same alert. The analyst opened the playbook for ransomware, created a case,
+         isolated the machine from the network <em>but left it powered on</em>, captured memory, and notified the IR
+         manager per the escalation matrix. Recovery from clean backups took <strong>two hours</strong>. The report
+         showed exactly what happened.</p>
+
+      <div class="box warn">
+        <span class="box-t">The difference was not skill</span>
+        <p>Both had good analysts. Company B had done the <strong>preparation</strong> — a plan, a playbook, an
+           escalation list, tested backups, and a rule about not powering off. That is what this session teaches.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P5 EVENT VS INCIDENT -->
+  <section class="page" data-title="Event vs incident">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P05</span><span class="tag ir">Theory</span><span class="time">⏱ 10 min</span></div>
+      <h1>Event · Alert · Incident — Say It Correctly</h1>
+      <p class="lede">These three words are not the same, and using them wrongly confuses everyone.</p>
+    </div>
+    <div class="content">
+      <table>
+        <thead><tr><th>Word</th><th>Simple meaning</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Event</strong></td><td>Anything that happened. Usually harmless.</td><td>A user logged in.</td></tr>
+          <tr><td><strong>Alert</strong></td><td>An event a rule found suspicious.</td><td>A user logged in 50 times and failed.</td></tr>
+          <tr><td><strong>Incident</strong></td><td>A confirmed event that <em>harms</em> or <em>threatens</em> the business.</td><td>The attacker succeeded and is inside.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">Easy way to remember</span>
+        <p>Event = <em>something happened</em>. Alert = <em>a machine thinks it's suspicious</em>.
+           Incident = <em>a human confirmed it's bad</em>. Only a human declares an incident.</p>
+      </div>
+
+      <h2>What counts as an incident?</h2>
+      <p>Anything that breaks one of the three security promises — <strong>C.I.A.</strong>:</p>
+      <table>
+        <thead><tr><th>Promise</th><th>Broken when…</th><th>Example incident</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Confidentiality</strong></td><td>someone sees data they shouldn't</td><td>Customer database stolen</td></tr>
+          <tr><td><strong>Integrity</strong></td><td>data is changed without permission</td><td>Website defaced, records edited</td></tr>
+          <tr><td><strong>Availability</strong></td><td>a service stops working</td><td>Ransomware, DDoS</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">SOC Perspective</span>
+        <p>Not every alert becomes an incident — most are false positives. But every incident <em>started</em> as an
+           alert someone took seriously. That is why triage quality decides everything downstream.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 — IR fundamentals: event vs incident, incident types and attack vectors</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P6 FRAMEWORKS -->
+  <section class="page" data-title="NIST vs SANS vs EC-Council">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P06</span><span class="tag ir">Theory ⭐</span><span class="time">⏱ 14 min</span></div>
+      <h1>Three Frameworks — NIST vs SANS vs EC-Council</h1>
+      <p class="lede">Students always ask "which one is correct?" — all of them. They describe the same journey.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-frameworks-compare.svg" alt="Comparison of NIST 4 phases, SANS 6 steps and EC-Council 9 steps side by side, showing they map to each other">
+        <figcaption>Read the rows top to bottom — the same work, cut into 4, 6 or 9 pieces.</figcaption>
+      </figure>
+
+      <h2>NIST — the four phases</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-nist-process.svg" alt="NIST incident handling process: Preparation, Detection and Analysis, Containment Eradication and Recovery, Post-Incident Activity, with feedback loops back to Detection and to Preparation">
+        <figcaption>The two curved arrows are the point: Detection ↔ Containment loops until the incident is really contained, and Post-Incident feeds back into Preparation (diagram rebuilt in the ITGate theme — source: Maharah · Incident Handling)</figcaption>
+      </figure>
+
+      <h2>SANS — the six steps</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-sans-process.svg" alt="SANS six step process: Preparation, Identification, Containment, Eradication, Recovery, Lessons Learned, colour coded to show the matching NIST phase, with a loop back to Preparation">
+        <figcaption>The colours do the teaching: <span style="color:#3fa87a">three green steps</span> are all inside NIST's single third phase. SANS didn't add work — it just cut that phase into three.</figcaption>
+      </figure>
+
+      <p>Notice the loop at the bottom. SANS draws the process as a <strong>cycle</strong>: what you learn in step 6
+         goes straight back into step 1, so the next incident is handled better. NIST means the same thing — SANS just
+         makes it visible.</p>
+
+      <h2>EC-Council — the nine steps</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-eccouncil-process.svg" alt="EC-Council nine step incident handling process from Preparation to Post-Incident Activities">
+        <figcaption>Steps 2, 4 and 6 are the paperwork steps NIST hides inside its phases — ticket, notify, evidence (diagram rebuilt in the ITGate theme — source: Maharah · Incident Handling)</figcaption>
+      </figure>
+
+      <h2>How they line up</h2>
+      <table>
+        <thead><tr><th>NIST (4)</th><th>SANS (6)</th><th>EC-Council (9)</th></tr></thead>
+        <tbody>
+          <tr><td>Preparation</td><td>Preparation</td><td>Preparation</td></tr>
+          <tr><td rowspan="1">Detection &amp; Analysis</td><td>Identification</td><td>Recording &amp; Assignment · Triage · Notification</td></tr>
+          <tr><td rowspan="1">Containment, Eradication &amp; Recovery</td><td>Containment · Eradication · Recovery</td><td>Containment · Evidence Gathering · Eradication · Recovery</td></tr>
+          <tr><td>Post-Incident Activity</td><td>Lessons Learned</td><td>Post-Incident Activities</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">Which do I use?</span>
+        <p><strong>NIST is our reference</strong> (and the exam's). SANS is the same thing with the middle split — useful
+           because real teams talk about "containment" and "eradication" separately. EC-Council adds the paperwork steps
+           (ticket, notify, evidence) that actually happen in a real SOC.</p>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">Common student mistake</span>
+        <p>Thinking more steps = a better framework. No — a small team may use NIST's 4 phases perfectly. The framework
+           is just a checklist so you don't forget a step under pressure.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 — NIST vs SANS lifecycles, side by side</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P7 PREPARATION -->
+  <section class="page" data-title="Phase 1 · Preparation">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P07</span><span class="tag ir">Phase 1</span><span class="time">⏱ 14 min</span></div>
+      <h1>Phase 1 — Preparation</h1>
+      <p class="lede">The only phase you do when nothing is wrong. It decides how the other three go.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-preparation.svg" alt="Preparation phase: vision and mission, funding, build the team, tools and logs, train and test, plus the policy plan playbook trio">
+        <figcaption>Preparation in one picture — build the team and the tools, then write the three documents.</figcaption>
+      </figure>
+
+      <h2>The document trio — the part students confuse most</h2>
+      <table>
+        <thead><tr><th>Document</th><th>Answers</th><th>Length</th><th>Fire analogy</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Policy</strong></td><td><em>What</em> and <em>why</em> — the rule</td><td>1–2 pages</td><td>"This building must be fire-safe."</td></tr>
+          <tr><td><strong>Plan</strong></td><td><em>Who</em> and <em>in what order</em></td><td>10–30 pages</td><td>The fire escape plan on the wall</td></tr>
+          <tr><td><strong>Playbook</strong></td><td><em>Exactly how</em>, for one incident type</td><td>2–5 pages each</td><td>"If the kitchen burns: do these 6 things"</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">Say it in one line</span>
+        <p>Policy = the <strong>rule</strong>. Plan = the <strong>strategy</strong>. Playbook = the
+           <strong>steps</strong>. Management signs the policy, the IR lead writes the plan, the senior analyst writes
+           the playbooks.</p>
+      </div>
+
+      <h2>Also prepared before anything happens</h2>
+      <ul>
+        <li><strong>Severity matrix</strong> — what counts as Low / Medium / High / Critical (agreed, not argued at 3 AM).</li>
+        <li><strong>Escalation matrix</strong> — which severity wakes which person.</li>
+        <li><strong>Contact list</strong> — IT, management, legal, HR, and the external IR firm if you have one.</li>
+        <li><strong>IR toolkit / jump bag</strong> — imaging tools, write blocker, clean USBs, notebook.</li>
+        <li><strong>Tested backups</strong> — a backup you never restored is not a backup.</li>
+      </ul>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 — Preparation phase, PPT framework, policy/plan/playbook trio, IR toolkit</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P8 TEAM -->
+  <section class="page" data-title="The IR team">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P08</span><span class="tag ir">Phase 1</span><span class="time">⏱ 12 min</span></div>
+      <h1>The Team — CSIRT, CERT, and Who Does What</h1>
+      <p class="lede">Lots of names for similar teams. What matters is that every phase has an owner.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-team-raci.svg" alt="IR team models CSIRT CERT SIRT IRT, a table of who owns which phase, and the RACI explanation">
+        <figcaption>Team names, then the important part — who owns which phase, and the RACI table.</figcaption>
+      </figure>
+
+      <table>
+        <thead><tr><th>Name</th><th>Stands for</th><th>Usually means</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CSIRT</strong></td><td>Computer Security Incident Response Team</td><td>The company's own IR team</td></tr>
+          <tr><td><strong>CERT</strong></td><td>Computer Emergency Response Team</td><td>Often national/government level</td></tr>
+          <tr><td><strong>SIRT / IRT</strong></td><td>(Security) Incident Response Team</td><td>Same idea, different company naming</td></tr>
+          <tr><td><strong>SOC</strong></td><td>Security Operations Center</td><td>Watches 24/7, escalates to IR</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box warn">
+        <span class="box-t">Where incident response actually happens — L2, not L3</span>
+        <p>Students often assume "L3 = the incident responder." That is wrong. <strong>Incident response and digital
+           forensics sit with L2</strong> — they are the ones who investigate the confirmed incident, contain it and
+           carry out the forensics. <strong>L3 is threat hunting and detection engineering</strong>, a different job.</p>
+        <table>
+          <thead><tr><th>Role</th><th>Main job</th><th>Owns which phases</th></tr></thead>
+          <tbody>
+            <tr><td><strong>SOC L1</strong></td><td>Monitor the queue, triage alerts, escalate</td><td>Detection</td></tr>
+            <tr><td><strong>SOC L2 · IR &amp; DF</strong></td><td>Investigate, respond, contain, do the forensics</td><td>Analysis → Containment → Eradicate/Recover → Report</td></tr>
+            <tr><td><strong>SOC L3</strong></td><td>Threat hunting, detection engineering, mentoring</td><td>Analysis (supports the rest)</td></tr>
+            <tr><td><strong>Management / legal</strong></td><td>Approvals, disclosure, legal duties</td><td>Report</td></tr>
+          </tbody>
+        </table>
+        <p>Remember it this way: <strong>L1 finds it, L2 fixes it, L3 hunts for what nobody reported yet.</strong></p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">In a small company</span>
+        <p>Often the same three people are the SOC, the IR team and the IT team. That is fine — but the
+           <strong>roles</strong> must still be written down, because during an incident you need to know who decides
+           to shut down a production server.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">RACI in one example</span>
+        <p>"Isolate an infected laptop" → <strong>R</strong>: SOC L2 (does it) · <strong>A</strong>: IR manager (answers
+           for it) · <strong>C</strong>: IT team (asked first) · <strong>I</strong>: the user's manager (told after).</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 — IR team models (CSIRT/CERT/SIRT/IRT), role map and RACI</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P9 PLAYBOOKS -->
+  <section class="page" data-title="Playbooks">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P09</span><span class="tag ir">Phase 1</span><span class="time">⏱ 12 min</span></div>
+      <h1>Playbooks — The Steps, Written Down</h1>
+      <p class="lede">So a new analyst at 3 AM does the same good job as your best analyst.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-playbook-hierarchy.svg" alt="Documentation zoom levels from policy to plan to playbooks, and how many use cases map to one playbook, plus prerequisites">
+        <figcaption>Zoom in from policy → plan → playbook. And note: many detection rules point at <em>one</em> playbook.</figcaption>
+      </figure>
+
+      <h2>Why a plan is not enough</h2>
+      <p>The IR plan says <em>"containment actions will be taken."</em> That sentence is useless at 3 AM. The playbook
+         says: <em>"block the sender domain on the mail gateway, block the file hash on the EDR, remove the email from
+         all inboxes."</em> That is the difference — <strong>granularity</strong>.</p>
+
+      <h2>What every playbook contains</h2>
+      <table>
+        <thead><tr><th>Part</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Prerequisites</strong></td><td>logs, fields, rules and tools that must exist first</td></tr>
+          <tr><td><strong>Trigger (use cases)</strong></td><td>which alerts start this playbook</td></tr>
+          <tr><td><strong>Detection &amp; analysis steps</strong></td><td>what to check, in order</td></tr>
+          <tr><td><strong>Containment / eradication / recovery</strong></td><td>exact response actions</td></tr>
+          <tr><td><strong>Roles</strong></td><td>which step is L1, which is L2, which needs approval</td></tr>
+          <tr><td><strong>Workflow diagram</strong></td><td>the picture — usually the most-used page</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">One playbook per incident type</span>
+        <p>Phishing · Malware · Ransomware · Account compromise · Data exfiltration · Insider · Policy violation.
+           A hundred detection rules may all lead to the same phishing playbook — that is normal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P10 PLAYBOOK EXAMPLE -->
+  <section class="page" data-title="A real playbook">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P10</span><span class="tag ir">Example</span><span class="time">⏱ 12 min</span></div>
+      <h1>A Real Phishing Playbook</h1>
+      <p class="lede">Follow the diagrams — this is what a working playbook actually looks like.</p>
+    </div>
+    <div class="content">
+      <h2>Step 1 — Detection: what starts it</h2>
+      <figure class="fig plate">
+        <img src="images/irpb-phishing-detection.png" alt="Phishing playbook detection stage flow diagram" loading="lazy">
+        <figcaption>The trigger: a SIEM/gateway alert <em>or</em> a user report — both enter the same playbook (source: TryHackMe · IR Playbooks).</figcaption>
+      </figure>
+
+      <h2>Step 2 — Analysis: what the analyst checks</h2>
+      <figure class="fig plate">
+        <img src="images/irpb-detection-workflow.png" alt="Detection and analysis workflow diagram from the IR playbooks room" loading="lazy">
+        <figcaption>The generic detection &amp; analysis workflow every playbook follows (source: TryHackMe · IR Playbooks).</figcaption>
+      </figure>
+
+      <ul>
+        <li>Who sent it, who received it? Is the receiver a high-value target (finance, HR, CEO)?</li>
+        <li>Pull out the <strong>URLs, attachments, QR codes</strong>.</li>
+        <li>Check sender domain <strong>age</strong> and reputation — and look for typosquatting <em>(Session 4 skills!)</em>.</li>
+        <li>Check hashes and links on VirusTotal / URLScan.</li>
+        <li>Hunt for anyone who <strong>clicked</strong> — suspicious logins after the email arrived.</li>
+      </ul>
+
+      <h2>Step 3 — Containment: stop the damage</h2>
+      <figure class="fig plate">
+        <img src="images/irpb-phishing-containment.png" alt="Phishing playbook containment stage flow diagram" loading="lazy">
+        <figcaption>Containment actions for phishing, written as exact steps (source: TryHackMe · IR Playbooks).</figcaption>
+      </figure>
+
+      <table>
+        <thead><tr><th>Stage</th><th>Actions for phishing</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Contain</strong></td><td>block sender address, domain and IP on the mail gateway · block file hashes on EDR · block the URL on the proxy</td></tr>
+          <tr><td><strong>Eradicate</strong></td><td>delete the email from every inbox · if someone clicked: isolate the machine, kill sessions, reset the password, start the malware playbook</td></tr>
+          <tr><td><strong>Recover</strong></td><td>reset credentials + enable MFA · review what the account did · reimage affected machines</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">Notice the chaining</span>
+        <p>The phishing playbook can <strong>call</strong> the malware playbook. Real playbooks connect to each other —
+           that is normal and good.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P11 DETECTION & ANALYSIS -->
+  <section class="page" data-title="Phase 2 · Detection &amp; Analysis">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P11</span><span class="tag ir">Phase 2</span><span class="time">⏱ 14 min</span></div>
+      <h1>Phase 2 — Detection &amp; Analysis</h1>
+      <p class="lede">Three small flows: write it down → decide how bad → tell the right people.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-detect-flow.svg" alt="Three flows: recording and assignment, triage with a real-incident decision, and notification by severity">
+        <figcaption>The overview. Now we walk each one as a real decision flow — follow the arrows and read the diamonds.</figcaption>
+      </figure>
+
+      <div class="box tip">
+        <span class="box-t">How to read every flow in this session — learn this once</span>
+        <p>All eight process flows use the same symbols. Learn them here and every diagram becomes easy to follow.</p>
+        <table>
+          <thead><tr><th>Symbol</th><th>Means</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Rectangle</strong></td><td>An action — <em>do this</em></td></tr>
+            <tr><td><strong>Diamond</strong></td><td>A question — the flow splits here</td></tr>
+            <tr><td><strong style="color:#3fa87a">Green ✓ circle</strong></td><td>The <strong>YES</strong> branch</td></tr>
+            <tr><td><strong style="color:#e0556b">Red ✗ circle</strong></td><td>The <strong>NO</strong> branch</td></tr>
+            <tr><td><strong style="color:#d4af37">Gold circle “…”</strong></td><td>Connector — the flow continues from / into another phase</td></tr>
+            <tr><td><strong style="color:#d4af37">Thick gold outline</strong></td><td>The most important step on that diagram</td></tr>
+            <tr><td><strong style="color:#37c7d4">Blue box</strong></td><td>A team or an outside input</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">Tip for teaching: put the diagram on screen, then trace <em>one</em> path aloud from the top
+           connector to the bottom connector before explaining any of the boxes.</p>
+      </div>
+
+      <h2>Flow 1 · Recording &amp; Assignment — "no ticket, no incident"</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-flow-recording.svg" alt="Recording and assignment flow: two entry points, does it require response, was it closed before, record and assign owner">
+        <figcaption>Two doors in — a user calls, or the SIEM alerts. Both end in one case with one owner.</figcaption>
+      </figure>
+
+      <p><strong>What this means, simply:</strong> an incident can arrive two ways — a person reports it, or a machine
+         detects it. Either way it must become a <em>written case</em> with a number, a time and
+         <strong>one named owner</strong>. If two people own it, nobody owns it.</p>
+
+      <p>The two questions in the diamonds are there for good reasons:</p>
+      <table>
+        <thead><tr><th>Question</th><th>Why we ask it</th><th>If the answer is unexpected</th></tr></thead>
+        <tbody>
+          <tr><td><em>Does it need a response?</em></td><td>Filters out noise and duplicates</td><td>NO → still record it, then close. The count matters for reporting.</td></tr>
+          <tr><td><em>Was it closed before?</em></td><td>Spots a returning attacker</td><td>YES → reopen the old case instead of starting fresh, so the history stays together.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">Example</span>
+        <p>Last month you closed "suspicious login from Romania — user was travelling." Today the same alert fires for
+           the same account. Because you <em>reopen</em> rather than open a new case, you instantly see it is the second
+           time — and suddenly it looks much less like travel.</p>
+      </div>
+
+      <h2>Flow 2 · Triage — is it real, is it ours, how urgent?</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-flow-triage.svg" alt="Triage flow: analyse and validate, classify, is it outside our scope, prioritise">
+        <figcaption>Validate → classify → is it ours? → set severity.</figcaption>
+      </figure>
+
+      <p><strong>What this means, simply:</strong> first prove the evidence is real (Session 4's true/false positive
+         call). Then say <em>what type</em> it is — malware, phishing, insider — because the type decides which
+         playbook you open. Then check it is even your team's job. Finally, set the severity.</p>
+
+      <div class="box tip">
+        <span class="box-t">"Outside our scope" is a real branch</span>
+        <p>Someone stealing office laptops is a security problem, but not a <em>cyber</em> one — that goes to Facilities.
+           An employee watching videos all day goes to HR, not the SOC. Knowing what is <strong>not</strong> yours keeps
+           the queue clean.</p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">Example</span>
+        <p>Alert: "user downloaded 4 GB to a USB drive." Validate — it really happened. Classify — possible data theft
+           (insider). Outside our scope? Partly: the SOC investigates the technical facts, but HR and Legal own the
+           person. Severity: High, because data may already be gone.</p>
+      </div>
+
+      <h2>Flow 3 · Notification — the right people, in the right order</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-flow-notification.svg" alt="Notification flow: notify management, approval to notify others, notify stakeholders, external support required, contact external agencies">
+        <figcaption>Management first, then approval, then everyone else — and only then outside agencies.</figcaption>
+      </figure>
+
+      <p><strong>What this means, simply:</strong> you do not get to tell the whole company (or the press) yourself.
+         Management is told first and <em>approves</em> who else hears about it. The escalation matrix — written back in
+         Preparation — already says who that is, so nobody argues at 3 AM.</p>
+
+      <div class="box warn">
+        <span class="box-t">Two traps in this flow</span>
+        <p><strong>1 · Do not use compromised email.</strong> If the attacker is in the mail system, they will read your
+           incident emails. Switch to phone or a separate chat.<br>
+           <strong>2 · Record who you told and when.</strong> After a real breach this becomes a legal question, and
+           "I think I called someone" is not an answer.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 — detection &amp; analysis phase · Module 3 · 3.7 triage workflow and escalation</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P12 KNOWLEDGE CHECK 1 -->
+  <section class="page" data-title="Knowledge check 1">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P12</span><span class="tag analysis">Knowledge check</span><span class="time">⏱ 8 min</span></div>
+      <h1>Knowledge Check — Lifecycle &amp; Preparation</h1>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="c"
+           data-why="NIST uses 4 phases: Preparation; Detection & Analysis; Containment, Eradication & Recovery; Post-Incident Activity.">
+        <p><span class="qn">Q1</span> How many phases does the NIST lifecycle have?</p>
+        <ul class="opts"><li data-opt="a">3</li><li data-opt="b">6</li><li data-opt="c">4</li><li data-opt="d">9</li></ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="b"
+           data-why="SANS splits NIST's third phase into three separate steps — Containment, Eradication and Recovery — giving 6 total.">
+        <p><span class="qn">Q2</span> What does SANS do differently from NIST?</p>
+        <ul class="opts">
+          <li data-opt="a">It removes preparation</li>
+          <li data-opt="b">It splits containment, eradication and recovery apart</li>
+          <li data-opt="c">It has no lessons-learned step</li>
+          <li data-opt="d">It only applies to malware</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d"
+           data-why="A playbook gives the exact granular steps for ONE incident type; the plan only describes the phases at a high level.">
+        <p><span class="qn">Q3</span> What makes a playbook different from the IR plan?</p>
+        <ul class="opts">
+          <li data-opt="a">It is signed by management</li>
+          <li data-opt="b">It is shorter than the policy</li>
+          <li data-opt="c">It only covers preparation</li>
+          <li data-opt="d">It gives exact steps for one incident type</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a"
+           data-why="An incident is a confirmed event that harms or threatens confidentiality, integrity or availability. An alert is only a machine's suspicion.">
+        <p><span class="qn">Q4</span> When does an alert become an incident?</p>
+        <ul class="opts">
+          <li data-opt="a">When a human confirms real harm or threat</li>
+          <li data-opt="b">As soon as the SIEM fires it</li>
+          <li data-opt="c">When severity is set to Low</li>
+          <li data-opt="d">After 24 hours automatically</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="b"
+           data-why="The escalation matrix is agreed during Preparation so that, during a real incident, nobody wastes time deciding who to inform.">
+        <p><span class="qn">Q5</span> Why is the escalation matrix written during Preparation?</p>
+        <ul class="opts">
+          <li data-opt="a">Because auditors require the file</li>
+          <li data-opt="b">So nobody has to decide who to call during the crisis</li>
+          <li data-opt="c">It replaces the playbook</li>
+          <li data-opt="d">It is only used after recovery</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P13 BREAK -->
+  <section class="page" data-title="Break">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P13</span><span class="tag">Break</span><span class="time">⏱ 15 min</span></div>
+      <h1>Break</h1>
+      <p class="lede">After the break: stopping the attack, then the tools — TheHive and SOAR.</p>
+    </div>
+    <div class="content">
+      <div class="timer-card" data-timer="15">
+        <div class="timer-ring">
+          <svg viewBox="0 0 120 120">
+            <circle class="timer-ring-bg" cx="60" cy="60" r="54"></circle>
+            <circle class="timer-ring-fill" cx="60" cy="60" r="54"></circle>
+          </svg>
+          <div class="timer-display">15:00</div>
+        </div>
+        <h3>Break time</h3>
+        <p class="timer-note">Press start when the break begins.</p>
+        <div class="timer-btns">
+          <button class="btn primary" data-act="start">▶ Start break</button>
+          <button class="btn" data-act="reset">↺ Reset</button>
+        </div>
+        <div class="after-break"><strong>After the break:</strong> Containment → Eradication → Recovery, post-incident, TheHive, SOAR and forensic readiness.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P14 CONTAINMENT/ERADICATION/RECOVERY -->
+  <section class="page" data-title="Phase 3 · Contain &amp; Recover">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P14</span><span class="tag ir">Phase 3</span><span class="time">⏱ 16 min</span></div>
+      <h1>Phase 3 — Contain, Collect, Eradicate, Recover</h1>
+      <p class="lede">The most dangerous phase — because this is where people destroy their own evidence.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-cer-flow.svg" alt="Containment short and long term, evidence collection, eradication with root cause, recovery, plus the warning about rebooting">
+        <figcaption>The order matters: contain → collect evidence → eradicate → recover.</figcaption>
+      </figure>
+
+      <h2>Containment — stop the bleeding</h2>
+      <table>
+        <thead><tr><th>Type</th><th>Meaning</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Short-term</strong></td><td>Stop it spreading right now</td><td>Isolate the host, block the IP, disable the account, kill the session</td></tr>
+          <tr><td><strong>Long-term</strong></td><td>A safe temporary state so business continues</td><td>Patch, segment the network, tighten firewall rules</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Flow 4 · Containment — three kinds of response</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-flow-containment.svg" alt="Containment flow with technical, management and legal response branches, initial response, contained decision and escalation loop">
+        <figcaption>Three questions in a row — technical? management? legal? — then "is it contained?" with a loop back if not.</figcaption>
+      </figure>
+
+      <p><strong>What this means, simply:</strong> containment is not only a technical job. The flow asks
+         <em>three separate questions</em>, and an incident can answer YES to all three at once — each task goes to a
+         different team, and they work in parallel.</p>
+
+      <table>
+        <thead><tr><th>Branch</th><th>Who acts</th><th>What they actually do</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Technical</strong></td><td>SOC / IT</td><td>isolate the host, block the IP, disable the account, kill sessions</td></tr>
+          <tr><td><strong>Management</strong></td><td>Managers</td><td>approve taking a production server offline, decide to tell customers</td></tr>
+          <tr><td><strong>Legal</strong></td><td>Legal / compliance</td><td>breach-reporting duties, evidence rules, contracts, regulators</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">Example — ransomware on a finance server</span>
+        <p><strong>Technical:</strong> isolate the server from the network. <strong>Management:</strong> approve the
+           downtime — finance cannot work today. <strong>Legal:</strong> customer data may be involved, so the
+           regulator may have to be told within 72 hours. All three branches fire on the same incident.</p>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">The loop at the bottom is the honest part</span>
+        <p>"Contained? → NO → escalate → go back to the strategy." Real containment often fails on the first try — the
+           attacker has a second foothold you did not know about. The dashed line means <em>try again with more
+           people</em>, not <em>give up</em>.</p>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">The mistake that ruins investigations</span>
+        <p><strong>Do not power off or reboot</strong> to "clean it fast." That deletes RAM — running processes,
+           injected malware, network connections, sometimes the encryption key. Instead:
+           <strong>disconnect from the network but leave it ON</strong> until memory is captured.</p>
+      </div>
+
+      <h2>Flow 5 · Evidence gathering — and how far to take it</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-flow-evidence.svg" alt="Evidence flow: collect, chain of custody, analyse, report, then perpetrator identified, external investigators, law enforcement or internal disciplinary">
+        <figcaption>Collect → document → analyse → report. Then management decides: police, HR, or close it.</figcaption>
+      </figure>
+
+      <p><strong>What this means, simply:</strong> the left column is the technical work you do. The diamonds at the
+         bottom are <strong>business decisions made by management</strong>, not by you — but they are only possible
+         because your report is solid.</p>
+
+      <table>
+        <thead><tr><th>Decision</th><th>Meaning in plain words</th><th>Where it leads</th></tr></thead>
+        <tbody>
+          <tr><td><em>Do we know who did it?</em></td><td>Did the forensics identify a person or group?</td><td>NO → consider hiring specialists</td></tr>
+          <tr><td><em>Hire outside investigators?</em></td><td>Is this beyond our skill or capacity?</td><td>YES → a DFIR firm takes over, then reports back</td></tr>
+          <tr><td><em>Law enforcement required?</em></td><td>Is this a crime we must report?</td><td>YES → police · NO → internal HR discipline</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">Example — two very different endings</span>
+        <p>An <strong>outsider</strong> ransomwares your company → law enforcement, and the evidence must survive court.
+           An <strong>employee</strong> copies the client list before resigning → same forensic work, but it ends with
+           HR and the company lawyer, not the police. <em>Same evidence, different door.</em></p>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">Why chain of custody appears so early</span>
+        <p>Notice it is step 2 — immediately after collecting, before any analysis. If you start analysing first and
+           document later, you can never prove the evidence was untouched in between.</p>
+      </div>
+
+      <h2>Eradication — remove them completely</h2>
+      <p>Delete the malware, close the backdoors, remove the attacker's accounts, reset stolen credentials, reimage if
+         needed. Then the important part: <strong>fix the root cause</strong>. If they got in through an unpatched
+         server and you only delete the malware, they will be back tomorrow.</p>
+
+      <figure class="fig">
+        <img src="../assets/img/s5-flow-eradication.svg" alt="Eradication flow: determine cause, can we eliminate it, escalate loop, does the weakness exist on other systems, patch them too">
+        <figcaption>Find the cause → remove it → <strong>then check every other machine with the same weakness.</strong></figcaption>
+      </figure>
+
+      <p><strong>What this means, simply:</strong> two things make this flow different from "just delete the virus."</p>
+      <ul>
+        <li><strong>The escalate loop</strong> — if you <em>cannot</em> remove the cause (a vendor bug, no patch yet),
+           you do not pretend it is fixed. You escalate and come back.</li>
+        <li><strong>The "other systems" check</strong> — the single most-skipped step in real incidents.</li>
+      </ul>
+
+      <div class="box soc">
+        <span class="box-t">Example</span>
+        <p>An old web server was breached through an unpatched service. You clean it and feel finished — but the
+           company runs <strong>nine more servers</strong> with that same version. If you skip the "similar systems"
+           branch, tomorrow's incident is already waiting.</p>
+      </div>
+
+      <h2>Flow 7 &amp; 8 · Recovery, then Post-Incident</h2>
+      <figure class="fig">
+        <img src="../assets/img/s5-flow-recovery-post.svg" alt="Recovery flow with data lost decision and backup restore, beside the post-incident flow of documentation, impact, policies, disclosure and closing">
+        <figcaption>Left: get the business running again. Right: make sure it cannot happen the same way twice.</figcaption>
+      </figure>
+
+      <p><strong>What recovery means, simply:</strong> one question decides the path — <em>was data lost?</em> If yes,
+         restore from backup <strong>first</strong>, then restart services. If no, just restart. Either way you keep
+         watching afterwards, because attackers commonly try to come back through a door you missed.</p>
+
+      <div class="box warn">
+        <span class="box-t">The backup trap</span>
+        <p>A backup taken <em>after</em> the attacker got in already contains their malware or backdoor. Always check
+           that your restore point is <strong>older than the intrusion</strong> — which means you need the timeline
+           from the evidence phase. This is why the phases are in this order.</p>
+      </div>
+
+      <p><strong>What post-incident means, simply:</strong> five steps — document what happened, measure the damage,
+         update the policies that failed, disclose if you legally must, and formally close the case.</p>
+
+      <div class="box tip">
+        <span class="box-t">Disclosure is not the analyst's decision</span>
+        <p>Telling customers, regulators or the public is decided by <strong>legal and management</strong> — often with
+           a legal deadline (for example 72 hours under GDPR). But they decide based on <em>your</em> report. Vague
+           report → bad decision.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 — containment, eradication &amp; recovery · technical / management / legal containment</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P15 POST-INCIDENT -->
+  <section class="page" data-title="Phase 4 · Post-Incident">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P15</span><span class="tag ir">Phase 4</span><span class="time">⏱ 12 min</span></div>
+      <h1>Phase 4 — Post-Incident Activity</h1>
+      <p class="lede">The phase everyone skips — and the only one that makes you stronger.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-postincident.svg" alt="Post-incident: four questions, a 5 Whys worked example, and the outputs including report, new rules, updated playbook">
+        <figcaption>Ask "why" until you reach the real cause — then fix <em>that</em>.</figcaption>
+      </figure>
+
+      <h2>The meeting rule</h2>
+      <div class="box tip">
+        <span class="box-t">Blameless</span>
+        <p>The question is never "who clicked the link?" — it is <em>"why was it possible for a click to cause this?"</em>
+           If people fear blame, they hide incidents, and hidden incidents become disasters.</p>
+      </div>
+
+      <h2>What must come out of it</h2>
+      <table>
+        <thead><tr><th>Output</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Incident report</strong></td><td>timeline, impact, actions taken — for management and legal</td></tr>
+          <tr><td><strong>New detection rule</strong></td><td>so the same attack alerts <em>earlier</em> next time (back to Session 4!)</td></tr>
+          <tr><td><strong>Updated playbook</strong></td><td>whatever was missing or wrong during the response</td></tr>
+          <tr><td><strong>Training / awareness</strong></td><td>for staff or for the analysts</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">The circle closes here</span>
+        <p>Post-incident feeds straight back into <strong>Preparation</strong>. That is why the lifecycle is drawn as a
+           loop, not a line — every incident should leave the SOC better than it found it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P16 THEHIVE INTRO -->
+  <section class="page" data-title="TheHive — what it is">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P16</span><span class="tag ir">Platform</span><span class="time">⏱ 10 min</span></div>
+      <h1>TheHive — Where the Case Lives</h1>
+      <p class="lede">A free, open-source platform built for exactly this process.</p>
+    </div>
+    <div class="content">
+      <figure class="fig" style="max-width:300px;margin-left:auto;margin-right:auto">
+        <img src="images/thehive-logo.png" alt="TheHive Project logo" loading="lazy"
+             style="background:#f2f5fa;padding:18px 22px;border-radius:10px">
+        <figcaption>TheHive Project — open-source Security Incident Response Platform.</figcaption>
+      </figure>
+
+      <p>Until now your "case" was a note in a text file. TheHive gives the whole team one place to track an incident:
+         who owns it, what tasks remain, what evidence was found, and what the verdict was.</p>
+
+      <h2>Three things it is built for</h2>
+      <table>
+        <thead><tr><th>Function</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Collaborate</strong></td><td>several analysts work the same case at the same time, live</td></tr>
+          <tr><td><strong>Elaborate</strong></td><td>break a case into tasks, attach evidence, record progress</td></tr>
+          <tr><td><strong>Act</strong></td><td>add observables, flag IOCs, and trigger analysis or response</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="fig">
+        <img src="images/thehive-landing.png" alt="TheHive main landing page with the case list and top menu" loading="lazy">
+        <figcaption>The analyst's home screen — New Case, My tasks, Alerts, Dashboards (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <h2>What it connects to</h2>
+      <ul>
+        <li><strong>Cortex</strong> — automatically analyses observables (like our Session 4 enrichment, but built in).</li>
+        <li><strong>MISP</strong> — threat-intel sharing: import IOCs, or share yours with the community.</li>
+        <li><strong>SIEM alerts</strong> — imported as alerts you can promote into cases.</li>
+      </ul>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 2 · 08 — TheHive incident management, Cortex, TLP/PAP</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P17 THEHIVE USERS -->
+  <section class="page" data-title="TheHive — org &amp; users">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P17</span><span class="tag ir">Platform</span><span class="time">⏱ 10 min</span></div>
+      <h1>TheHive — Organisations, Users &amp; Permissions</h1>
+      <p class="lede">Who is allowed to do what — the admin side, in three screens.</p>
+    </div>
+    <div class="content">
+      <p><strong>Step 1 — create the organisation.</strong> An organisation is a container for your team, its cases and
+         its users.</p>
+      <figure class="fig">
+        <img src="images/thehive-create-org.png" alt="TheHive admin console creating a new organisation" loading="lazy">
+        <figcaption>Admin → Organisations → New Organisation (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <p><strong>Step 2 — add users and give each one a profile.</strong></p>
+      <figure class="fig">
+        <img src="images/thehive-add-user.png" alt="TheHive add user dialog showing the profile dropdown with org-admin, analyst and read-only" loading="lazy">
+        <figcaption>Adding a user — the profile decides their permissions (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <table>
+        <thead><tr><th>Profile</th><th>Can do</th><th>Typical person</th></tr></thead>
+        <tbody>
+          <tr><td><strong>admin</strong></td><td>runs the platform — but cannot work cases</td><td>Platform administrator</td></tr>
+          <tr><td><strong>org-admin</strong></td><td>manage users + full case work</td><td>SOC / IR manager</td></tr>
+          <tr><td><strong>analyst</strong></td><td>create and edit cases, tasks, observables; run analysers</td><td>SOC L1 / L2</td></tr>
+          <tr><td><strong>read-only</strong></td><td>can only look</td><td>Auditor, trainee, management</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Step 3 — check the permissions</strong> attached to the profile before saving.</p>
+      <figure class="fig">
+        <img src="images/thehive-permissions.png" alt="TheHive showing the permission list for the analyst profile" loading="lazy">
+        <figcaption>Choosing "analyst" shows exactly which permissions it grants (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <div class="box tip">
+        <span class="box-t">Least privilege — a real principle, not theory</span>
+        <p>Notice the admin profile <em>cannot</em> open cases. That is deliberate: the person who manages the system is
+           not automatically allowed to read sensitive investigations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P18 THEHIVE CASE -->
+  <section class="page" data-title="TheHive — the case">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P18</span><span class="tag ir">Platform</span><span class="time">⏱ 12 min</span></div>
+      <h1>TheHive — Building a Real Case</h1>
+      <p class="lede">Case → tasks → TTPs → observables. This is the digital version of the whole lifecycle.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="images/thehive-cases-list.png" alt="TheHive list of cases page, empty, with New Case button" loading="lazy">
+        <figcaption>The case list — your queue. Empty here; after the lab it won't be (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <h2>1 · Create the case</h2>
+      <figure class="fig">
+        <img src="images/thehive-new-case.gif" alt="Animated walkthrough of creating a new case in TheHive with severity, TLP and PAP" loading="lazy">
+        <figcaption>New Case — title, description, severity, TLP, PAP, tags, and tasks (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <table>
+        <thead><tr><th>Field</th><th>Simple meaning</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Severity</strong></td><td>how much damage — Low → Critical</td></tr>
+          <tr><td><strong>TLP</strong> (Traffic Light Protocol)</td><td><em>Who may I share this with?</em> RED = nobody outside, WHITE = public</td></tr>
+          <tr><td><strong>PAP</strong> (Permissible Actions Protocol)</td><td><em>What may I do without the attacker noticing?</em> RED = do nothing active</td></tr>
+          <tr><td><strong>Tasks</strong></td><td>the playbook steps, turned into checkboxes</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">TLP vs PAP in one line</span>
+        <p><strong>TLP = sharing.</strong> <strong>PAP = actions.</strong> Example: PAP:RED means don't even visit the
+           attacker's domain in a browser — they would see your company's IP and know you found them.</p>
+      </div>
+
+      <h2>2 · Attach the MITRE technique</h2>
+      <figure class="fig">
+        <img src="images/thehive-ttps.gif" alt="Selecting MITRE ATT&CK TTPs on a case in TheHive" loading="lazy">
+        <figcaption>Adding the tactic and technique (here: exfiltration, T1048.003) (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="images/thehive-attack-patterns.png" alt="Imported list of MITRE ATT&CK patterns in TheHive admin" loading="lazy">
+        <figcaption>The 885 ATT&amp;CK patterns imported into the platform (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <h2>3 · Add the observables (your IOCs)</h2>
+      <figure class="fig">
+        <img src="images/thehive-observables.gif" alt="Adding observables to a case in TheHive, marking as IOC" loading="lazy">
+        <figcaption>Observables — IP, hash, domain — flagged as IOC and tagged (source: TryHackMe · TheHive Project).</figcaption>
+      </figure>
+
+      <div class="box soc">
+        <span class="box-t">This is Session 4 plugged into Session 5</span>
+        <p>The IOCs you enriched last session (IP, domain, hash) become <strong>observables</strong> here — marked
+           "is IOC", tagged, and shareable with your team and MISP.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P19 LAB THEHIVE -->
+  <section class="page" data-title="Lab · TheHive case">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P19</span><span class="tag ir">SOC Lab</span><span class="time">⏱ 30 min</span></div>
+      <h1>Lab — Run a Case From Start to Finish</h1>
+      <p class="lede">Scenario: suspected data exfiltration over FTP. Build the case an auditor would accept.</p>
+    </div>
+    <div class="content">
+      <div class="box note">
+        <span class="box-t">Environment</span>
+        <p>In-class TheHive VM (TryHackMe · <em>TheHive Project</em>). Log in with the analyst profile given in the room.
+           You also get a PCAP file to look at in Wireshark.</p>
+      </div>
+
+      <ol class="steps">
+        <li><strong>Look at the evidence.</strong> Open the PCAP in Wireshark. Find the FTP traffic and note the
+           <strong>source IP</strong> doing the transfer.</li>
+        <li><strong>Create the case.</strong> Title it clearly ("Suspected data exfiltration over FTP"). Set
+           <strong>Severity</strong>, <strong>TLP</strong> and <strong>PAP</strong>, and add tags
+           (<code>data exfiltration</code>, <code>ftp</code>).</li>
+        <li><strong>Add tasks</strong> that match the lifecycle — for example:
+          <p class="muted">"Analyse PCAP" · "Identify data transferred" · "Contain the host" · "Notify manager" · "Write report"</p>
+        </li>
+        <li><strong>Add the MITRE TTP.</strong> Tactic = Exfiltration, technique = <code>T1048.003</code>
+           (exfiltration over unencrypted non-C2 protocol).</li>
+        <li><strong>Add the observable.</strong> Type = IP, value = the source IP you found. Tick
+           <strong>Is IOC</strong>, add a short description.</li>
+        <li><strong>Close the loop.</strong> Complete a task, write a comment explaining your verdict.</li>
+      </ol>
+
+      <div class="verify">
+        <h4>✅ Verification</h4>
+        <ul>
+          <li>Your case appears in the case list with the correct severity and TLP</li>
+          <li>At least 3 tasks exist, and one is marked done</li>
+          <li>The case has a MITRE technique attached</li>
+          <li>At least one observable is flagged as an IOC</li>
+        </ul>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">Think while you click</span>
+        <p>Ask yourself at each step: <em>which NIST phase am I in right now?</em> Creating the case = Detection &amp;
+           Analysis. Adding "contain the host" = Phase 3. The tool is just the lifecycle with buttons.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P20 SOAR -->
+  <section class="page" data-title="SOAR">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P20</span><span class="tag ir">Automation</span><span class="time">⏱ 12 min</span></div>
+      <h1>SOAR — Let the Robot Do the Boring Part</h1>
+      <p class="lede">Security Orchestration, Automation and Response.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-soar-concept.svg" alt="SOAR: the pain without it, the three capabilities orchestration automation response, and a VPN brute force example">
+        <figcaption>The problem, the three capabilities, and one concrete example.</figcaption>
+      </figure>
+
+      <figure class="fig plate">
+        <img src="images/soar-before-after.png" alt="Comparison of a SOC before and after SOAR" loading="lazy">
+        <figcaption>Before and after SOAR — tools scattered vs unified (source: TryHackMe · Introduction to SOAR).</figcaption>
+      </figure>
+
+      <h2>The three letters, in plain words</h2>
+      <table>
+        <thead><tr><th>Letter</th><th>Means</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>O — Orchestration</strong></td><td>connect all your tools together</td><td>SIEM + threat intel + firewall + ticket system in one screen</td></tr>
+          <tr><td><strong>A — Automation</strong></td><td>the playbook runs by itself</td><td>no analyst clicks needed for the repetitive checks</td></tr>
+          <tr><td><strong>R — Response</strong></td><td>take action from that one screen</td><td>block IP, disable user, isolate host</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">Playbook vs SOAR playbook</span>
+        <p>An <strong>IR playbook</strong> is a document a human follows. A <strong>SOAR playbook</strong> is that same
+           document turned into automated steps. You cannot automate what you never wrote down — which is why
+           Preparation comes first.</p>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">SOAR does not replace analysts</span>
+        <p>It handles repetitive work. It cannot make judgement calls, understand business context, or respond to a new
+           kind of attack. And humans are the ones who <em>write</em> the playbooks it follows.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P21 SOAR PLAYBOOKS -->
+  <section class="page" data-title="SOAR playbooks">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P21</span><span class="tag ir">Automation</span><span class="time">⏱ 10 min</span></div>
+      <h1>Reading a SOAR Playbook</h1>
+      <p class="lede">A flow chart of "if this, then that" — with humans at the important corners.</p>
+    </div>
+    <div class="content">
+      <h2>Phishing playbook</h2>
+      <figure class="fig plate">
+        <img src="images/soar-phishing-playbook.png" alt="SOAR phishing playbook flow diagram with decision branches" loading="lazy">
+        <figcaption>Follow the arrows: alert → ticket → does it have a URL or attachment? → branch (source: TryHackMe · Introduction to SOAR).</figcaption>
+      </figure>
+
+      <p><strong>How to read it:</strong> start at the top ("suspicious email received"). Each diamond is a
+         <strong>question</strong>; each box is an <strong>action</strong>. Follow one path down and say it out loud —
+         that is the whole playbook.</p>
+
+      <h2>CVE patching playbook</h2>
+      <figure class="fig plate">
+        <img src="images/soar-cve-playbook.png" alt="SOAR CVE patching playbook flow diagram" loading="lazy">
+        <figcaption>A non-incident playbook: analyse the CVE, assess risk, ticket it, test the patch, deploy (source: TryHackMe · Introduction to SOAR).</figcaption>
+      </figure>
+
+      <div class="box tip">
+        <span class="box-t">Spot the human</span>
+        <p>In both diagrams, most steps are automated — but a few clearly say "analyst". Those are the points where a
+           judgement call or an approval is needed (usually just before something destructive or irreversible).</p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">Class exercise (5 min)</span>
+        <p>Pick the phishing diagram and trace <em>one</em> path from top to bottom out loud, as a team. Then ask:
+           which step would <strong>you</strong> refuse to automate, and why?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P22 DF INTRO -->
+  <section class="page" data-title="Forensic readiness">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P22</span><span class="tag dfir">Forensics</span><span class="time">⏱ 12 min</span></div>
+      <h1>Forensic Readiness — Why It Belongs Here</h1>
+      <p class="lede">Forensics is not a separate job. It is a way of working <em>during</em> the incident.</p>
+    </div>
+    <div class="content">
+      <p><strong>Digital forensics</strong> = finding and analysing evidence on digital devices in a way that survives
+         scrutiny — from your manager, an auditor, or a court.</p>
+
+      <div class="box tip">
+        <span class="box-t">Simple example</span>
+        <p>Police raid a suspect's home and take a laptop, a phone and a USB stick. The forensics team finds a map of a
+           bank on the laptop, escape routes in a document, and chat records on the phone. Same skills — we just do it
+           for company incidents instead.</p>
+      </div>
+
+      <h2>The four phases (NIST)</h2>
+      <figure class="fig plate">
+        <img src="images/df-nist-phases.png" alt="NIST digital forensics four phases: collection, examination, analysis, reporting" loading="lazy">
+        <figcaption>Collection → Examination → Analysis → Reporting (source: TryHackMe · Digital Forensics Fundamentals).</figcaption>
+      </figure>
+
+      <table>
+        <thead><tr><th>Phase</th><th>Plain meaning</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1 Collection</strong></td><td>gather the devices/data safely, without changing anything</td></tr>
+          <tr><td><strong>2 Examination</strong></td><td>filter the mountain of data down to what matters</td></tr>
+          <tr><td><strong>3 Analysis</strong></td><td>connect the pieces into a timeline of what happened</td></tr>
+          <tr><td><strong>4 Reporting</strong></td><td>write it so both an engineer and a manager understand</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Types of digital forensics</h2>
+      <figure class="fig plate">
+        <img src="images/df-types.png" alt="Types of digital forensics: computer, mobile, network, database, cloud, email" loading="lazy">
+        <figcaption>Different evidence, different tools (source: TryHackMe · Digital Forensics Fundamentals).</figcaption>
+      </figure>
+      <p class="muted">Computer · Mobile · Network · Database · Cloud · Email — Sessions 6–9 take these one at a time,
+         each with its own incident type.</p>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 5 — digital forensics in IR, the DF process, Locard's exchange principle</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P23 EVIDENCE HANDLING -->
+  <section class="page" data-title="Handling evidence">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P23</span><span class="tag dfir">Forensics</span><span class="time">⏱ 14 min</span></div>
+      <h1>Handling Evidence So It Still Counts</h1>
+      <p class="lede">Collect in the right order, prove nobody changed it, never write to the original.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <img src="../assets/img/s5-forensic-readiness.svg" alt="Order of volatility from CPU registers to backups, chain of custody contents, and the three rules before touching evidence">
+        <figcaption>Order of volatility on the left, chain of custody and the three rules on the right.</figcaption>
+      </figure>
+
+      <h2>Order of volatility — grab what is dying first</h2>
+      <p>Some evidence disappears in seconds; some is still there next month. Always collect the fastest-disappearing
+         thing first.</p>
+      <table>
+        <thead><tr><th>Order</th><th>Evidence</th><th>Lost when…</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>CPU registers &amp; cache</td><td>instantly</td></tr>
+          <tr><td><strong>2</strong></td><td><strong>RAM / memory</strong> ⭐</td><td>the machine powers off</td></tr>
+          <tr><td>3</td><td>Network connections, ARP cache</td><td>seconds to minutes</td></tr>
+          <tr><td>4</td><td>Running processes, open files</td><td>the process ends</td></tr>
+          <tr><td><strong>5</strong></td><td><strong>Disk</strong> — files, registry, logs ⭐</td><td>survives reboot</td></tr>
+          <tr><td>6</td><td>Backups, archived logs</td><td>slowest of all</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box warn">
+        <span class="box-t">This is why we said "don't power off"</span>
+        <p>Items 2, 3 and 4 all live in memory. One reboot deletes them permanently — including the running malware you
+           were trying to catch.</p>
+      </div>
+
+      <h2>Two forensic images</h2>
+      <table>
+        <thead><tr><th>Image</th><th>Contains</th><th>Volatile?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Memory image</strong></td><td>RAM — running processes, connections, injected code</td><td>Yes — take it <strong>first</strong></td></tr>
+          <tr><td><strong>Disk image</strong></td><td>everything on the drive, bit by bit</td><td>No — survives restart</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Chain of custody — the evidence logbook</h2>
+      <p>A form that records: what the evidence is, who collected it, when, where it is stored, and every person who
+         touched it since. <strong>One gap and the evidence can be thrown out.</strong></p>
+
+      <h2>Write blockers</h2>
+      <figure class="fig plate" style="max-width:520px;margin-left:auto;margin-right:auto">
+        <img src="images/df-write-blocker.svg" alt="Write blocker device between the evidence drive and the forensic workstation" loading="lazy">
+        <figcaption>A write blocker lets you read the drive but never write to it (source: TryHackMe · Digital Forensics Fundamentals).</figcaption>
+      </figure>
+      <p>Plug a suspect's drive straight into your PC and the operating system will quietly touch it — changing
+         timestamps and ruining your evidence. A write blocker sits in between and physically allows
+         <strong>read only</strong>.</p>
+
+      <div class="box tip">
+        <span class="box-t">Hashing = the proof</span>
+        <p>Hash the evidence when you collect it. Hash it again later. <strong>Same hash = nothing changed.</strong>
+           That single number is what makes your evidence trustworthy.</p>
+      </div>
+
+      <div class="box ine">
+        <span class="box-t">INE Reference</span>
+        <p>Module 5 — evidence types, order of volatility, chain of custody, rules of evidence</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P24 DF TOOLS -->
+  <section class="page" data-title="Forensics tools">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P24</span><span class="tag dfir">Forensics</span><span class="time">⏱ 10 min</span></div>
+      <h1>The Tools You'll Meet in Sessions 6–9</h1>
+      <p class="lede">Just recognise them today — you will use them properly per incident type.</p>
+    </div>
+    <div class="content">
+      <table>
+        <thead><tr><th>Tool</th><th>Used for</th><th>Acquire or Analyse?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>FTK Imager</strong></td><td>disk images (and quick preview)</td><td>both</td></tr>
+          <tr><td><strong>Autopsy</strong></td><td>digging through a disk image</td><td>analyse</td></tr>
+          <tr><td><strong>DumpIt</strong></td><td>capturing RAM on Windows</td><td>acquire</td></tr>
+          <tr><td><strong>Volatility</strong></td><td>analysing a memory image</td><td>analyse</td></tr>
+        </tbody>
+      </table>
+
+      <figure class="fig plate">
+        <img src="images/df-ftk-imager.png" alt="FTK Imager interface" loading="lazy">
+        <figcaption>FTK Imager — creating and browsing disk images (source: TryHackMe · Digital Forensics Fundamentals).</figcaption>
+      </figure>
+      <figure class="fig plate">
+        <img src="images/df-autopsy.png" alt="Autopsy digital forensics platform interface" loading="lazy">
+        <figcaption>Autopsy — keyword search, deleted-file recovery, file metadata (source: TryHackMe · Digital Forensics Fundamentals).</figcaption>
+      </figure>
+      <figure class="fig plate">
+        <img src="images/df-volatility.png" alt="Volatility memory forensics framework" loading="lazy">
+        <figcaption>Volatility — memory analysis through plugins (source: TryHackMe · Digital Forensics Fundamentals).</figcaption>
+      </figure>
+
+      <div class="box tip">
+        <span class="box-t">Even a document holds evidence</span>
+        <p>Metadata is everywhere. <code>pdfinfo report.pdf</code> shows who created a document and when;
+           <code>exiftool photo.jpg</code> can reveal the camera and even <strong>GPS coordinates</strong>. Attackers
+           forget this constantly.</p>
+      </div>
+
+      <div class="box note">
+        <span class="box-t">Coming next</span>
+        <p>Session 6 goes deep on <strong>malware</strong> incidents — including memory forensics with Volatility on a
+           real infected image.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P25 KNOWLEDGE CHECK 2 -->
+  <section class="page" data-title="Knowledge check 2">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P25</span><span class="tag analysis">Knowledge check</span><span class="time">⏱ 10 min</span></div>
+      <h1>Knowledge Check — Response, Tools &amp; Evidence</h1>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-answer="c"
+           data-why="Powering off destroys RAM — running processes, network connections and injected malware. Isolate from the network but leave it running until memory is captured.">
+        <p><span class="qn">Q1</span> A host is infected. What should you <em>not</em> do first?</p>
+        <ul class="opts">
+          <li data-opt="a">Disconnect it from the network</li>
+          <li data-opt="b">Capture a memory image</li>
+          <li data-opt="c">Power it off and reboot to clean it</li>
+          <li data-opt="d">Open a case and assign an owner</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="b"
+           data-why="Order of volatility: RAM disappears the moment the machine powers off, so it is captured before disk, which survives a reboot.">
+        <p><span class="qn">Q2</span> Which do you collect first — memory or disk?</p>
+        <ul class="opts">
+          <li data-opt="a">Disk — it holds more data</li>
+          <li data-opt="b">Memory — it disappears on shutdown</li>
+          <li data-opt="c">Either, order does not matter</li>
+          <li data-opt="d">Neither — collect backups first</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d"
+           data-why="Chain of custody documents who handled evidence and when. A gap means you cannot prove the evidence was not altered, so it may be rejected.">
+        <p><span class="qn">Q3</span> What is the chain of custody for?</p>
+        <ul class="opts">
+          <li data-opt="a">Choosing which tool to use</li>
+          <li data-opt="b">Blocking the attacker's IP</li>
+          <li data-opt="c">Deciding incident severity</li>
+          <li data-opt="d">Proving evidence was never altered</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a"
+           data-why="A write blocker allows reading the evidence drive while physically preventing any write, so timestamps and data stay untouched.">
+        <p><span class="qn">Q4</span> Why use a write blocker?</p>
+        <ul class="opts">
+          <li data-opt="a">It lets you read the drive without changing it</li>
+          <li data-opt="b">It speeds up imaging</li>
+          <li data-opt="c">It encrypts the evidence</li>
+          <li data-opt="d">It deletes malware automatically</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="b"
+           data-why="TLP controls who you may SHARE the information with. PAP controls what ACTIONS you may take without tipping off the attacker.">
+        <p><span class="qn">Q5</span> In TheHive, what is the difference between TLP and PAP?</p>
+        <ul class="opts">
+          <li data-opt="a">TLP is severity, PAP is priority</li>
+          <li data-opt="b">TLP = who you can share with, PAP = what actions you may take</li>
+          <li data-opt="c">They mean the same thing</li>
+          <li data-opt="d">TLP is for malware, PAP is for phishing</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="c"
+           data-why="SOAR automates repetitive playbook steps but cannot make judgement calls or understand business context — and analysts are the ones who write the playbooks.">
+        <p><span class="qn">Q6</span> Does SOAR replace SOC analysts?</p>
+        <ul class="opts">
+          <li data-opt="a">Yes, fully</li>
+          <li data-opt="b">Yes, for all L1 work</li>
+          <li data-opt="c">No — it automates repetitive work only</li>
+          <li data-opt="d">No — SOAR cannot take any action</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a"
+           data-why="Eradication must fix the root cause (for example the unpatched service). Removing only the malware leaves the door open for the attacker to return.">
+        <p><span class="qn">Q7</span> You deleted the malware but the attacker returns next day. What was skipped?</p>
+        <ul class="opts">
+          <li data-opt="a">Fixing the root cause during eradication</li>
+          <li data-opt="b">Setting the case severity</li>
+          <li data-opt="c">The chain of custody form</li>
+          <li data-opt="d">The TLP marking</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P26 SUMMARY + CHEAT SHEET -->
+  <section class="page" data-title="Summary &amp; cheat sheet">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P26</span><span class="tag">Summary</span><span class="time">⏱ 8 min</span></div>
+      <h1>Summary &amp; Cheat Sheet</h1>
+    </div>
+    <div class="content">
+      <h2>What we learned, in order</h2>
+      <ol>
+        <li>Event vs alert vs <strong>incident</strong> — only a human declares an incident.</li>
+        <li><strong>NIST (4) · SANS (6) · EC-Council (9)</strong> — the same journey, cut differently.</li>
+        <li><strong>Preparation</strong> — team, policy, plan, playbooks, matrices, backups.</li>
+        <li><strong>Detection &amp; Analysis</strong> — record → triage → notify.</li>
+        <li><strong>Contain → collect evidence → eradicate → recover</strong> (never reboot first).</li>
+        <li><strong>Post-incident</strong> — 5 Whys, blameless, feeds back into preparation.</li>
+        <li><strong>TheHive</strong> for the case, <strong>SOAR</strong> for automation.</li>
+        <li><strong>Forensic readiness</strong> — volatility order, chain of custody, write blockers, hashing.</li>
+      </ol>
+
+      <div class="cheat">
+        <div class="cheat-head">
+          <h3>📋 Session 5 Cheat Sheet</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a class="btn-sm" href="../cheatsheets/index.html#s05" style="text-decoration:none">📚 All cheat sheets</a>
+            <button class="btn-sm" onclick="window.print()">🖨 Print / save as PDF</button>
+          </div>
+        </div>
+        <div class="cheat-grid">
+          <div class="cheat-card"><h5>NIST · 4 phases</h5><ul>
+            <li>1 Preparation</li>
+            <li>2 Detection &amp; Analysis</li>
+            <li>3 Containment, Eradication, Recovery</li>
+            <li>4 Post-Incident Activity</li></ul></div>
+
+          <div class="cheat-card"><h5>SANS · 6 steps</h5><ul>
+            <li>Preparation · Identification</li>
+            <li>Containment · Eradication</li>
+            <li>Recovery · Lessons Learned</li></ul></div>
+
+          <div class="cheat-card"><h5>EC-Council · 9 steps</h5><ul>
+            <li>Prep · Recording · Triage</li>
+            <li>Notification · Containment</li>
+            <li>Evidence · Eradication</li>
+            <li>Recovery · Post-Incident</li></ul></div>
+
+          <div class="cheat-card"><h5>Document trio</h5><ul>
+            <li><b>Policy</b> = the rule (what/why)</li>
+            <li><b>Plan</b> = who &amp; in what order</li>
+            <li><b>Playbook</b> = exact steps, per type</li></ul></div>
+
+          <div class="cheat-card"><h5>Order of volatility</h5><ul>
+            <li>1 registers/cache</li>
+            <li>2 <b>RAM</b> · 3 network</li>
+            <li>4 processes · 5 <b>disk</b></li>
+            <li>6 backups/archives</li></ul></div>
+
+          <div class="cheat-card"><h5>Evidence rules</h5><ul>
+            <li>Authorisation first</li>
+            <li>Write blocker always</li>
+            <li>Work on a copy</li>
+            <li>Hash before &amp; after</li>
+            <li>Chain of custody unbroken</li></ul></div>
+
+          <div class="cheat-card"><h5>TheHive</h5><ul>
+            <li>Case → Tasks → Observables</li>
+            <li><b>TLP</b> = who to share with</li>
+            <li><b>PAP</b> = what actions allowed</li>
+            <li>Profiles: admin · org-admin · analyst · read-only</li></ul></div>
+
+          <div class="cheat-card"><h5>SOAR</h5><ul>
+            <li><b>O</b>rchestration = tools connected</li>
+            <li><b>A</b>utomation = playbook self-runs</li>
+            <li><b>R</b>esponse = act from one screen</li>
+            <li>Humans keep judgement calls</li></ul></div>
+
+          <div class="cheat-card"><h5>Golden rules</h5><ul>
+            <li>Contain before you clean</li>
+            <li>Collect before you contain</li>
+            <li>Never power off — isolate</li>
+            <li>Fix the root cause</li>
+            <li>Blameless post-incident</li></ul></div>
+        </div>
+      </div>
+
+      <div class="box note">
+        <span class="box-t">Next session</span>
+        <p>You know the process. <strong>Session 6</strong> runs it for real on a <strong>malware incident</strong> —
+           detection, the full IR arc, and memory forensics with Volatility.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P27 TAKEAWAYS -->
+  <section class="page" data-title="Key takeaways">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P27</span><span class="tag">Takeaways</span><span class="time">⏱ 3 min</span></div>
+      <h1>Key Takeaways</h1>
+    </div>
+    <div class="content">
+      <ul class="takeaways">
+        <li>An incident is <strong>confirmed harm</strong> — a machine raises alerts, a human declares incidents.</li>
+        <li>NIST, SANS and EC-Council describe the <strong>same journey</strong>; we use NIST's 4 phases.</li>
+        <li><strong>Preparation decides everything.</strong> The plan you didn't write is the one you'll need at 3 AM.</li>
+        <li>Policy = rule · Plan = strategy · <strong>Playbook = the exact steps</strong>.</li>
+        <li>Record → triage → notify. No ticket, no incident.</li>
+        <li><strong>Contain before you clean; collect before you contain.</strong> Never power off — isolate.</li>
+        <li>Eradication without <strong>root cause</strong> just invites them back tomorrow.</li>
+        <li>Post-incident is <strong>blameless</strong> and feeds straight back into preparation.</li>
+        <li>Evidence needs <strong>volatility order, chain of custody, a write blocker and a hash</strong> — or it's worthless.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- P28 HOMEWORK -->
+  <section class="page" data-title="Homework">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P28</span><span class="tag dfir">Homework</span><span class="time">⏱ 5 min</span></div>
+      <h1>Homework</h1>
+      <p class="lede">All free rooms — no subscription needed.</p>
+    </div>
+    <div class="content">
+      <div class="hw-head">
+        <div class="hw-progress" id="hwProgress">Required: <b>0 / 3</b> &nbsp;·&nbsp; All tasks: <b>0 / 5</b></div>
+        <div class="hw-actions">
+          <a class="btn-sm" href="../resources/labs.html#s05" style="text-decoration:none">🧪 All practice labs</a>
+          <button class="btn-sm" id="btnNewTask">➕ Create task</button>
+          <button class="btn-sm" id="hwAddAll">📅 Add all deadlines</button>
+          <button class="btn-sm" id="hwReset">↺ Reset progress</button>
+        </div>
+      </div>
+
+      <div id="taskList">
+
+        <div class="task mandatory" data-due="2026-08-25">
+          <div class="task-top"><h3 class="task-title">Milestone Review — Sessions 1 to 5</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 25 Aug</span></div>
+          <div class="task-body"><p>50 questions covering everything from the SOC basics to forensic readiness (different from the class Kahoot). It scores you
+             and tells you which sessions to revise. Do this <strong>before</strong> Session 6 — the forensics and IR
+             deep dives assume all of it.</p></div>
+          <div class="task-links"><a class="task-link" href="../review/index.html">★ Open the Milestone Review</a></div>
+          <div class="task-deliver"><b>Bring:</b> your score, and the one topic you found hardest.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task mandatory" data-due="2026-08-25">
+          <div class="task-top"><h3 class="task-title">Finish the lab — a complete case in TheHive</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 25 Aug</span></div>
+          <div class="task-body"><p>Your case must have severity + TLP + PAP set, at least 3 tasks, one MITRE technique,
+             and one observable flagged as an IOC.</p></div>
+          <div class="task-deliver"><b>Deliverable:</b> a screenshot of your case showing the Observables and TTPs tabs.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task optional" data-due="2026-09-01">
+          <div class="task-top"><h3 class="task-title">TryHackMe — Digital Forensics Fundamentals</h3>
+            <span class="badge opt">Optional · premium</span><span class="badge due">Due · 1 Sep</span></div>
+          <div class="task-body"><p><strong>Note: this room is premium</strong> — only Task 1 is free. Do it only if you
+             already have a TryHackMe subscription; otherwise your instructor will cover the same material in class.
+             It covers the DF phases, evidence acquisition and chain of custody.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/digitalforensicsfundamentals" target="_blank" rel="noopener">🔗 Open the room (premium)</a></div>
+          <div class="task-deliver"><b>Optional:</b> one thing about evidence handling you did not know before.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task mandatory" data-due="2026-08-25">
+          <div class="task-top"><h3 class="task-title">Write a mini playbook (one page)</h3>
+            <span class="badge req">Required</span><span class="badge due">Due · 25 Aug</span></div>
+          <div class="task-body"><p>Pick <strong>one</strong> incident type (phishing, ransomware, or account compromise).
+             Write: prerequisites → trigger use cases → analysis steps → containment → eradication → recovery. Keep it to one page.</p></div>
+          <div class="task-deliver"><b>Deliverable:</b> your one-page playbook (any format). We review a few in class.</div>
+          <div class="task-btns"></div>
+        </div>
+
+        <div class="task optional" data-due="2026-09-01">
+          <div class="task-top"><h3 class="task-title">TryHackMe — Intro to Cyber Threat Intel (free · revision)</h3>
+            <span class="badge opt">Optional</span><span class="badge due">Due · 1 Sep</span></div>
+          <div class="task-body"><p>If you missed it in Session 4 — it connects directly to observables and MISP in TheHive.</p></div>
+          <div class="task-links"><a class="task-link" href="https://tryhackme.com/room/cyberthreatintel" target="_blank" rel="noopener">🔗 Open the room</a></div>
+          <div class="task-deliver"><b>Optional:</b> one IOC type and where you'd enrich it.</div>
+          <div class="task-btns"></div>
+        </div>
+
+      </div><!-- /taskList -->
+
+      <p class="hw-note">In-class rooms (TheHive Project, Introduction to SOAR, IR Playbooks, Digital Forensics Fundamentals) are premium and instructor-led — you are never required to pay for anything.
+         Progress is saved in this browser.</p>
+    </div>
+  </section>
+
+  <!-- P29 REFERENCES -->
+  <section class="page" data-title="References">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S05 · P29</span><span class="tag">References</span></div>
+      <h1>References</h1>
+    </div>
+    <div class="content">
+      <h2>Primary source — INE eCIR v2</h2>
+      <table>
+        <thead><tr><th>Topic</th><th>INE module</th></tr></thead>
+        <tbody>
+          <tr><td>IR fundamentals, event vs incident, team models</td><td>Module 2</td></tr>
+          <tr><td>NIST vs SANS lifecycles, PPT, policy/plan/playbook</td><td>Module 2</td></tr>
+          <tr><td>TheHive, Cortex, TLP / PAP</td><td>Module 2 · 08</td></tr>
+          <tr><td>DF process, chain of custody, rules of evidence</td><td>Module 5</td></tr>
+          <tr><td>Evidence types, order of volatility, acquisition</td><td>Module 5</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Supporting source — Maharah Tech (Incident Handling)</h2>
+      <p>Chapter 1 — the incident-handling process: preparation flow, recording &amp; assignment, triage, notification,
+         containment, evidence gathering, eradication, recovery, post-incident and forensic readiness. Process diagrams
+         in this session were redrawn in the ITGate theme from that chapter's flowcharts.</p>
+
+      <h2>In-class labs — TryHackMe (instructor-led)</h2>
+      <ul>
+        <li><a href="https://tryhackme.com/room/thehiveproject" target="_blank" rel="noopener">TheHive Project</a></li>
+        <li><a href="https://tryhackme.com/room/introtosoar" target="_blank" rel="noopener">Introduction to SOAR</a></li>
+        <li><a href="https://tryhackme.com/room/irplaybooks" target="_blank" rel="noopener">IR Playbooks</a></li>
+      </ul>
+
+      <h2>Homework labs — TryHackMe (free)</h2>
+      <ul>
+        <li><a href="https://tryhackme.com/room/digitalforensicsfundamentals" target="_blank" rel="noopener">Digital Forensics Fundamentals</a> (premium — in class)</li>
+        <li><a href="https://tryhackme.com/room/cyberthreatintel" target="_blank" rel="noopener">Intro to Cyber Threat Intelligence</a></li>
+      </ul>
+
+      <h2>Useful standards &amp; templates</h2>
+      <ul>
+        <li>NIST SP 800-61 — Computer Security Incident Handling Guide</li>
+        <li>NIST sample chain-of-custody form</li>
+        <li>CISA — Traffic Light Protocol (TLP) definitions · MISP taxonomies — PAP</li>
+      </ul>
+
+      <div class="box note">
+        <span class="box-t">Reminder</span>
+        <p>INE is the primary reference for the exam. Maharah and THM reinforce — where wording differs, INE wins.
+           Screenshots are credited to their source room and used as figures only.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREATE TASK MODAL -->
+  <div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-label="Create a homework task">
+    <div class="modal-box">
+      <h3>Create a homework task</h3>
+      <p class="modal-sub">Add your own lab, reading or exercise to this session's homework list.</p>
+      <div class="field"><label for="tTitle">Task title *</label>
+        <input type="text" id="tTitle" placeholder="e.g. Write a ransomware playbook"></div>
+      <div class="field"><label for="tDesc">Description</label>
+        <textarea id="tDesc" placeholder="What should the student do?"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label for="tDue">Deadline</label><input type="date" id="tDue"></div>
+        <div class="field"><label>Type</label>
+          <div class="seg"><button type="button" data-type="mandatory" class="sel">Required</button>
+            <button type="button" data-type="optional">Optional</button></div></div>
+      </div>
+      <div class="field"><label>Links, labs or files</label>
+        <div id="tLinks"><div class="link-row">
+          <input type="text" placeholder="Label" class="lk-label">
+          <input type="text" placeholder="https://… or file.pdf" class="lk-url"></div></div>
+        <button type="button" class="btn-sm" id="addLink" style="margin-top:6px">＋ Add another link</button></div>
+      <div class="field"><label for="tDeliver">Deliverable</label>
+        <input type="text" id="tDeliver" placeholder="e.g. Screenshot of the completed case"></div>
+      <div class="modal-actions">
+        <button class="btn-sm" data-close>Cancel</button>
+        <button class="btn primary" id="tSave">Add to homework list</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagenav">
+    <a href="#" id="btnPrev"><small>Previous</small><span class="lbl">—</span></a>
+    <a href="#" id="btnNext" class="next"><small>Next</small><span class="lbl">—</span></a>
+  </div>
+  <p class="kbd-hint">Navigate with <span class="kbd">←</span> <span class="kbd">→</span> arrow keys</p>
+
+  </article>
+</div>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Session 05</span>
+    <span class="mono">Primary reference: INE eCIR v2</span>
+  </div>
+</footer>
+
+<script src="../assets/js/session.js"></script>
+<script src="../assets/js/homework.js"></script>
+<script src="../assets/js/quiz.js"></script>
+<script src="../assets/js/task-creator.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# ── Instructor-only material — never publish to GitHub Pages ──
+# Kahoot games are played live in class. Students must not be able to
+# download them, otherwise the in-class quiz is spoiled.
+review/kahoot/
+review/*.xlsx
+*.xlsx
+
+# Never publish anything with credentials in it
+**/Session02_Lab_Build.md

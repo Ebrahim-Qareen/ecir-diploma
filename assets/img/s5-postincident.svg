@@ -1,0 +1,33 @@
+<svg viewBox="0 0 940 500" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Process flow of post-incident activities: incident documentation, incident impact assessment, review and revise policies, close the investigation, incident disclosure">
+<title>Process Flow of Post-Incident Activities</title>
+<defs>
+  <marker id="qG" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#3fa87a"/></marker>
+</defs>
+<rect width="940" height="500" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Process Flow of Post-Incident Activities</text>
+<text x="912" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- start connector -->
+<circle cx="530" cy="84" r="18" fill="#d4af37"/>
+<text x="530" y="91" text-anchor="middle" fill="#0a1226" font-size="16" font-weight="700">…</text>
+
+<rect x="350" y="126" width="360" height="40" rx="8" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="530" y="151" text-anchor="middle" fill="#9ceccb" font-size="13" font-weight="700">Incident Documentation</text>
+<path d="M530 102 L530 124" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#qG)"/>
+
+<rect x="350" y="200" width="360" height="40" rx="8" fill="#10241c" stroke="#d4af37" stroke-width="2.6"/>
+<text x="530" y="225" text-anchor="middle" fill="#9ceccb" font-size="13" font-weight="700">Incident Impact Assessment</text>
+<path d="M530 166 L530 198" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#qG)"/>
+
+<rect x="350" y="274" width="360" height="40" rx="8" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="530" y="299" text-anchor="middle" fill="#9ceccb" font-size="13" font-weight="700">Review and Revise Policies</text>
+<path d="M530 240 L530 272" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#qG)"/>
+
+<rect x="350" y="348" width="360" height="40" rx="8" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="530" y="373" text-anchor="middle" fill="#9ceccb" font-size="13" font-weight="700">Close the Investigation</text>
+<path d="M530 314 L530 346" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#qG)"/>
+
+<rect x="350" y="422" width="360" height="40" rx="8" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="530" y="447" text-anchor="middle" fill="#9ceccb" font-size="13" font-weight="700">Incident Disclosure</text>
+<path d="M530 388 L530 420" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#qG)"/>
+</svg>

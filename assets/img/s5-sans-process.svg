@@ -1,0 +1,74 @@
+<svg viewBox="0 0 1120 470" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="SANS incident response process, six steps: Preparation, Identification, Containment, Eradication, Recovery, Lessons Learned, colour coded to show how they map onto the four NIST phases">
+<title>Incident Handling Process According To SANS</title>
+<defs>
+  <marker id="sa" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="16" refX="14" refY="8" orient="auto"><path d="M0,0 L14,8 L0,16 Z" fill="#2b3f70"/></marker>
+  <marker id="sb" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="16" refX="14" refY="8" orient="auto"><path d="M0,0 L14,8 L0,16 Z" fill="#5d6f96"/></marker>
+</defs>
+<rect width="1120" height="470" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Incident Handling Process According To SANS</text>
+<text x="1092" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="58" fill="#8ea3c8" font-size="11.5">Six steps — the colours show which NIST phase each one belongs to.</text>
+
+<!-- NIST phase bands behind the nodes -->
+<rect x="52" y="92" width="150" height="150" rx="10" fill="#0d2030" stroke="#37c7d4" stroke-width="1.4" opacity="0.55"/>
+<text x="127" y="112" text-anchor="middle" fill="#7fdce6" font-size="10.5" font-weight="700">NIST 1</text>
+<rect x="222" y="92" width="150" height="150" rx="10" fill="#2a1420" stroke="#e0556b" stroke-width="1.4" opacity="0.55"/>
+<text x="297" y="112" text-anchor="middle" fill="#f2a6b4" font-size="10.5" font-weight="700">NIST 2</text>
+<rect x="392" y="92" width="490" height="150" rx="10" fill="#10241c" stroke="#3fa87a" stroke-width="1.4" opacity="0.55"/>
+<text x="637" y="112" text-anchor="middle" fill="#9ceccb" font-size="10.5" font-weight="700">NIST 3 — one NIST phase, three SANS steps</text>
+<rect x="902" y="92" width="166" height="150" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.4" opacity="0.55"/>
+<text x="985" y="112" text-anchor="middle" fill="#b6a9f2" font-size="10.5" font-weight="700">NIST 4</text>
+
+<!-- connectors -->
+<path d="M156 168 L216 168" stroke="#2b3f70" stroke-width="8" stroke-linecap="round" marker-end="url(#sa)"/>
+<path d="M326 168 L386 168" stroke="#2b3f70" stroke-width="8" stroke-linecap="round" marker-end="url(#sa)"/>
+<path d="M496 168 L556 168" stroke="#2b3f70" stroke-width="8" stroke-linecap="round" marker-end="url(#sa)"/>
+<path d="M666 168 L726 168" stroke="#2b3f70" stroke-width="8" stroke-linecap="round" marker-end="url(#sa)"/>
+<path d="M836 168 L896 168" stroke="#2b3f70" stroke-width="8" stroke-linecap="round" marker-end="url(#sa)"/>
+
+<!-- 1 Preparation -->
+<rect x="98" y="139" width="58" height="58" rx="14" fill="#0d2030" stroke="#37c7d4" stroke-width="2.4"/>
+<text x="127" y="179" text-anchor="middle" fill="#7fdce6" font-size="24" font-weight="700">1</text>
+<text x="127" y="222" text-anchor="middle" fill="#c7d3e8" font-size="12" font-weight="700">Preparation</text>
+
+<!-- 2 Identification -->
+<rect x="268" y="139" width="58" height="58" rx="14" fill="#2a1420" stroke="#e0556b" stroke-width="2.4"/>
+<text x="297" y="179" text-anchor="middle" fill="#f2a6b4" font-size="24" font-weight="700">2</text>
+<text x="297" y="222" text-anchor="middle" fill="#c7d3e8" font-size="12" font-weight="700">Identification</text>
+
+<!-- 3 Containment -->
+<rect x="438" y="139" width="58" height="58" rx="14" fill="#10241c" stroke="#3fa87a" stroke-width="2.4"/>
+<text x="467" y="179" text-anchor="middle" fill="#9ceccb" font-size="24" font-weight="700">3</text>
+<text x="467" y="222" text-anchor="middle" fill="#c7d3e8" font-size="12" font-weight="700">Containment</text>
+
+<!-- 4 Eradication -->
+<rect x="608" y="139" width="58" height="58" rx="14" fill="#10241c" stroke="#3fa87a" stroke-width="2.4"/>
+<text x="637" y="179" text-anchor="middle" fill="#9ceccb" font-size="24" font-weight="700">4</text>
+<text x="637" y="222" text-anchor="middle" fill="#c7d3e8" font-size="12" font-weight="700">Eradication</text>
+
+<!-- 5 Recovery -->
+<rect x="778" y="139" width="58" height="58" rx="14" fill="#10241c" stroke="#3fa87a" stroke-width="2.4"/>
+<text x="807" y="179" text-anchor="middle" fill="#9ceccb" font-size="24" font-weight="700">5</text>
+<text x="807" y="222" text-anchor="middle" fill="#c7d3e8" font-size="12" font-weight="700">Recovery</text>
+
+<!-- 6 Lessons Learned -->
+<rect x="948" y="139" width="58" height="58" rx="14" fill="#1a1533" stroke="#8b7ce8" stroke-width="2.4"/>
+<text x="977" y="179" text-anchor="middle" fill="#b6a9f2" font-size="24" font-weight="700">6</text>
+<text x="977" y="222" text-anchor="middle" fill="#c7d3e8" font-size="12" font-weight="700">Lessons Learned</text>
+
+<!-- the loop back: Lessons Learned improves Preparation. Routed at y=282, below the
+     labels (which end at y=222) and above the mapping panel (y=306). -->
+<path d="M1006 168 Q 1068 168 1068 226 Q 1068 282 1020 282 L 130 282 Q 72 282 72 224 L 72 178 Q 72 168 82 168 L 92 168"
+      fill="none" stroke="#5d6f96" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+      marker-end="url(#sb)" opacity="0.75"/>
+<text x="596" y="266" text-anchor="middle" fill="#8ea3c8" font-size="11" font-weight="700">what you learn goes back into Preparation — the cycle repeats</text>
+
+<!-- mapping panel -->
+<rect x="52" y="306" width="1016" height="106" rx="10" fill="#0e1730" stroke="#2b3f70"/>
+<text x="72" y="330" fill="#f0d78a" font-size="12.5" font-weight="700">How SANS lines up with NIST</text>
+<text x="72" y="354" fill="#c7d3e8" font-size="11.5"><tspan fill="#7fdce6" font-weight="700">SANS 1 Preparation</tspan> = NIST 1 Preparation   ·   <tspan fill="#f2a6b4" font-weight="700">SANS 2 Identification</tspan> = NIST 2 Detection &amp; Analysis</text>
+<text x="72" y="376" fill="#c7d3e8" font-size="11.5"><tspan fill="#9ceccb" font-weight="700">SANS 3 + 4 + 5</tspan> = NIST 3 Containment, Eradication &amp; Recovery — SANS just splits that one phase into three</text>
+<text x="72" y="398" fill="#c7d3e8" font-size="11.5"><tspan fill="#b6a9f2" font-weight="700">SANS 6 Lessons Learned</tspan> = NIST 4 Post-Incident Activity</text>
+
+<text x="560" y="440" text-anchor="middle" fill="#5d6f96" font-size="10">Same journey as NIST — only the middle is cut into smaller pieces.</text>
+</svg>

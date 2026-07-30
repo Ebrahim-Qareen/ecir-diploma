@@ -1,0 +1,52 @@
+<svg viewBox="0 0 1060 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="The incident response journey roadmap from alert to lessons learned">
+<title>The IR journey roadmap</title>
+<defs><marker id="r5" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d4af37"/></marker></defs>
+<rect width="1060" height="420" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Session 5 — The Road From "Alert" to "It Can't Happen Again"</text>
+<text x="1032" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Session 4 ended when you said "this is a real threat." Session 5 is everything that happens next.</text>
+
+<!-- road -->
+<path d="M60 250 C 220 190, 320 300, 470 240 S 720 180, 880 250" stroke="#2b3f70" stroke-width="26" fill="none" stroke-linecap="round"/>
+<path d="M60 250 C 220 190, 320 300, 470 240 S 720 180, 880 250" stroke="#d4af37" stroke-width="2" fill="none" stroke-dasharray="12 12"/>
+
+<!-- stops -->
+<circle cx="70" cy="248" r="20" fill="#2a1620" stroke="#e0556b" stroke-width="2"/>
+<text x="70" y="254" text-anchor="middle" fill="#f2a6b4" font-size="14" font-weight="700">!</text>
+<text x="70" y="300" text-anchor="middle" fill="#f2a6b4" font-size="11.5" font-weight="700">Confirmed</text>
+<text x="70" y="316" text-anchor="middle" fill="#8ea3c8" font-size="10">True Positive (S4)</text>
+
+<circle cx="240" cy="212" r="20" fill="#0e1730" stroke="#37c7d4" stroke-width="2"/>
+<text x="240" y="218" text-anchor="middle" fill="#7fdce6" font-size="13" font-weight="700">1</text>
+<text x="240" y="168" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Prepare</text>
+<text x="240" y="184" text-anchor="middle" fill="#8ea3c8" font-size="10">plan · team · playbooks</text>
+
+<circle cx="400" cy="266" r="20" fill="#0e1730" stroke="#37c7d4" stroke-width="2"/>
+<text x="400" y="272" text-anchor="middle" fill="#7fdce6" font-size="13" font-weight="700">2</text>
+<text x="400" y="318" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Detect &amp; Analyse</text>
+<text x="400" y="334" text-anchor="middle" fill="#8ea3c8" font-size="10">record · triage · notify</text>
+
+<circle cx="560" cy="222" r="20" fill="#101f1a" stroke="#3fa87a" stroke-width="2"/>
+<text x="560" y="228" text-anchor="middle" fill="#7fe0b4" font-size="13" font-weight="700">3</text>
+<text x="560" y="178" text-anchor="middle" fill="#7fe0b4" font-size="11.5" font-weight="700">Contain · Eradicate · Recover</text>
+<text x="560" y="194" text-anchor="middle" fill="#8ea3c8" font-size="10">stop it, remove it, restore it</text>
+
+<circle cx="730" cy="212" r="20" fill="#1a1533" stroke="#8b7ce8" stroke-width="2"/>
+<text x="730" y="218" text-anchor="middle" fill="#b6a9f2" font-size="13" font-weight="700">4</text>
+<text x="730" y="300" text-anchor="middle" fill="#b6a9f2" font-size="11.5" font-weight="700">Post-Incident</text>
+<text x="730" y="316" text-anchor="middle" fill="#8ea3c8" font-size="10">lessons learned</text>
+
+<circle cx="880" cy="250" r="22" fill="#241a1a" stroke="#d4af37" stroke-width="2"/>
+<text x="880" y="256" text-anchor="middle" fill="#f0d78a" font-size="14" font-weight="700">★</text>
+<text x="880" y="304" text-anchor="middle" fill="#f0d78a" font-size="11.5" font-weight="700">Stronger SOC</text>
+
+<!-- the lifecycle is a loop: a stronger SOC feeds back into Preparation -->
+<path d="M880 228 L880 120 L240 120 L240 190" stroke="#d4af37" stroke-width="1.8" fill="none"
+      stroke-dasharray="7 5" marker-end="url(#r5)"/>
+<text x="560" y="112" text-anchor="middle" fill="#f0d78a" font-size="11.5" font-weight="700">the loop closes — every incident makes the next response better</text>
+
+<!-- tools band -->
+<rect x="24" y="346" width="1012" height="58" rx="10" fill="#0e1730" stroke="#2b3f70"/>
+<text x="40" y="368" fill="#f0d78a" font-size="12.5" font-weight="700">The tools that carry you along the road</text>
+<text x="40" y="390" fill="#c7d3e8" font-size="11.5"><tspan fill="#7fdce6" font-weight="700">Playbook</tspan> = the written steps  ·  <tspan fill="#7fe0b4" font-weight="700">TheHive</tspan> = where the case lives  ·  <tspan fill="#b6a9f2" font-weight="700">SOAR</tspan> = the robot that does the repeat work  ·  <tspan fill="#f2a6b4" font-weight="700">Forensic readiness</tspan> = keeping the evidence usable</text>
+</svg>

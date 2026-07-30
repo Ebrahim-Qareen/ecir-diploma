@@ -1,0 +1,81 @@
+<svg viewBox="0 0 1180 440" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Incident handling process according to EC-Council, nine steps from Preparation to Post-Incident Activities">
+<title>Incident Handling Process According To EC-Council</title>
+<rect width="1180" height="440" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Incident Handling Process According To EC-Council</text>
+<text x="1152" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- connector ribbons (zig-zag) — 8 links joining 9 nodes -->
+<path d="M118 214 C 150 214, 152 160, 186 160" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+<path d="M244 160 C 278 160, 280 214, 312 214" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+<path d="M370 214 C 404 214, 406 160, 438 160" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+<path d="M496 160 C 530 160, 532 214, 564 214" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+<path d="M622 214 C 656 214, 658 160, 690 160" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+<path d="M748 160 C 782 160, 784 214, 816 214" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+<path d="M874 214 C 908 214, 910 160, 942 160" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+<path d="M1000 160 C 1034 160, 1036 214, 1068 214" fill="none" stroke="#2b3f70" stroke-width="9" stroke-linecap="round"/>
+
+<!-- EVEN steps (upper row, gold) -->
+<g>
+  <rect x="186" y="130" width="58" height="58" rx="14" fill="#241d0d" stroke="#d4af37" stroke-width="2.4"/>
+  <text x="215" y="170" text-anchor="middle" fill="#f0d78a" font-size="24" font-weight="700">2</text>
+  <text x="215" y="106" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Incident Recording</text>
+  <text x="215" y="121" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">and Assignment</text>
+</g>
+<g>
+  <rect x="438" y="130" width="58" height="58" rx="14" fill="#241d0d" stroke="#d4af37" stroke-width="2.4"/>
+  <text x="467" y="170" text-anchor="middle" fill="#f0d78a" font-size="24" font-weight="700">4</text>
+  <text x="467" y="114" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Notification</text>
+</g>
+<g>
+  <rect x="690" y="130" width="58" height="58" rx="14" fill="#241d0d" stroke="#d4af37" stroke-width="2.4"/>
+  <text x="719" y="170" text-anchor="middle" fill="#f0d78a" font-size="24" font-weight="700">6</text>
+  <text x="719" y="91" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Evidence</text>
+  <text x="719" y="106" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Gathering and</text>
+  <text x="719" y="121" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Forensic Analysis</text>
+</g>
+<g>
+  <rect x="942" y="130" width="58" height="58" rx="14" fill="#241d0d" stroke="#d4af37" stroke-width="2.4"/>
+  <text x="971" y="170" text-anchor="middle" fill="#f0d78a" font-size="24" font-weight="700">8</text>
+  <text x="971" y="114" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Recovery</text>
+</g>
+
+<!-- ODD steps (lower row, light) -->
+<g>
+  <rect x="60" y="184" width="58" height="58" rx="14" fill="#132244" stroke="#8ea3c8" stroke-width="2.2"/>
+  <text x="89" y="224" text-anchor="middle" fill="#e8edf7" font-size="24" font-weight="700">1</text>
+  <text x="89" y="266" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Preparation</text>
+</g>
+<g>
+  <rect x="312" y="184" width="58" height="58" rx="14" fill="#132244" stroke="#8ea3c8" stroke-width="2.2"/>
+  <text x="341" y="224" text-anchor="middle" fill="#e8edf7" font-size="24" font-weight="700">3</text>
+  <text x="341" y="266" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Incident Triage</text>
+</g>
+<g>
+  <rect x="564" y="184" width="58" height="58" rx="14" fill="#132244" stroke="#8ea3c8" stroke-width="2.2"/>
+  <text x="593" y="224" text-anchor="middle" fill="#e8edf7" font-size="24" font-weight="700">5</text>
+  <text x="593" y="266" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Containment</text>
+</g>
+<g>
+  <rect x="816" y="184" width="58" height="58" rx="14" fill="#132244" stroke="#8ea3c8" stroke-width="2.2"/>
+  <text x="845" y="224" text-anchor="middle" fill="#e8edf7" font-size="24" font-weight="700">7</text>
+  <text x="845" y="266" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Eradication</text>
+</g>
+<!-- step 9 — now in the same lower row as 1,3,5,7 -->
+<g>
+  <rect x="1068" y="184" width="58" height="58" rx="14" fill="#132244" stroke="#8ea3c8" stroke-width="2.2"/>
+  <text x="1097" y="224" text-anchor="middle" fill="#e8edf7" font-size="24" font-weight="700">9</text>
+  <text x="1097" y="266" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Post-Incident</text>
+  <text x="1097" y="281" text-anchor="middle" fill="#c7d3e8" font-size="11.5" font-weight="700">Activities</text>
+</g>
+
+<!-- what step 9 contains -->
+<rect x="60" y="306" width="1066" height="66" rx="10" fill="#0e1730" stroke="#2b3f70"/>
+<text x="80" y="330" fill="#f0d78a" font-size="12" font-weight="700">Step 9 · Post-Incident Activities include</text>
+<text x="80" y="356" fill="#c7d3e8" font-size="11">• Incident Documentation</text>
+<text x="292" y="356" fill="#c7d3e8" font-size="11">• Incident Impact Assessment</text>
+<text x="524" y="356" fill="#c7d3e8" font-size="11">• Review and Revise Policies</text>
+<text x="750" y="356" fill="#c7d3e8" font-size="11">• Close the Investigation</text>
+<text x="950" y="356" fill="#c7d3e8" font-size="11">• Incident Disclosure</text>
+
+<text x="590" y="406" text-anchor="middle" fill="#5d6f96" font-size="10">Rebuilt in the ITGate theme from the Maharah "Incident Handling" course slide.</text>
+</svg>

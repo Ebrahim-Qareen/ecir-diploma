@@ -1,0 +1,70 @@
+<svg viewBox="0 0 980 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Process flow of eradication: determine the cause, eliminate the cause decision, escalate the problem, verify similar systems, resolve and patch, start recovery">
+<title>Process flow of Eradication</title>
+<defs>
+  <marker id="xG" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#3fa87a"/></marker>
+  <marker id="xR" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#e0556b"/></marker>
+</defs>
+<rect width="980" height="560" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Process flow of Eradication</text>
+<text x="952" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- start connector -->
+<circle cx="470" cy="82" r="18" fill="#d4af37"/>
+<text x="470" y="89" text-anchor="middle" fill="#0a1226" font-size="16" font-weight="700">…</text>
+
+<!-- Determine the Cause of the Incident -->
+<rect x="330" y="122" width="280" height="46" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="470" y="142" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Determine the Cause of</text>
+<text x="470" y="159" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">the Incident</text>
+<path d="M470 100 L470 120" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#xR)"/>
+
+<!-- D1 Eliminate the Cause -->
+<polygon points="470,196 610,244 470,292 330,244" fill="#2a1420" stroke="#e0556b" stroke-width="2"/>
+<text x="470" y="240" text-anchor="middle" fill="#f7c2cc" font-size="12" font-weight="700">Eliminate</text>
+<text x="470" y="256" text-anchor="middle" fill="#f7c2cc" font-size="12" font-weight="700">the Cause</text>
+<path d="M470 168 L470 194" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#xR)"/>
+
+<!-- NO -> Escalate the Problem -->
+<circle cx="632" cy="222" r="9" fill="#e0556b"/><path d="M628 218 l8 8 M636 218 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="646" y="227" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+<rect x="694" y="226" width="238" height="36" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="813" y="249" text-anchor="middle" fill="#9ceccb" font-size="12.5" font-weight="700">Escalate the Problem</text>
+<path d="M610 244 L692 244" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#xR)"/>
+<!-- loop back to Determine the Cause -->
+<path d="M932 244 L954 244 L954 145 L612 145" stroke="#8ea3c8" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#xG)"/>
+
+<!-- YES down -->
+<circle cx="426" cy="310" r="9" fill="#3fa87a"/><path d="M421 310 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="380" y="315" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+
+<!-- D2 Verify if the Issue Exists in Similar Systems (highlighted) -->
+<polygon points="470,330 630,384 470,438 310,384" fill="#2a1420" stroke="#d4af37" stroke-width="2.6"/>
+<text x="470" y="372" text-anchor="middle" fill="#f7c2cc" font-size="11.5" font-weight="700">Verify if</text>
+<text x="470" y="388" text-anchor="middle" fill="#f7c2cc" font-size="11.5" font-weight="700">the Issue Exists in</text>
+<text x="470" y="404" text-anchor="middle" fill="#f7c2cc" font-size="11.5" font-weight="700">Similar Systems</text>
+<path d="M470 292 L470 328" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#xG)"/>
+
+<!-- NO left -->
+<circle cx="288" cy="364" r="9" fill="#e0556b"/><path d="M284 360 l8 8 M292 360 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="256" y="369" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+<path d="M310 384 L232 384 L232 517 L328 517" stroke="#e0556b" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#xR)"/>
+
+<!-- YES down -->
+<circle cx="426" cy="456" r="9" fill="#3fa87a"/><path d="M421 456 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="380" y="461" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+
+<!-- Resolve and Patch the Issue -->
+<rect x="330" y="440" width="280" height="36" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="470" y="463" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Resolve and Patch the Issue</text>
+<path d="M470 438 L470 438" stroke="#3fa87a" stroke-width="1.6"/>
+
+<!-- Start Recovery Processes -->
+<rect x="330" y="499" width="280" height="36" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="470" y="522" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Start Recovery Processes</text>
+<path d="M470 476 L470 497" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#xR)"/>
+
+<!-- end connector -->
+<circle cx="708" cy="517" r="18" fill="#d4af37"/>
+<text x="708" y="524" text-anchor="middle" fill="#0a1226" font-size="16" font-weight="700">…</text>
+<path d="M610 517 L688 517" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#xR)"/>
+</svg>

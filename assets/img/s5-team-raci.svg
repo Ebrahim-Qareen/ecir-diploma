@@ -1,0 +1,69 @@
+<svg viewBox="0 0 1060 442" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="IR team models and who does what across the lifecycle">
+<title>IR team and roles</title>
+<rect width="1060" height="442" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Who Actually Does the Work</text>
+<text x="1032" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Different names, same idea — a team whose job is to handle incidents.</text>
+
+<!-- team names -->
+<g text-anchor="middle">
+<rect x="24" y="76" width="196" height="62" rx="9" fill="#0e1730" stroke="#37c7d4" stroke-width="1.4"/>
+<text x="122" y="100" fill="#7fdce6" font-size="13" font-weight="700">CSIRT</text>
+<text x="122" y="120" fill="#8ea3c8" font-size="9.5">Computer Security</text><text x="122" y="132" fill="#8ea3c8" font-size="9.5">Incident Response Team</text>
+<rect x="232" y="76" width="196" height="62" rx="9" fill="#0e1730" stroke="#37c7d4" stroke-width="1.4"/>
+<text x="330" y="100" fill="#7fdce6" font-size="13" font-weight="700">CERT</text>
+<text x="330" y="120" fill="#8ea3c8" font-size="9.5">Computer Emergency</text><text x="330" y="132" fill="#8ea3c8" font-size="9.5">Response Team (often national)</text>
+<rect x="440" y="76" width="196" height="62" rx="9" fill="#0e1730" stroke="#37c7d4" stroke-width="1.4"/>
+<text x="538" y="100" fill="#7fdce6" font-size="13" font-weight="700">SIRT / IRT</text>
+<text x="538" y="120" fill="#8ea3c8" font-size="9.5">Security Incident</text><text x="538" y="132" fill="#8ea3c8" font-size="9.5">Response Team</text>
+<rect x="648" y="76" width="388" height="62" rx="9" fill="#241a1a" stroke="#d4af37" stroke-width="1.4"/>
+<text x="842" y="100" fill="#f0d78a" font-size="13" font-weight="700">They work with — not instead of — the SOC</text>
+<text x="842" y="122" fill="#8ea3c8" font-size="10">SOC watches 24/7 and escalates · IR team takes the confirmed incident</text>
+</g>
+
+<!-- who does what -->
+<text x="28" y="176" fill="#f0d78a" font-size="14" font-weight="700">Who owns which phase</text>
+<rect x="24" y="188" width="1012" height="154" rx="10" fill="#0e1730" stroke="#2b3f70"/>
+<g font-size="11">
+<text x="44" y="212" fill="#8ea3c8" font-weight="700">Role</text>
+<text x="230" y="212" fill="#8ea3c8" font-weight="700">Detection</text>
+<text x="390" y="212" fill="#8ea3c8" font-weight="700">Analysis</text>
+<text x="550" y="212" fill="#8ea3c8" font-weight="700">Containment</text>
+<text x="730" y="212" fill="#8ea3c8" font-weight="700">Eradicate/Recover</text>
+<text x="920" y="212" fill="#8ea3c8" font-weight="700">Report</text>
+
+<text x="44" y="244" fill="#c7d3e8" font-weight="700">SOC L1</text>
+<text x="230" y="244" fill="#3fa87a" font-size="14" font-weight="700">●</text>
+<text x="390" y="244" fill="#d4af37" font-size="14">◐</text>
+<text x="550" y="244" fill="#4a5a78" font-size="14">○</text>
+<text x="730" y="244" fill="#4a5a78" font-size="14">○</text>
+<text x="920" y="244" fill="#d4af37" font-size="14">◐</text>
+
+<text x="44" y="272" fill="#7fe0b4" font-weight="700">SOC L2 · IR &amp; DF</text>
+<text x="230" y="272" fill="#d4af37" font-size="14">◐</text>
+<text x="390" y="272" fill="#3fa87a" font-size="14" font-weight="700">●</text>
+<text x="550" y="272" fill="#3fa87a" font-size="14" font-weight="700">●</text>
+<text x="730" y="272" fill="#3fa87a" font-size="14" font-weight="700">●</text>
+<text x="920" y="272" fill="#3fa87a" font-size="14" font-weight="700">●</text>
+
+<text x="44" y="300" fill="#c7d3e8" font-weight="700">SOC L3 · hunting</text>
+<text x="230" y="300" fill="#d4af37" font-size="14">◐</text>
+<text x="390" y="300" fill="#3fa87a" font-size="14" font-weight="700">●</text>
+<text x="550" y="300" fill="#d4af37" font-size="14">◐</text>
+<text x="730" y="300" fill="#d4af37" font-size="14">◐</text>
+<text x="920" y="300" fill="#d4af37" font-size="14">◐</text>
+
+<text x="44" y="328" fill="#c7d3e8" font-weight="700">Management / legal</text>
+<text x="230" y="328" fill="#4a5a78" font-size="14">○</text>
+<text x="390" y="328" fill="#4a5a78" font-size="14">○</text>
+<text x="550" y="328" fill="#d4af37" font-size="14">◐</text>
+<text x="730" y="328" fill="#d4af37" font-size="14">◐</text>
+<text x="920" y="328" fill="#3fa87a" font-size="14" font-weight="700">●</text>
+</g>
+
+<text x="28" y="360" fill="#8ea3c8" font-size="11"><tspan fill="#3fa87a" font-weight="700">●</tspan> owns it   <tspan fill="#d4af37">◐</tspan> helps   <tspan fill="#4a5a78">○</tspan> not involved   —   <tspan fill="#7fe0b4" font-weight="700">green row = where incident response &amp; forensics happen</tspan></text>
+
+<rect x="24" y="374" width="1012" height="54" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.3"/>
+<text x="44" y="396" fill="#b6a9f2" font-size="12.5" font-weight="700">RACI — the table that stops arguments during a crisis</text>
+<text x="44" y="418" fill="#c7d3e8" font-size="11.5"><tspan font-weight="700">R</tspan>esponsible (does it) · <tspan font-weight="700">A</tspan>ccountable (answers for it) · <tspan font-weight="700">C</tspan>onsulted (asked first) · <tspan font-weight="700">I</tspan>nformed (told after). Agreed BEFORE the incident.</text>
+</svg>

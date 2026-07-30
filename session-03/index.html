@@ -623,6 +623,39 @@ grep "Failed password" /var/log/auth.log \
         <p>A workbook makes the analyst method repeatable and teachable. Every real hunt is one of these patterns —
            the same loop, harder data. You'll run them for real in the challenges and in Session 4.</p>
       </div>
+
+      <div class="box tip">
+        <span class="box-t">Workbook, playbook, runbook — same idea</span>
+        <p>Different companies use different words for "the written steps to follow". A <strong>workbook</strong> (our
+           word here) is the hunt procedure for one behaviour. In Session 5 you'll meet the <strong>playbook</strong> —
+           the same idea written for a whole incident type. If someone says <em>runbook</em>, that's the same thing again.</p>
+      </div>
+
+      <h2>Give every behaviour its ATT&amp;CK name</h2>
+      <p>From now on, whenever you describe what an attacker did, say the <strong>MITRE ATT&amp;CK technique</strong>
+         with it. It turns your finding into language every SOC in the world understands — and you'll need it for the
+         case reports in Sessions 4–10.</p>
+      <table>
+        <thead><tr><th>What you saw in the logs</th><th>ATT&amp;CK technique</th></tr></thead>
+        <tbody>
+          <tr><td>Many <code>4625</code> failures, then a <code>4624</code> success</td><td><strong>T1110</strong> Brute Force → <strong>T1078</strong> Valid Accounts</td></tr>
+          <tr><td>RDP logon (Logon Type 10) from outside</td><td><strong>T1021.001</strong> Remote Services · RDP</td></tr>
+          <tr><td><code>certutil.exe</code> downloading a file</td><td><strong>T1105</strong> Ingress Tool Transfer (a LOLBin)</td></tr>
+          <tr><td>PowerShell <code>4104</code> running code in memory</td><td><strong>T1059.001</strong> PowerShell (fileless)</td></tr>
+          <tr><td>New user <code>4720</code>, added to admins <code>4732</code></td><td><strong>T1136.001</strong> Create Account · <strong>T1098</strong> Account Manipulation</td></tr>
+          <tr><td>Registry Run key (Sysmon <code>13</code>)</td><td><strong>T1547.001</strong> Registry Run Keys</td></tr>
+          <tr><td>New service <code>7045</code> / scheduled task</td><td><strong>T1543.003</strong> Windows Service · <strong>T1053.005</strong> Scheduled Task</td></tr>
+          <tr><td>Security log cleared <code>1102</code></td><td><strong>T1070.001</strong> Clear Windows Event Logs</td></tr>
+          <tr><td>Reading <code>/etc/shadow</code> on Linux</td><td><strong>T1003.008</strong> OS Credential Dumping</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">How to say it like an analyst</span>
+        <p>Not: <em>"someone made a new user."</em><br>
+           But: <em>"T1136.001 — a backdoor account was created at 02:14 by the session that logged in from
+           45.137.21.88, then added to Administrators (T1098)."</em> Same finding, professional language.</p>
+      </div>
     </div>
   </section>
 

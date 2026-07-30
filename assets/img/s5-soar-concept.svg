@@ -1,0 +1,53 @@
+<svg viewBox="0 0 1060 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="SOAR orchestration automation response solving SOC challenges">
+<title>SOAR concept</title>
+<defs><marker id="s5m" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#3fa87a"/></marker></defs>
+<rect width="1060" height="420" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">SOAR — One Screen Instead of Seven</text>
+<text x="1032" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Security <tspan fill="#f0d78a" font-weight="700">O</tspan>rchestration, <tspan fill="#f0d78a" font-weight="700">A</tspan>utomation and <tspan fill="#f0d78a" font-weight="700">R</tspan>esponse — the robot assistant for repetitive work.</text>
+
+<!-- problems -->
+<rect x="24" y="78" width="300" height="200" rx="10" fill="#2a1620" stroke="#e0556b" stroke-width="1.5"/>
+<text x="44" y="102" fill="#f2a6b4" font-size="14" font-weight="700">The pain without SOAR</text>
+<circle cx="50" cy="124" r="3.5" fill="#e0556b"/>
+<text x="64" y="128" fill="#c7d3e8" font-size="11.5"><tspan font-weight="700">Alert fatigue</tspan> — too many to handle</text>
+<circle cx="50" cy="150" r="3.5" fill="#e0556b"/>
+<text x="64" y="154" fill="#c7d3e8" font-size="11.5"><tspan font-weight="700">Disconnected tools</tspan> — 7 tabs open</text>
+<circle cx="50" cy="176" r="3.5" fill="#e0556b"/>
+<text x="64" y="180" fill="#c7d3e8" font-size="11.5"><tspan font-weight="700">Manual steps</tspan> — slow, inconsistent</text>
+<circle cx="50" cy="202" r="3.5" fill="#e0556b"/>
+<text x="64" y="206" fill="#c7d3e8" font-size="11.5"><tspan font-weight="700">Talent shortage</tspan> — not enough analysts</text>
+<text x="44" y="238" fill="#8ea3c8" font-size="10.5" font-style="italic">Same VPN alert = 15 minutes of clicking</text>
+<text x="44" y="256" fill="#8ea3c8" font-size="10.5" font-style="italic">between SIEM, TI, IAM and the ticket system.</text>
+
+<!-- the 3 capabilities -->
+<rect x="356" y="78" width="300" height="200" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.6"/>
+<text x="376" y="102" fill="#f0d78a" font-size="14" font-weight="700">What SOAR gives you</text>
+<rect x="376" y="116" width="260" height="46" rx="7" fill="#15213f" stroke="#37c7d4"/>
+<text x="392" y="136" fill="#7fdce6" font-size="12" font-weight="700">Orchestration</text>
+<text x="392" y="152" fill="#8ea3c8" font-size="9.5">all tools connected in one place</text>
+<rect x="376" y="170" width="260" height="46" rx="7" fill="#15213f" stroke="#3fa87a"/>
+<text x="392" y="190" fill="#7fe0b4" font-size="12" font-weight="700">Automation</text>
+<text x="392" y="206" fill="#8ea3c8" font-size="9.5">the playbook runs itself, no clicks</text>
+<rect x="376" y="224" width="260" height="46" rx="7" fill="#15213f" stroke="#8b7ce8"/>
+<text x="392" y="244" fill="#b6a9f2" font-size="12" font-weight="700">Response</text>
+<text x="392" y="260" fill="#8ea3c8" font-size="9.5">block, disable, isolate — from one screen</text>
+
+<!-- example -->
+<rect x="688" y="78" width="348" height="200" rx="10" fill="#101f1a" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="708" y="102" fill="#7fe0b4" font-size="14" font-weight="700">Example: VPN brute-force alert</text>
+<text x="708" y="124" fill="#8ea3c8" font-size="10.5">SOAR does all of this automatically:</text>
+<text x="708" y="148" fill="#c7d3e8" font-size="11">1 · takes the alert from the SIEM</text>
+<text x="708" y="170" fill="#c7d3e8" font-size="11">2 · checks if the user normally uses that IP</text>
+<text x="708" y="192" fill="#c7d3e8" font-size="11">3 · looks up the IP reputation (threat intel)</text>
+<text x="708" y="214" fill="#c7d3e8" font-size="11">4 · if bad → disables the user account</text>
+<text x="708" y="236" fill="#c7d3e8" font-size="11">5 · opens a ticket with all the details</text>
+<text x="708" y="262" fill="#f0d78a" font-size="10.5" font-weight="700">15 minutes of clicking → a few seconds.</text>
+
+<!-- human note -->
+<rect x="24" y="296" width="1012" height="106" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.4"/>
+<text x="44" y="320" fill="#b6a9f2" font-size="14" font-weight="700">Does SOAR replace the analyst? No.</text>
+<text x="44" y="344" fill="#c7d3e8" font-size="11.5">SOAR is fast at <tspan font-weight="700">repetitive</tspan> work. It cannot make a judgement call, understand business context, or handle a new kind of attack.</text>
+<text x="44" y="366" fill="#c7d3e8" font-size="11.5">And notice: <tspan fill="#f0d78a" font-weight="700">the analyst is the one who writes the playbooks.</tspan> The robot only follows what a human designed.</text>
+<text x="44" y="390" fill="#8ea3c8" font-size="11">Every real playbook still has human decision points built into it — usually before anything destructive happens.</text>
+</svg>

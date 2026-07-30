@@ -401,6 +401,10 @@ pre code{background:none;border:none;padding:0;color:#cfe0ff;font-size:13px;line
   width:100%;display:block;border:1px solid var(--line);
   border-radius:var(--radius);background:var(--bg-alt);
 }
+/* Light plate — for source images drawn on white (transparent PNG/SVG with dark
+   ink). Without this they render dark-on-dark and become unreadable. */
+.fig.plate img{background:#f2f5fa;padding:16px}
+.fig.plate.tight img{padding:10px}
 .fig figcaption{
   margin-top:9px;font-size:12.5px;color:var(--text-3);text-align:center;font-style:italic;
 }

@@ -1,0 +1,60 @@
+<svg viewBox="0 0 1060 460" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Detection and analysis: recording and assignment, triage, notification">
+<title>Detection and analysis flows</title>
+<defs><marker id="d5" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#37c7d4"/></marker></defs>
+<rect width="1060" height="460" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Phase 2 · Detection &amp; Analysis — Three Small Flows</text>
+<text x="1032" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Write it down → decide how bad it is → tell the right people. In that order, every time.</text>
+
+<!-- FLOW 1 RECORDING -->
+<rect x="24" y="76" width="326" height="360" rx="10" fill="#0e1730" stroke="#37c7d4" stroke-width="1.5"/>
+<text x="44" y="102" fill="#7fdce6" font-size="14" font-weight="700">1 · Recording &amp; Assignment</text>
+<text x="44" y="122" fill="#8ea3c8" font-size="10.5">"Nothing exists until it has a ticket."</text>
+<g text-anchor="middle" font-size="11">
+<rect x="60" y="136" width="254" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="187" y="162" fill="#c7d3e8">Alert arrives (SIEM / user report)</text>
+<rect x="60" y="192" width="254" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="187" y="212" fill="#c7d3e8">Create the ticket / case</text><text x="187" y="227" fill="#8ea3c8" font-size="9.5">time, source, what was seen</text>
+<rect x="60" y="248" width="254" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="187" y="268" fill="#c7d3e8">Give it an owner</text><text x="187" y="283" fill="#8ea3c8" font-size="9.5">one named analyst</text>
+<rect x="60" y="304" width="254" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="187" y="324" fill="#c7d3e8">Set initial severity</text><text x="187" y="339" fill="#8ea3c8" font-size="9.5">can change later</text>
+<rect x="60" y="360" width="254" height="46" rx="7" fill="#101f1a" stroke="#3fa87a"/><text x="187" y="380" fill="#7fe0b4" font-weight="700">→ hand to Triage</text><text x="187" y="396" fill="#8ea3c8" font-size="9.5" font-weight="400">the case now exists officially</text>
+</g>
+<path d="M187 178 L187 190" stroke="#37c7d4" stroke-width="1.6" marker-end="url(#d5)"/>
+<path d="M187 234 L187 246" stroke="#37c7d4" stroke-width="1.6" marker-end="url(#d5)"/>
+<path d="M187 290 L187 302" stroke="#37c7d4" stroke-width="1.6" marker-end="url(#d5)"/>
+<path d="M187 346 L187 358" stroke="#37c7d4" stroke-width="1.6" marker-end="url(#d5)"/>
+
+<!-- FLOW 2 TRIAGE -->
+<rect x="366" y="76" width="326" height="360" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.5"/>
+<text x="386" y="102" fill="#f0d78a" font-size="14" font-weight="700">2 · Triage</text>
+<text x="386" y="122" fill="#8ea3c8" font-size="10.5">"Is it real, and how bad?"</text>
+<g text-anchor="middle" font-size="11">
+<rect x="402" y="136" width="254" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="529" y="162" fill="#c7d3e8">Verify the evidence</text>
+<rect x="402" y="192" width="254" height="52" rx="7" fill="#241a1a" stroke="#d4af37"/><text x="529" y="214" fill="#f0d78a" font-weight="700">Real incident?</text><text x="529" y="232" fill="#8ea3c8" font-size="9.5" font-weight="400">true positive or false alarm</text>
+</g>
+<rect x="386" y="258" width="120" height="40" rx="7" fill="#101f1a" stroke="#3fa87a"/>
+<text x="446" y="276" text-anchor="middle" fill="#7fe0b4" font-size="10.5" font-weight="700">NO → close</text>
+<text x="446" y="291" text-anchor="middle" fill="#8ea3c8" font-size="9">tune the rule</text>
+<rect x="552" y="258" width="120" height="40" rx="7" fill="#2a1620" stroke="#e0556b"/>
+<text x="612" y="276" text-anchor="middle" fill="#f2a6b4" font-size="10.5" font-weight="700">YES → continue</text>
+<g text-anchor="middle" font-size="11">
+<rect x="402" y="312" width="254" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="529" y="332" fill="#c7d3e8">Scope it</text><text x="529" y="347" fill="#8ea3c8" font-size="9.5">how many hosts / users?</text>
+<rect x="402" y="368" width="254" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="529" y="388" fill="#c7d3e8">Set final severity</text><text x="529" y="403" fill="#8ea3c8" font-size="9.5">drives who gets told</text>
+</g>
+<path d="M529 178 L529 190" stroke="#d4af37" stroke-width="1.6" marker-end="url(#d5)"/>
+<path d="M480 244 L455 256" stroke="#3fa87a" stroke-width="1.5" marker-end="url(#d5)"/>
+<path d="M578 244 L603 256" stroke="#e0556b" stroke-width="1.5" marker-end="url(#d5)"/>
+<path d="M612 298 L612 306 L529 306 L529 310" stroke="#d4af37" stroke-width="1.5" fill="none" marker-end="url(#d5)"/>
+<path d="M529 354 L529 366" stroke="#d4af37" stroke-width="1.6" marker-end="url(#d5)"/>
+
+<!-- FLOW 3 NOTIFICATION -->
+<rect x="708" y="76" width="328" height="360" rx="10" fill="#0e1730" stroke="#8b7ce8" stroke-width="1.5"/>
+<text x="728" y="102" fill="#b6a9f2" font-size="14" font-weight="700">3 · Notification</text>
+<text x="728" y="122" fill="#8ea3c8" font-size="10.5">"The right people, at the right time."</text>
+<g text-anchor="middle" font-size="11">
+<rect x="744" y="136" width="256" height="42" rx="7" fill="#1a1533" stroke="#8b7ce8"/><text x="872" y="156" fill="#c3b8f5">Check the escalation matrix</text><text x="872" y="171" fill="#8ea3c8" font-size="9.5">severity decides who</text>
+<rect x="744" y="192" width="256" height="38" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="872" y="216" fill="#c7d3e8">Low / Medium → SOC lead</text>
+<rect x="744" y="240" width="256" height="38" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="872" y="264" fill="#c7d3e8">High → IR manager + IT</text>
+<rect x="744" y="288" width="256" height="38" rx="7" fill="#2a1620" stroke="#e0556b"/><text x="872" y="312" fill="#f2a6b4">Critical → management, legal</text>
+<rect x="744" y="336" width="256" height="42" rx="7" fill="#15213f" stroke="#2b3f70"/><text x="872" y="356" fill="#c7d3e8">Record who was told, when</text><text x="872" y="371" fill="#8ea3c8" font-size="9.5">part of the case file</text>
+<rect x="744" y="388" width="256" height="34" rx="7" fill="#101f1a" stroke="#3fa87a"/><text x="872" y="410" fill="#7fe0b4" font-weight="700">→ move to Containment</text>
+</g>
+</svg>

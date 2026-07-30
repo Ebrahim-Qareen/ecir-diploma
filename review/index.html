@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Milestone Review — Sessions 1–5 | eCIR · ITGate Academy</title>
+<link rel="stylesheet" href="../assets/css/itgate.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+<style>
+  .scorebar{position:sticky;top:0;z-index:40;background:var(--bg-card,#151c27);
+    border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;margin:0 0 22px;
+    display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+  .scorebar b{font-size:19px;color:var(--gold,#d4af37)}
+  .sb-track{flex:1;min-width:180px;height:9px;border-radius:6px;background:#1b2740;overflow:hidden}
+  .sb-fill{height:100%;width:0;background:linear-gradient(90deg,#37c7d4,#3fa87a);transition:width .35s}
+  .round-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:34px}
+  .round-tag{font-size:11.5px;color:var(--text-3);border:1px solid var(--line);
+    border-radius:20px;padding:3px 11px;white-space:nowrap}
+  .result{display:none;border-radius:var(--radius);padding:22px;margin-top:28px;
+    border:1.5px solid var(--gold,#d4af37);background:#161222}
+  .result.show{display:block}
+  .grade{font-size:30px;font-weight:700;margin:0 0 6px}
+  .revise li{margin:5px 0}
+  .q.mcq .opts li{cursor:pointer}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy">
+      <span class="brand-text">
+        <span class="brand-name">ITGate Academy</span>
+        <span class="brand-sub">eCIR · Milestone Review</span>
+      </span>
+    </a>
+    <nav class="topnav">
+      <a href="../index.html">Sessions</a>
+      <a href="../cheatsheets/index.html">Cheat Sheets</a>
+      <a href="../lab/challenges/index.html">Challenges</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding:44px 0 26px">
+  <div class="wrap">
+    <div class="eyebrow">Checkpoint · everything from Session 1 to Session 5</div>
+    <h1>Milestone <span>Review</span></h1>
+    <p>50 questions across six rounds. Answer them all, then read your result — it tells you exactly which session to
+       revise. Do this <strong>before</strong> we start digital forensics and the incident-response deep dives.</p>
+  </div>
+</section>
+
+<main class="wrap section">
+
+  <div class="scorebar">
+    <span>Score <b id="sScore">0</b> / <span id="sTotal">0</span></span>
+    <span class="muted">Answered <span id="sDone">0</span></span>
+    <div class="sb-track"><div class="sb-fill" id="sFill"></div></div>
+    <button class="btn-sm" id="btnReset">↺ Start again</button>
+    <button class="btn-sm" onclick="window.print()">🖨 Print</button>
+  </div>
+
+  <div class="box tip">
+    <span class="box-t">How to use this</span>
+    <p><strong>Students:</strong> click one answer per question — you get the reason immediately, right or wrong.
+       When you finish all 50 you get a score and a list of exactly which sessions to revise.</p>
+    <p><strong>These questions are different from the Kahoot ones you played in class</strong> — same topics, new
+       angles. If you can answer both sets, you really know the material.</p>
+    <p><strong>Instructors:</strong> the five per-session Kahoot files live outside the site, in <code>Instructor_Only/kahoot/</code>.</p>
+  </div>
+
+
+  <div class="round-head">
+    <h2 class="sec" id="rs1" style="margin-top:34px">Round 1 · The SOC and the SIEM</h2>
+    <span class="round-tag">from Session 1</span>
+  </div>
+  <p class="sec-desc">Who works in a SOC, what counts as an incident, and why a SIEM exists.</p>
+  <div class="q mcq" data-src="S1" data-answer="b" data-why="An incident is a CONFIRMED event that harms or threatens the business. The other three are normal events.">
+    <p><span class="qn">Q1</span> Which of these is an INCIDENT, not just an event?</p>
+    <ul class="opts"><li data-opt="a">A server rebooted after a scheduled patch</li><li data-opt="b">An attacker used stolen credentials and is inside the network</li><li data-opt="c">A backup job finished</li><li data-opt="d">A user logged in successfully at 09:00</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S1" data-answer="d" data-why="Data was changed without permission - that is Integrity. If the site were down instead, it would be Availability.">
+    <p><span class="qn">Q2</span> Your company website is defaced. Which part of CIA was broken?</p>
+    <ul class="opts"><li data-opt="a">None of them</li><li data-opt="b">Confidentiality</li><li data-opt="c">Availability</li><li data-opt="d">Integrity</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S1" data-answer="d" data-why="The attack shows up as pieces across firewall, endpoint and server logs. Correlation joins them into one story.">
+    <p><span class="qn">Q3</span> Why can reading one log file never replace a SIEM?</p>
+    <ul class="opts"><li data-opt="a">Log files delete themselves</li><li data-opt="b">Log files are always encrypted</li><li data-opt="c">One file is too small</li><li data-opt="d">One file cannot correlate activity across many systems</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S1" data-answer="b" data-why="The IR team (CSIRT) owns the confirmed incident. That is a handover to another team, not a promotion up the tiers.">
+    <p><span class="qn">Q4</span> A breach is confirmed and needs forensics, legal and comms together. Who takes it?</p>
+    <ul class="opts"><li data-opt="a">The help desk</li><li data-opt="b">The IR team</li><li data-opt="c">SOC L1</li><li data-opt="d">The developer team</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S1" data-answer="a" data-why="Detection rules compress a flood of events into a handful of alerts, and only some become incidents.">
+    <p><span class="qn">Q5</span> A SOC sees 1,000,000 events, 50 alerts and 2 incidents in a day. What does that show?</p>
+    <ul class="opts"><li data-opt="a">Filtering - rules reduce noise down to what humans can work</li><li data-opt="b">Analysts are ignoring alerts</li><li data-opt="c">There were 1,000,000 attacks</li><li data-opt="d">The SIEM is broken</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S1" data-answer="c" data-why="Building applications is a development job. The SOC monitors, detects, investigates and escalates.">
+    <p><span class="qn">Q6</span> Which of these is NOT a SOC responsibility?</p>
+    <ul class="opts"><li data-opt="a">Investigating suspicious activity</li><li data-opt="b">Escalating confirmed incidents</li><li data-opt="c">Writing the company&#x27;s business applications</li><li data-opt="d">Monitoring alerts</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S1" data-answer="c" data-why="The alert fired but the activity was benign - a False Positive. Tune the rule so it stops firing on that.">
+    <p><span class="qn">Q7</span> A rule fired, but the activity turned out to be a normal admin task. That is a?</p>
+    <ul class="opts"><li data-opt="a">True Positive</li><li data-opt="b">True Negative</li><li data-opt="c">False Positive</li><li data-opt="d">False Negative</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S1" data-answer="d" data-why="Out-of-hours is exactly when attackers move, because nobody is watching.">
+    <p><span class="qn">Q8</span> Why do SOCs run 24/7 instead of office hours?</p>
+    <ul class="opts"><li data-opt="a">Logs only arrive at night</li><li data-opt="b">Software licences require it</li><li data-opt="c">Analysts prefer night shifts</li><li data-opt="d">Attackers deliberately act at night and on weekends</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+
+  <div class="round-head">
+    <h2 class="sec" id="rs2" style="margin-top:34px">Round 2 · Logs, the pipeline and Splunk</h2>
+    <span class="round-tag">from Session 2</span>
+  </div>
+  <p class="sec-desc">Getting logs from a machine into a SIEM you can actually search.</p>
+  <div class="q mcq" data-src="S2" data-answer="c" data-why="Generation, Collection, Shipping, Aggregation, Parsing, Storage, Analysis, then Alerting.">
+    <p><span class="qn">Q9</span> Which is the LAST stage of the log pipeline?</p>
+    <ul class="opts"><li data-opt="a">Analysis</li><li data-opt="b">Storage</li><li data-opt="c">Alerting</li><li data-opt="d">Parsing</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S2" data-answer="a" data-why="Parsing is where raw text becomes named fields. If it fails, the data is there but you cannot search it properly.">
+    <p><span class="qn">Q10</span> Logs reach Splunk but the fields are not searchable. Which stage failed?</p>
+    <ul class="opts"><li data-opt="a">Parsing</li><li data-opt="b">Shipping</li><li data-opt="c">Collection</li><li data-opt="d">Alerting</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S2" data-answer="c" data-why="inputs.conf decides WHAT is collected, including which Windows channel.">
+    <p><span class="qn">Q11</span> You want ONLY the Sysmon channel forwarded. Which file do you edit?</p>
+    <ul class="opts"><li data-opt="a">server.conf</li><li data-opt="b">outputs.conf</li><li data-opt="c">inputs.conf</li><li data-opt="d">indexes.conf</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S2" data-answer="d" data-why="No data usually means the shipping step: wrong indexer address, blocked port, or the service is not running.">
+    <p><span class="qn">Q12</span> The forwarder is installed but no data arrives. What do you check first?</p>
+    <ul class="opts"><li data-opt="a">The dashboard colour scheme</li><li data-opt="b">The alert severity</li><li data-opt="c">The analyst&#x27;s password</li><li data-opt="d">That it can reach the indexer on 9997</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S2" data-answer="b" data-why="A typo or a different index name in inputs.conf sends the data somewhere else. Check what index it really lands in.">
+    <p><span class="qn">Q13</span> index=linux returns nothing, but the agent is running. Most likely cause?</p>
+    <ul class="opts"><li data-opt="a">Linux cannot be monitored</li><li data-opt="b">inputs.conf is sending to a different index</li><li data-opt="c">The web port is wrong</li><li data-opt="d">Splunk deletes Linux logs</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S2" data-answer="a" data-why="Separate indexes let you search less data, keep sources for different lengths of time, and control who sees what.">
+    <p><span class="qn">Q14</span> Why keep separate indexes for Windows, Linux and Sysmon?</p>
+    <ul class="opts"><li data-opt="a">Faster searches, and different retention and access per source</li><li data-opt="b">It reduces licence cost to zero</li><li data-opt="c">It looks tidier</li><li data-opt="d">Splunk requires exactly three</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S2" data-answer="d" data-why="It counts events per source IP and sorts descending - the classic way to find a brute-force source.">
+    <p><span class="qn">Q15</span> What does | stats count by src_ip | sort -count give you?</p>
+    <ul class="opts"><li data-opt="a">The newest event only</li><li data-opt="b">A single total number</li><li data-opt="c">A list of usernames</li><li data-opt="d">The noisiest source IPs, highest first</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S2" data-answer="d" data-why="Collecting is done; reading and connecting the data is the Analysis stage.">
+    <p><span class="qn">Q16</span> When you sit down to investigate collected logs, which pipeline stage are you in?</p>
+    <ul class="opts"><li data-opt="a">Shipping</li><li data-opt="b">Generation</li><li data-opt="c">Collection</li><li data-opt="d">Analysis</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+
+  <div class="round-head">
+    <h2 class="sec" id="rs3" style="margin-top:34px">Round 3 · Telemetry and the analyst method</h2>
+    <span class="round-tag">from Session 3</span>
+  </div>
+  <p class="sec-desc">Reading events, pivoting, and naming what you found in ATT&amp;CK terms.</p>
+  <div class="q mcq" data-src="S3" data-answer="a" data-why="The Logon ID is unique per session and appears on the actions that session performed.">
+    <p><span class="qn">Q17</span> Which field ties a logon to everything that session did afterwards?</p>
+    <ul class="opts"><li data-opt="a">Logon ID</li><li data-opt="b">Source Port</li><li data-opt="c">Event ID</li><li data-opt="d">Keywords</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="d" data-why="EID 3, 11 and 13 carry a ProcessId - pivot back to EID 1 for the user, parent and command line.">
+    <p><span class="qn">Q18</span> A Sysmon EID 3 has no Logon ID. How do you find who caused it?</p>
+    <ul class="opts"><li data-opt="a">It cannot be found</li><li data-opt="b">Read the firewall log</li><li data-opt="c">Search by timestamp only</li><li data-opt="d">Pivot on ProcessId to the matching EID 1</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="a" data-why="Sysmon adds a SHA-256 hash, the full command line and a reliable parent - that is why we deploy it.">
+    <p><span class="qn">Q19</span> What does native 4688 typically LACK compared with Sysmon EID 1?</p>
+    <ul class="opts"><li data-opt="a">The file hash and a reliable parent process</li><li data-opt="b">The username</li><li data-opt="c">The timestamp</li><li data-opt="d">The computer name</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="a" data-why="Office spawning a shell is a classic phishing-to-execution chain. Walk UP the process tree from there.">
+    <p><span class="qn">Q20</span> WINWORD.EXE spawns powershell.exe. Why is that a red flag?</p>
+    <ul class="opts"><li data-opt="a">A document should not launch a shell - it suggests a malicious macro</li><li data-opt="b">It means the disk is full</li><li data-opt="c">PowerShell is malware</li><li data-opt="d">Word always spawns PowerShell</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="d" data-why="auth.log holds the logon story on Debian/Ubuntu. RHEL calls it secure.">
+    <p><span class="qn">Q21</span> On Ubuntu, which file records SSH logins and sudo use?</p>
+    <ul class="opts"><li data-opt="a">/var/log/dmesg</li><li data-opt="b">/var/log/syslog</li><li data-opt="c">/etc/shadow</li><li data-opt="d">/var/log/auth.log</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="b" data-why="auditd records execve syscalls - forensic-grade detail about what was actually run.">
+    <p><span class="qn">Q22</span> What does auditd give you that auth.log does not?</p>
+    <ul class="opts"><li data-opt="a">Encrypted storage</li><li data-opt="b">The exact commands executed, at syscall level</li><li data-opt="c">Prettier colours</li><li data-opt="d">Automatic blocking</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="a" data-why="Never stop at the first host - pivot to find patient zero and the full blast radius.">
+    <p><span class="qn">Q23</span> You confirmed one infected host. What is the golden question?</p>
+    <ul class="opts"><li data-opt="a">Where did it come FROM, and where did it GO?</li><li data-opt="b">Who do we blame?</li><li data-opt="c">Can we reimage now?</li><li data-opt="d">Which antivirus failed?</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="a" data-why="certutil is a trusted Windows binary abused to pull payloads - a LOLBin, mapped to T1105.">
+    <p><span class="qn">Q24</span> certutil.exe downloads a file from the internet. Which ATT&CK technique?</p>
+    <ul class="opts"><li data-opt="a">T1105 Ingress Tool Transfer</li><li data-opt="b">T1070 Log Clearing</li><li data-opt="c">T1110 Brute Force</li><li data-opt="d">T1486 Ransomware</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="a" data-why="T1136.001 create account, then T1098 account manipulation - classic persistence plus privilege.">
+    <p><span class="qn">Q25</span> You see 4720 then 4732 for the same account. What happened?</p>
+    <ul class="opts"><li data-opt="a">An account was created, then added to a privileged group</li><li data-opt="b">A user changed their password</li><li data-opt="c">A service was installed</li><li data-opt="d">A log was cleared</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S3" data-answer="c" data-why="Orient to the alert, validate it is real, scope how far it spread, decide containment, then document and notify.">
+    <p><span class="qn">Q26</span> What is the correct order of the 5-minute first response?</p>
+    <ul class="opts"><li data-opt="a">Contain, orient, document, validate, scope</li><li data-opt="b">Document, contain, orient, scope, validate</li><li data-opt="c">Orient, validate, scope, contain, document</li><li data-opt="d">Scope, document, contain, orient, validate</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+
+  <div class="round-head">
+    <h2 class="sec" id="rs4" style="margin-top:34px">Round 4 · Detection, triage and threat intel</h2>
+    <span class="round-tag">from Session 4</span>
+  </div>
+  <p class="sec-desc">Writing rules, working the queue, judging indicators.</p>
+  <div class="q mcq" data-src="S4" data-answer="d" data-why="Confirm the parent actually fires in Ruleset Test Phase 3, then build your child under it.">
+    <p><span class="qn">Q27</span> Your custom Wazuh rule never fires. What is the most likely cause?</p>
+    <ul class="opts"><li data-opt="a">The rule ID is too high</li><li data-opt="b">Alerts are disabled globally</li><li data-opt="c">Wazuh does not support custom rules</li><li data-opt="d">The if_sid parent rule never matches that log</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="b" data-why="Phase 1 pre-decodes, Phase 2 decodes the fields, Phase 3 shows the rule that fired.">
+    <p><span class="qn">Q28</span> In the Wazuh Ruleset Test, what does Phase 3 show you?</p>
+    <ul class="opts"><li data-opt="a">The agent version</li><li data-opt="b">Which rule matched the log</li><li data-opt="c">The disk usage</li><li data-opt="d">The raw timestamp</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="d" data-why="A list is OR by default. Add the |all modifier to turn it into AND.">
+    <p><span class="qn">Q29</span> In a Sigma detection, a LIST of values means which logic?</p>
+    <ul class="opts"><li data-opt="a">NOT - exclude them</li><li data-opt="b">XOR</li><li data-opt="c">AND - all must match</li><li data-opt="d">OR - any one value matches</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="b" data-why="Selection is the threat; filter is the exception. That pattern covers most real Sigma rules.">
+    <p><span class="qn">Q30</span> What does condition: selection and not filter mean in plain English?</p>
+    <ul class="opts"><li data-opt="a">Alert on everything</li><li data-opt="b">Alert on the suspicious thing, except the known-good case</li><li data-opt="c">Never alert</li><li data-opt="d">Alert only on weekends</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="a" data-why="|all turns the list&#x27;s OR into AND, so every listed value must appear.">
+    <p><span class="qn">Q31</span> You need several command-line flags present TOGETHER. Which modifier?</p>
+    <ul class="opts"><li data-opt="a">|all</li><li data-opt="b">|base64</li><li data-opt="c">|contains</li><li data-opt="d">|startswith</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="d" data-why="Converters stumble on backslashes, wildcards and differing field names. Always test the converted query.">
+    <p><span class="qn">Q32</span> Your converted Sigma query returns nothing in the SIEM. What do you check?</p>
+    <ul class="opts"><li data-opt="a">Change the rule level</li><li data-opt="b">Delete the rule</li><li data-opt="c">Nothing - conversion is always correct</li><li data-opt="d">Escaped characters and field names, then test on real data</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="b" data-why="Sort by severity first, then by age (oldest first). Critical is likeliest to be a real, spreading threat.">
+    <p><span class="qn">Q33</span> A critical alert and a low alert are both New. Which do you take first?</p>
+    <ul class="opts"><li data-opt="a">Whichever is newest</li><li data-opt="b">The critical one</li><li data-opt="c">The low one, it is quicker</li><li data-opt="d">Neither - wait for L2</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="a" data-why="Note it and move on rather than blocking a shared edge - the IP itself is not a useful indicator.">
+    <p><span class="qn">Q34</span> An alert's IP belongs to a CDN range. What does that tell you?</p>
+    <ul class="opts"><li data-opt="a">Very little - thousands of good and bad sites share it</li><li data-opt="b">It is an internal asset</li><li data-opt="c">It is definitely malicious</li><li data-opt="d">It is definitely safe</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="a" data-why="Attackers swap in Cyrillic or Greek letters that look identical. xn-- means take a much closer look.">
+    <p><span class="qn">Q35</span> A domain converts to a punycode form starting xn--. What does that mean?</p>
+    <ul class="opts"><li data-opt="a">It contains non-ASCII look-alike characters</li><li data-opt="b">It is expired</li><li data-opt="c">It uses HTTPS</li><li data-opt="d">It is a Microsoft domain</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S4" data-answer="b" data-why="malicious-ips.txt and malicious-domains.txt feed the threat-intel rules - turning your enrichment into detection.">
+    <p><span class="qn">Q36</span> You confirmed some IOCs are malicious. Where do they go for automatic detection?</p>
+    <ul class="opts"><li data-opt="a">The decoder file</li><li data-opt="b">The Wazuh CDB lists</li><li data-opt="c">The agent log</li><li data-opt="d">The public SigmaHQ repo</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+
+  <div class="round-head">
+    <h2 class="sec" id="rs5" style="margin-top:34px">Round 5 · IR lifecycle and forensic readiness</h2>
+    <span class="round-tag">from Session 5</span>
+  </div>
+  <p class="sec-desc">The process after “yes, this is real” — and protecting the evidence.</p>
+  <div class="q mcq" data-src="S5" data-answer="c" data-why="SANS separates Containment, Eradication and Recovery - the same work, cut into three.">
+    <p><span class="qn">Q37</span> Which NIST phase does SANS split into three separate steps?</p>
+    <ul class="opts"><li data-opt="a">Preparation</li><li data-opt="b">Post-Incident</li><li data-opt="c">Containment, Eradication and Recovery</li><li data-opt="d">Detection and Analysis</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="d" data-why="Powering off destroys RAM - running processes, connections, sometimes the key. Isolate but leave it ON.">
+    <p><span class="qn">Q38</span> A laptop is encrypting files right now. What must you NOT do first?</p>
+    <ul class="opts"><li data-opt="a">Capture a memory image</li><li data-opt="b">Disconnect it from the network</li><li data-opt="c">Open a case and take ownership</li><li data-opt="d">Power it off to stop the damage</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="a" data-why="A backup taken after the attacker got in already contains their malware. You need the timeline from the evidence phase.">
+    <p><span class="qn">Q39</span> Before restoring from backup, what must you verify?</p>
+    <ul class="opts"><li data-opt="a">That the backup is older than the intrusion</li><li data-opt="b">That it is on the same server</li><li data-opt="c">That it is the newest backup</li><li data-opt="d">That it is compressed</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="d" data-why="Eradication must close HOW they got in. Delete the malware only, and the door stays open.">
+    <p><span class="qn">Q40</span> You removed the malware, but the attacker returns the next day. What was skipped?</p>
+    <ul class="opts"><li data-opt="a">Setting the TLP</li><li data-opt="b">Writing the chain of custody</li><li data-opt="c">Assigning an owner</li><li data-opt="d">Fixing the root cause</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="a" data-why="Plugging a drive straight in lets the OS alter timestamps. A write blocker physically permits read only.">
+    <p><span class="qn">Q41</span> What is a write blocker used for?</p>
+    <ul class="opts"><li data-opt="a">Reading a drive without changing anything on it</li><li data-opt="b">Speeding up imaging</li><li data-opt="c">Encrypting the evidence</li><li data-opt="d">Deleting malware safely</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="d" data-why="Order of volatility - memory dies immediately, disk survives a reboot.">
+    <p><span class="qn">Q42</span> Which of these disappears FIRST when a machine is powered off?</p>
+    <ul class="opts"><li data-opt="a">The registry</li><li data-opt="b">Archived backups</li><li data-opt="c">Files on disk</li><li data-opt="d">RAM contents</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="b" data-why="Disclosure is a legal and business decision - but they base it on YOUR report, so the report must be accurate.">
+    <p><span class="qn">Q43</span> Who decides whether an incident is disclosed to customers or regulators?</p>
+    <ul class="opts"><li data-opt="a">The IT helpdesk</li><li data-opt="b">Legal and management</li><li data-opt="c">The SIEM</li><li data-opt="d">The L1 analyst</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="b" data-why="Flagging it as an IOC lets it correlate with other cases and be shared, for example to MISP.">
+    <p><span class="qn">Q44</span> In TheHive, why mark an observable as 'is IOC'?</p>
+    <ul class="opts"><li data-opt="a">To raise the case severity automatically</li><li data-opt="b">So it can be correlated and shared as a real indicator</li><li data-opt="c">To hide it from the team</li><li data-opt="d">To delete it later</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="b" data-why="SOAR automates repetitive, written-down steps. Judgement and business context stay human.">
+    <p><span class="qn">Q45</span> Which of these can SOAR NOT do for you?</p>
+    <ul class="opts"><li data-opt="a">Look up an IP&#x27;s reputation</li><li data-opt="b">Make a judgement call on a brand-new attack</li><li data-opt="c">Disable a user account</li><li data-opt="d">Open a ticket automatically</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="S5" data-answer="c" data-why="It is written in advance so nobody wastes time at 3 AM deciding who to wake up.">
+    <p><span class="qn">Q46</span> When is the escalation matrix agreed?</p>
+    <ul class="opts"><li data-opt="a">After the post-incident review</li><li data-opt="b">While the incident is happening</li><li data-opt="c">During Preparation, before any incident</li><li data-opt="d">Only for critical incidents</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+
+  <div class="round-head">
+    <h2 class="sec" id="r6" style="margin-top:34px">Round 6 · One real case, end to end</h2>
+    <span class="round-tag">from Sessions 1–5</span>
+  </div>
+  <p class="sec-desc">02:14. Failed logons, then a success, then PowerShell, then a new admin account.</p>
+  <div class="q mcq" data-src="MIX" data-answer="b" data-why="Take ownership so nobody duplicates work, then validate and scope. Containment comes after you confirm.">
+    <p><span class="qn">Q47</span> 02:14 - 15 failed logons then one success from an external IP. What do you do FIRST?</p>
+    <ul class="opts"><li data-opt="a">Email every employee</li><li data-opt="b">Assign the alert to yourself and start scoping it</li><li data-opt="c">Reimage the server immediately</li><li data-opt="d">Close it as a False Positive</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="MIX" data-answer="d" data-why="Many failures then a success is brute force leading to the use of valid (stolen) credentials.">
+    <p><span class="qn">Q48</span> That pattern maps to which two ATT&CK techniques, in order?</p>
+    <ul class="opts"><li data-opt="a">T1566 Phishing then T1486 Ransomware</li><li data-opt="b">T1053 Scheduled Task then T1490</li><li data-opt="c">T1105 Ingress Tool then T1070 Log Clearing</li><li data-opt="d">T1110 Brute Force then T1078 Valid Accounts</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="MIX" data-answer="a" data-why="Hosting ASN plus abuse history plus a download cradle is attacker infrastructure. Escalate with your reasoning written down.">
+    <p><span class="qn">Q49</span> The IP sits on a server-hosting ASN with abuse reports. Then PowerShell downloads a file. Verdict?</p>
+    <ul class="opts"><li data-opt="a">True Positive - comment the evidence and escalate</li><li data-opt="b">False Positive - close it</li><li data-opt="c">Ignore, hosting ASNs are always clean</li><li data-opt="d">Wait 24 hours and re-check</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+  <div class="q mcq" data-src="MIX" data-answer="d" data-why="Post-incident feeds back into Preparation - the lesson becomes a rule so it alerts earlier next time.">
+    <p><span class="qn">Q50</span> The incident is contained and recovered. What finally closes the loop?</p>
+    <ul class="opts"><li data-opt="a">Deleting the case</li><li data-opt="b">Rebooting every server</li><li data-opt="c">Changing the SIEM vendor</li><li data-opt="d">A post-incident review that produces a new detection rule</li></ul>
+    <div class="mcq-fb"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result" id="result">
+    <p class="grade" id="gradeLine">—</p>
+    <p id="gradeMsg" class="muted"></p>
+    <div id="reviseWrap" style="margin-top:14px">
+      <h3 style="margin:0 0 8px">What to revise before Session 6</h3>
+      <ul class="revise" id="reviseList"></ul>
+    </div>
+  </div>
+
+
+  <div class="box note" id="kahoot" style="margin-top:34px">
+    <span class="box-t">About the in-class Kahoot</span>
+    <p>Your instructor runs a separate <strong>Kahoot game at the end of each session</strong> — five games, one per
+       session. Those questions are <em>different</em> from the 50 above, so doing well in class does not mean you can
+       skip this review, and this review does not give away the Kahoot answers.</p>
+    <p class="muted">The Kahoot files are instructor material and are not published here.</p>
+  </div>
+
+  <div class="box note" style="margin-top:26px">
+    <span class="box-t">Next</span>
+    <p>Once you are comfortable with all six rounds, you're ready for <strong>Session 6</strong> — malware incidents,
+       the full IR arc, and memory forensics with Volatility.</p>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>ITGate Academy · eCIR Diploma · Milestone Review S1–S5</span>
+    <span class="mono">Primary reference: INE eCIR v2</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var NAMES={S1:'Session 1 — Welcome to the SOC',S2:'Session 2 — Build the Lab & Make Logs Flow',
+             S3:'Session 3 — Read the Telemetry',S4:'Session 4 — Detect, Triage, Enrich',
+             S5:'Session 5 — IR Lifecycle & Forensic Readiness',MIX:'Round 6 — joining it all together'};
+  var LINKS={S1:'../session-01/index.html',S2:'../session-02/index.html',S3:'../session-03/index.html',
+             S4:'../session-04/index.html',S5:'../session-05/index.html',MIX:'#r6'};
+  var qs=[].slice.call(document.querySelectorAll('.q.mcq'));
+  var score=0, done=0, wrong={};
+  var elScore=document.getElementById('sScore'), elDone=document.getElementById('sDone'),
+      elTotal=document.getElementById('sTotal'), elFill=document.getElementById('sFill'),
+      res=document.getElementById('result');
+  elTotal.textContent=qs.length;
+
+  function finish(){
+    var pct=Math.round(score/qs.length*100), g, m;
+    if(pct>=90){g='Excellent — '+pct+'%';m='You are ready for the forensics and IR deep dives.';}
+    else if(pct>=75){g='Good — '+pct+'%';m='Solid. Revise the sessions listed below and you are ready.';}
+    else if(pct>=50){g='Almost — '+pct+'%';m='Go back over the sessions below before Session 6.';}
+    else {g='Needs review — '+pct+'%';m='Work through the sessions below again, then retry this review.';}
+    document.getElementById('gradeLine').textContent=g;
+    document.getElementById('gradeMsg').textContent=m;
+    var ul=document.getElementById('reviseList'); ul.innerHTML='';
+    var keys=Object.keys(wrong);
+    if(!keys.length){
+      ul.innerHTML='<li>Nothing — you answered every question correctly. Well done.</li>';
+    } else {
+      keys.sort().forEach(function(k){
+        var li=document.createElement('li');
+        li.innerHTML='<a href="'+LINKS[k]+'">'+NAMES[k]+'</a> — '+wrong[k]+' missed';
+        ul.appendChild(li);
+      });
+    }
+    res.classList.add('show');
+    res.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  qs.forEach(function(q){
+    var answer=(q.getAttribute('data-answer')||'').toLowerCase();
+    var why=q.getAttribute('data-why')||'';
+    var src=q.getAttribute('data-src')||'MIX';
+    var opts=[].slice.call(q.querySelectorAll('.opts li'));
+    var fb=q.querySelector('.mcq-fb');
+    opts.forEach(function(li){
+      li.addEventListener('click',function(){
+        if(q.classList.contains('answered'))return;
+        q.classList.add('answered');
+        var chosen=(li.getAttribute('data-opt')||'').toLowerCase();
+        var right=chosen===answer;
+        opts.forEach(function(o){
+          var k=(o.getAttribute('data-opt')||'').toLowerCase();
+          if(k===answer)o.classList.add('correct');
+          else if(o===li)o.classList.add('wrong');
+          else o.classList.add('muted-opt');
+        });
+        fb.className='mcq-fb show '+(right?'ok':'no');
+        fb.innerHTML=(right?'<b>Correct.</b> ':'<b>Not quite.</b> ')+why;
+        done++; if(right)score++; else wrong[src]=(wrong[src]||0)+1;
+        elScore.textContent=score; elDone.textContent=done;
+        elFill.style.width=(done/qs.length*100)+'%';
+        if(done===qs.length) finish();
+      });
+    });
+  });
+
+  document.getElementById('btnReset').addEventListener('click',function(){
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Forensic readiness objectives and benefits">
+<title>Forensic Readiness — Objectives and Benefits</title>
+<rect width="1000" height="400" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Forensic Readiness</text>
+<text x="972" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- ===== OBJECTIVES panel ===== -->
+<rect x="40" y="76" width="470" height="290" rx="26" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+<rect x="62" y="96" width="382" height="42" rx="21" fill="#0a1226" stroke="#2b3f70"/>
+<text x="253" y="124" text-anchor="middle" fill="#e8edf7" font-size="16" font-weight="700">Objectives</text>
+<circle cx="470" cy="106" r="26" fill="#0e1730" stroke="#d4af37" stroke-width="2"/>
+<circle cx="470" cy="106" r="16" fill="none" stroke="#e0556b" stroke-width="3"/>
+<circle cx="470" cy="106" r="6" fill="#e0556b"/>
+
+<text x="70" y="170" fill="#c7d3e8" font-size="12.5">–  Act as a deterrent against the risks from</text>
+<text x="84" y="188" fill="#c7d3e8" font-size="12.5">internal and external threats.</text>
+<text x="70" y="216" fill="#c7d3e8" font-size="12.5">–  Collect acceptable evidence without</text>
+<text x="84" y="234" fill="#c7d3e8" font-size="12.5">interfering with business processes.</text>
+<text x="70" y="262" fill="#c7d3e8" font-size="12.5">–  Collect evidence related to potential</text>
+<text x="84" y="280" fill="#c7d3e8" font-size="12.5">crimes and disputes that may show the</text>
+<text x="84" y="298" fill="#c7d3e8" font-size="12.5">adverse impact they had on the organization.</text>
+<text x="70" y="326" fill="#c7d3e8" font-size="12.5">–  Limit the expense of the investigation process</text>
+<text x="84" y="344" fill="#c7d3e8" font-size="12.5">to an amount proportional to the incident.</text>
+
+<!-- ===== BENEFITS panel ===== -->
+<rect x="550" y="76" width="410" height="180" rx="26" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+<rect x="572" y="96" width="322" height="42" rx="21" fill="#0a1226" stroke="#2b3f70"/>
+<text x="733" y="124" text-anchor="middle" fill="#e8edf7" font-size="16" font-weight="700">Benefits</text>
+<circle cx="920" cy="106" r="26" fill="#0e1730" stroke="#d4af37" stroke-width="2"/>
+<path d="M910 112 q10 -14 20 0" fill="none" stroke="#3fa87a" stroke-width="3" stroke-linecap="round"/>
+<path d="M914 98 l4 4 l8 -8" fill="none" stroke="#37c7d4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+<text x="580" y="176" fill="#c7d3e8" font-size="12.5">–  Fast and efficient investigation with</text>
+<text x="594" y="194" fill="#c7d3e8" font-size="12.5">minimal disruption to the business.</text>
+
+<text x="550" y="300" fill="#f0d78a" font-size="12" font-weight="700">Forensic readiness and business continuity</text>
+<text x="550" y="324" fill="#8ea3c8" font-size="11.5">Forensic readiness helps maintain business continuity by allowing</text>
+<text x="550" y="342" fill="#8ea3c8" font-size="11.5">the quick and easy identification of the impacted components that</text>
+<text x="550" y="360" fill="#8ea3c8" font-size="11.5">must be replaced for the services and business to continue.</text>
+</svg>

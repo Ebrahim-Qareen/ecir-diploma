@@ -1,0 +1,75 @@
+<svg viewBox="0 0 1060 470" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Containment, eradication and recovery flow with evidence gathering">
+<title>Containment, eradication, recovery</title>
+<defs><marker id="c5" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#3fa87a"/></marker></defs>
+<rect width="1060" height="470" fill="#0a1226"/>
+<text x="28" y="34" fill="#fff" font-size="18" font-weight="700">Phase 3 · Contain → Collect Evidence → Eradicate → Recover</text>
+<text x="1032" y="34" fill="#d4af37" font-size="12" font-weight="700" text-anchor="end">IT GATE</text>
+<text x="28" y="56" fill="#8ea3c8" font-size="12">Golden rule: <tspan fill="#f0d78a" font-weight="700">stop the bleeding first, but collect evidence BEFORE you clean.</tspan> Cleaning destroys proof.</text>
+
+<!-- CONTAINMENT -->
+<rect x="24" y="76" width="240" height="196" rx="10" fill="#2a1620" stroke="#e0556b" stroke-width="1.6"/>
+<text x="44" y="102" fill="#f2a6b4" font-size="14" font-weight="700">1 · Containment</text>
+<text x="44" y="120" fill="#8ea3c8" font-size="10.5">Stop it spreading — fast.</text>
+<rect x="42" y="132" width="204" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="144" y="152" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Short-term</text>
+<text x="144" y="168" text-anchor="middle" fill="#8ea3c8" font-size="9.5">isolate host · block IP</text>
+<text x="144" y="182" text-anchor="middle" fill="#8ea3c8" font-size="9.5">disable account · kill session</text>
+<rect x="42" y="200" width="204" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="144" y="220" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Long-term</text>
+<text x="144" y="236" text-anchor="middle" fill="#8ea3c8" font-size="9.5">patch · segment network</text>
+<text x="144" y="250" text-anchor="middle" fill="#8ea3c8" font-size="9.5">temporary fix to keep working</text>
+
+<!-- EVIDENCE -->
+<rect x="288" y="76" width="240" height="196" rx="10" fill="#0e1730" stroke="#d4af37" stroke-width="1.6"/>
+<text x="308" y="102" fill="#f0d78a" font-size="14" font-weight="700">2 · Evidence</text>
+<text x="308" y="120" fill="#8ea3c8" font-size="10.5">Collect while it still exists.</text>
+<rect x="306" y="132" width="204" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="408" y="152" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Most volatile first</text>
+<text x="408" y="168" text-anchor="middle" fill="#8ea3c8" font-size="9.5">memory → network → disk</text>
+<text x="408" y="182" text-anchor="middle" fill="#8ea3c8" font-size="9.5">RAM dies on shutdown</text>
+<rect x="306" y="200" width="204" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="408" y="220" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Chain of custody</text>
+<text x="408" y="236" text-anchor="middle" fill="#8ea3c8" font-size="9.5">who touched it, when</text>
+<text x="408" y="250" text-anchor="middle" fill="#8ea3c8" font-size="9.5">hash everything</text>
+
+<!-- ERADICATION -->
+<rect x="552" y="76" width="240" height="196" rx="10" fill="#101f1a" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="572" y="102" fill="#7fe0b4" font-size="14" font-weight="700">3 · Eradication</text>
+<text x="572" y="120" fill="#8ea3c8" font-size="10.5">Remove the attacker completely.</text>
+<rect x="570" y="132" width="204" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="672" y="152" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Technical</text>
+<text x="672" y="168" text-anchor="middle" fill="#8ea3c8" font-size="9.5">delete malware · close backdoors</text>
+<text x="672" y="182" text-anchor="middle" fill="#8ea3c8" font-size="9.5">reset creds · reimage</text>
+<rect x="570" y="200" width="204" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="672" y="220" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Root cause</text>
+<text x="672" y="236" text-anchor="middle" fill="#8ea3c8" font-size="9.5">fix HOW they got in</text>
+<text x="672" y="250" text-anchor="middle" fill="#8ea3c8" font-size="9.5">or they come straight back</text>
+
+<!-- RECOVERY -->
+<rect x="816" y="76" width="220" height="196" rx="10" fill="#1a1533" stroke="#8b7ce8" stroke-width="1.6"/>
+<text x="836" y="102" fill="#b6a9f2" font-size="14" font-weight="700">4 · Recovery</text>
+<text x="836" y="120" fill="#8ea3c8" font-size="10.5">Back to normal — carefully.</text>
+<rect x="834" y="132" width="184" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="926" y="152" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Restore</text>
+<text x="926" y="168" text-anchor="middle" fill="#8ea3c8" font-size="9.5">clean backup, last known</text>
+<text x="926" y="182" text-anchor="middle" fill="#8ea3c8" font-size="9.5">good configuration</text>
+<rect x="834" y="200" width="184" height="60" rx="7" fill="#15213f" stroke="#2b3f70"/>
+<text x="926" y="220" text-anchor="middle" fill="#c7d3e8" font-size="11" font-weight="700">Watch closely</text>
+<text x="926" y="236" text-anchor="middle" fill="#8ea3c8" font-size="9.5">monitor for return</text>
+<text x="926" y="250" text-anchor="middle" fill="#8ea3c8" font-size="9.5">then declare "closed"</text>
+
+<path d="M264 174 L286 174" stroke="#3fa87a" stroke-width="2" marker-end="url(#c5)"/>
+<path d="M528 174 L550 174" stroke="#3fa87a" stroke-width="2" marker-end="url(#c5)"/>
+<path d="M792 174 L814 174" stroke="#3fa87a" stroke-width="2" marker-end="url(#c5)"/>
+
+<!-- warning band -->
+<rect x="24" y="292" width="1012" height="72" rx="10" fill="#241a1a" stroke="#e0556b" stroke-width="1.4"/>
+<text x="44" y="316" fill="#f2a6b4" font-size="13.5" font-weight="700">The mistake that ruins cases</text>
+<text x="44" y="338" fill="#c7d3e8" font-size="11.5">Rebooting or reimaging the machine "to fix it fast" — this wipes RAM, running processes, and network connections forever.</text>
+<text x="44" y="356" fill="#c7d3e8" font-size="11.5">If you must contain immediately: <tspan fill="#f0d78a" font-weight="700">isolate from the network, but leave it powered ON</tspan> until evidence is captured.</text>
+
+<!-- overlap note -->
+<rect x="24" y="380" width="1012" height="66" rx="10" fill="#0e1730" stroke="#2b3f70"/>
+<text x="44" y="404" fill="#f0d78a" font-size="12.5" font-weight="700">Why these three are grouped as one NIST phase</text>
+<text x="44" y="428" fill="#c7d3e8" font-size="11.5">In real life they overlap — you contain one machine while still eradicating on another and already recovering a third.</text>
+</svg>

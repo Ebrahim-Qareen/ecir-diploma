@@ -46,6 +46,7 @@
     <a class="tile" href="#s02"><span class="ico">✅</span><h4>Session 2</h4><p>Splunk, ports, forwarders, first SPL</p></a>
     <a class="tile" href="#s03"><span class="ico">✅</span><h4>Session 3</h4><p>Event IDs · Sysmon · Linux · SPL</p></a>
     <a class="tile" href="#s04"><span class="ico">✅</span><h4>Session 4</h4><p>Wazuh · Sigma · triage · intel</p></a>
+    <a class="tile" href="#s05"><span class="ico">✅</span><h4>Session 5</h4><p>IR lifecycle · TheHive · SOAR · evidence</p></a>
     <a class="tile" href="#topical" style="opacity:.55"><span class="ico">📇</span><h4>Topical packs</h4><p>Event IDs · SPL · Volatility · MITRE</p></a>
   </div>
 
@@ -177,13 +178,31 @@
     </div>
   </div>
 
+  <h2 class="sec" id="s05" style="margin-top:40px">Session 5 · IR Lifecycle, Platform &amp; Forensic Readiness</h2>
+  <p class="sec-desc"><a href="../session-05/index.html#p26">Open in the session →</a></p>
+  <div class="cheat">
+    <div class="cheat-head"><h3>📋 Session 5 Cheat Sheet</h3>
+      <a class="btn-sm" href="../session-05/index.html" style="text-decoration:none">▶ Go to Session 5</a></div>
+    <div class="cheat-grid">
+      <div class="cheat-card"><h5>NIST · 4 phases</h5><ul><li>1 Preparation</li><li>2 Detection &amp; Analysis</li><li>3 Containment, Eradication, Recovery</li><li>4 Post-Incident Activity</li></ul></div>
+      <div class="cheat-card"><h5>SANS · 6 steps</h5><ul><li>Preparation · Identification</li><li>Containment · Eradication</li><li>Recovery · Lessons Learned</li></ul></div>
+      <div class="cheat-card"><h5>EC-Council · 9 steps</h5><ul><li>Prep · Recording · Triage</li><li>Notification · Containment</li><li>Evidence · Eradication</li><li>Recovery · Post-Incident</li></ul></div>
+      <div class="cheat-card"><h5>Document trio</h5><ul><li><b>Policy</b> = the rule (what/why)</li><li><b>Plan</b> = who &amp; in what order</li><li><b>Playbook</b> = exact steps, per type</li></ul></div>
+      <div class="cheat-card"><h5>Order of volatility</h5><ul><li>1 registers/cache</li><li>2 <b>RAM</b> · 3 network</li><li>4 processes · 5 <b>disk</b></li><li>6 backups/archives</li></ul></div>
+      <div class="cheat-card"><h5>Evidence rules</h5><ul><li>Authorisation first</li><li>Write blocker always</li><li>Work on a copy</li><li>Hash before &amp; after</li><li>Chain of custody unbroken</li></ul></div>
+      <div class="cheat-card"><h5>TheHive</h5><ul><li>Case → Tasks → Observables</li><li><b>TLP</b> = who to share with</li><li><b>PAP</b> = what actions allowed</li><li>admin · org-admin · analyst · read-only</li></ul></div>
+      <div class="cheat-card"><h5>SOAR</h5><ul><li><b>O</b>rchestration = tools connected</li><li><b>A</b>utomation = playbook self-runs</li><li><b>R</b>esponse = act from one screen</li><li>Humans keep judgement calls</li></ul></div>
+      <div class="cheat-card"><h5>Golden rules</h5><ul><li>Contain before you clean</li><li>Collect before you contain</li><li>Never power off — isolate</li><li>Fix the root cause</li><li>Blameless post-incident</li></ul></div>
+    </div>
+  </div>
+
   <!-- future sessions -->
   <h2 class="sec" id="more" style="margin-top:40px">Coming as the course grows</h2>
   <p class="sec-desc">Each new session adds its cheat sheet here automatically.</p>
   <div class="tiles">
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 5</h4><p>IR lifecycle · forensic readiness</p></div>
-    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 6</h4><p>malware IR + DF</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 6</h4><p>malware IR + DF · Volatility</p></div>
     <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 7</h4><p>email / phishing IR + DF</p></div>
+    <div class="tile" style="opacity:.5;cursor:default"><span class="ico">🔒</span><h4>Session 8</h4><p>network IR + DF</p></div>
   </div>
 
   <!-- topical packs -->

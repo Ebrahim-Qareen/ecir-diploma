@@ -1,0 +1,111 @@
+<svg viewBox="0 0 1080 620" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Process flow of evidence gathering and forensic analysis: collect evidence, chain of custody, analyze, report, then perpetrator identification, law enforcement and external investigation branches">
+<title>Process flow of Evidence Gathering and Forensic Analysis</title>
+<defs>
+  <marker id="eG" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#3fa87a"/></marker>
+  <marker id="eR" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#e0556b"/></marker>
+  <marker id="eB" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#37c7d4"/></marker>
+  <marker id="eS" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#8ea3c8"/></marker>
+</defs>
+<rect width="1080" height="620" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Process flow of Evidence Gathering and Forensic Analysis</text>
+<text x="1052" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- ===== LEFT COLUMN (maroon) ===== -->
+<circle cx="176" cy="86" r="18" fill="#d4af37"/>
+<text x="176" y="93" text-anchor="middle" fill="#0a1226" font-size="16" font-weight="700">…</text>
+
+<rect x="52" y="128" width="248" height="36" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="176" y="151" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Collect Evidence</text>
+<path d="M176 104 L176 126" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+
+<rect x="52" y="204" width="248" height="46" rx="6" fill="#2a1420" stroke="#d4af37" stroke-width="2.6"/>
+<text x="176" y="224" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Create a Chain</text>
+<text x="176" y="241" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">of Custody Document</text>
+<path d="M176 164 L176 202" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+
+<rect x="52" y="290" width="248" height="36" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="176" y="313" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Analyze the Evidence</text>
+<path d="M176 250 L176 288" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+
+<rect x="52" y="366" width="248" height="46" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="176" y="386" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Create a Forensic</text>
+<text x="176" y="403" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Investigation Report</text>
+<path d="M176 326 L176 364" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+
+<rect x="52" y="452" width="248" height="46" rx="6" fill="#2a1420" stroke="#e0556b" stroke-width="1.6"/>
+<text x="176" y="472" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Management Receives</text>
+<text x="176" y="489" text-anchor="middle" fill="#f2a6b4" font-size="12.5" font-weight="700">Investigation Report</text>
+<path d="M176 412 L176 450" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+
+<!-- rail from Management Receives -> Perpetrator Identified? -->
+<path d="M300 475 L336 475 L336 148 L438 148" stroke="#8ea3c8" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#eS)"/>
+
+<!-- ===== MIDDLE (green) ===== -->
+<polygon points="562,110 682,148 562,186 442,148" fill="#10241c" stroke="#3fa87a" stroke-width="2"/>
+<text x="562" y="144" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Perpetrator</text>
+<text x="562" y="160" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Identified?</text>
+
+<circle cx="704" cy="128" r="9" fill="#e0556b"/><path d="M700 124 l8 8 M708 124 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="718" y="133" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+<circle cx="596" cy="206" r="9" fill="#3fa87a"/><path d="M591 206 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="610" y="211" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+
+<polygon points="562,232 682,270 562,308 442,270" fill="#10241c" stroke="#3fa87a" stroke-width="2"/>
+<text x="562" y="266" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Law Enforcement</text>
+<text x="562" y="282" text-anchor="middle" fill="#9ceccb" font-size="11.5" font-weight="700">Required?</text>
+<path d="M562 186 L562 230" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eG)"/>
+
+<circle cx="424" cy="244" r="9" fill="#e0556b"/><path d="M420 240 l8 8 M428 240 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="392" y="249" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+<circle cx="596" cy="328" r="9" fill="#3fa87a"/><path d="M591 328 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="610" y="333" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+
+<rect x="442" y="346" width="240" height="46" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="562" y="366" text-anchor="middle" fill="#9ceccb" font-size="12" font-weight="700">Liaise with Third Party</text>
+<text x="562" y="383" text-anchor="middle" fill="#9ceccb" font-size="12" font-weight="700">Law Enforcement Agencies</text>
+<path d="M562 308 L562 344" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eG)"/>
+
+<rect x="442" y="440" width="240" height="46" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="562" y="460" text-anchor="middle" fill="#9ceccb" font-size="12" font-weight="700">Organizational Disciplinary</text>
+<text x="562" y="477" text-anchor="middle" fill="#9ceccb" font-size="12" font-weight="700">Team Handles the Case</text>
+<path d="M562 392 L562 438" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eG)"/>
+<!-- NO from Law Enforcement -> down the left rail into Disciplinary -->
+<path d="M442 270 L406 270 L406 463 L440 463" stroke="#e0556b" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+
+<rect x="442" y="530" width="240" height="38" rx="6" fill="#10241c" stroke="#3fa87a" stroke-width="1.6"/>
+<text x="562" y="554" text-anchor="middle" fill="#9ceccb" font-size="12.5" font-weight="700">Close the Investigation</text>
+<path d="M562 486 L562 528" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eG)"/>
+
+<!-- ===== RIGHT (cyan) ===== -->
+<polygon points="900,102 1020,148 900,194 780,148" fill="#0d2030" stroke="#37c7d4" stroke-width="2"/>
+<text x="900" y="136" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">External</text>
+<text x="900" y="152" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Investigation</text>
+<text x="900" y="168" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Required?</text>
+<path d="M682 148 L778 148" stroke="#e0556b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+
+<circle cx="1040" cy="132" r="9" fill="#e0556b"/><path d="M1036 128 l8 8 M1044 128 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="1040" y="114" text-anchor="middle" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+<circle cx="934" cy="214" r="9" fill="#3fa87a"/><path d="M929 214 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="948" y="219" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+
+<rect x="772" y="232" width="256" height="36" rx="6" fill="#0d2030" stroke="#37c7d4" stroke-width="1.6"/>
+<text x="900" y="255" text-anchor="middle" fill="#7fdce6" font-size="12" font-weight="700">Hire Third Party Investigators</text>
+<path d="M900 194 L900 230" stroke="#3fa87a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eG)"/>
+
+<polygon points="900,300 1020,344 900,388 780,344" fill="#0d2030" stroke="#37c7d4" stroke-width="2"/>
+<text x="900" y="340" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Perpetrator</text>
+<text x="900" y="356" text-anchor="middle" fill="#7fdce6" font-size="11.5" font-weight="700">Identified?</text>
+<path d="M900 268 L900 298" stroke="#37c7d4" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#eB)"/>
+
+<!-- YES -> back to Law Enforcement Required? -->
+<circle cx="756" cy="324" r="9" fill="#3fa87a"/><path d="M751 324 l4 4 l7 -8" fill="none" stroke="#0a1226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="716" y="329" fill="#3fa87a" font-size="12" font-weight="700">YES</text>
+<path d="M780 344 L730 344 L730 288 L682 288" stroke="#3fa87a" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#eG)"/>
+
+<!-- NO -> down to Close the Investigation -->
+<circle cx="878" cy="408" r="9" fill="#e0556b"/><path d="M874 404 l8 8 M882 404 l-8 8" stroke="#0a1226" stroke-width="2" stroke-linecap="round"/>
+<text x="892" y="413" fill="#e0556b" font-size="12" font-weight="700">NO</text>
+<path d="M900 388 L900 549 L684 549" stroke="#e0556b" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#eR)"/>
+<!-- External NO rail -->
+<path d="M1020 148 L1052 148 L1052 549 L920 549" stroke="#e0556b" stroke-width="1.6" fill="none" stroke-dasharray="5 4"/>
+</svg>

@@ -1,0 +1,60 @@
+<svg viewBox="0 0 960 386" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="Incident handling process according to NIST: Preparation, Detection and Analysis, Containment Eradication and Recovery, Post-Incident Activity">
+<title>Incident Handling Process According To NIST</title>
+<defs>
+  <marker id="na" markerUnits="userSpaceOnUse" markerWidth="20" markerHeight="18" refX="16" refY="9" orient="auto"><path d="M0,0 L16,9 L0,18 Z" fill="#8ea3c8"/></marker>
+  <marker id="nb" markerUnits="userSpaceOnUse" markerWidth="20" markerHeight="18" refX="16" refY="9" orient="auto"><path d="M0,0 L16,9 L0,18 Z" fill="#5d6f96"/></marker>
+</defs>
+<rect width="960" height="386" fill="#0a1226"/>
+<text x="28" y="36" fill="#fff" font-size="17" font-weight="700">Incident Handling Process According To NIST</text>
+<text x="932" y="36" fill="#d4af37" font-size="11" font-weight="700" text-anchor="end">IT GATE</text>
+
+<!-- feedback loop between Detection&Analysis and Containment — BOTH arcs routed above
+     the nodes so they can never cross the phase labels below (y=268/287). -->
+<path d="M344 126 C 420 56, 542 56, 618 126" fill="none" stroke="#5d6f96" stroke-width="7" stroke-linecap="round" marker-end="url(#nb)" opacity="0.75"/>
+<path d="M591 135 C 550 105, 412 105, 371 135" fill="none" stroke="#5d6f96" stroke-width="7" stroke-linecap="round" marker-end="url(#nb)" opacity="0.75"/>
+<!-- feedback: Post-Incident -> Preparation. Routed right of the labels, then along
+     y=344 (below every label) so it clears the text completely. -->
+<path d="M900 190 Q 944 196 944 250 L 944 318 Q 944 344 908 344 L 152 344 Q 56 344 56 272 L 56 198 Q 56 182 72 182"
+      fill="none" stroke="#5d6f96" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+      marker-end="url(#nb)" opacity="0.6"/>
+
+<!-- node 1 Preparation -->
+<circle cx="124" cy="182" r="54" fill="#0e1730" stroke="#37c7d4" stroke-width="3"/>
+<rect x="103" y="158" width="42" height="48" rx="4" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+<path d="M111 170 h10 M111 182 h10 M111 194 h10" stroke="#3fa87a" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M126 170 h12 M126 182 h12 M126 194 h12" stroke="#5d6f96" stroke-width="2" stroke-linecap="round"/>
+<text x="124" y="268" text-anchor="middle" fill="#e0556b" font-size="14.5" font-weight="700">Preparation</text>
+
+<!-- node 2 Detection & Analysis -->
+<circle cx="344" cy="182" r="54" fill="#0e1730" stroke="#37c7d4" stroke-width="3"/>
+<circle cx="337" cy="175" r="20" fill="none" stroke="#c7d3e8" stroke-width="3.4"/>
+<path d="M351 189 L364 202" stroke="#c7d3e8" stroke-width="4.6" stroke-linecap="round"/>
+<path d="M337 165 L346 182 L328 182 Z" fill="#e0556b"/>
+<text x="344" y="268" text-anchor="middle" fill="#e0556b" font-size="14.5" font-weight="700">Detection &amp;</text>
+<text x="344" y="287" text-anchor="middle" fill="#e0556b" font-size="14.5" font-weight="700">Analysis</text>
+
+<!-- node 3 Containment / Eradication / Recovery -->
+<circle cx="618" cy="182" r="54" fill="#0e1730" stroke="#37c7d4" stroke-width="3"/>
+<path d="M596 168 A 26 26 0 1 1 596 198" fill="none" stroke="#3fa87a" stroke-width="6" stroke-linecap="round"/>
+<path d="M598 158 L590 172 L606 172 Z" fill="#3fa87a"/>
+<path d="M638 208 L646 194 L630 194 Z" fill="#3fa87a"/>
+<path d="M612 172 h12 v8 h8 v12 h-8 v8 h-12 v-8 h-8 v-12 h8 z" fill="#e0556b"/>
+<text x="618" y="268" text-anchor="middle" fill="#3fa87a" font-size="14.5" font-weight="700">Containment</text>
+<text x="618" y="287" text-anchor="middle" fill="#3fa87a" font-size="14.5" font-weight="700">Eradication &amp; Recovery</text>
+
+<!-- node 4 Post-Incident Activity -->
+<circle cx="846" cy="182" r="54" fill="#0e1730" stroke="#37c7d4" stroke-width="3"/>
+<rect x="824" y="156" width="40" height="52" rx="4" fill="#132244" stroke="#37c7d4" stroke-width="1.6"/>
+<rect x="856" y="162" width="14" height="46" rx="3" fill="#d4af37" opacity="0.85"/>
+<path d="M831 176 l5 5 l9 -10" fill="none" stroke="#3fa87a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M831 192 l5 5 l9 -10" fill="none" stroke="#3fa87a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="846" y="268" text-anchor="middle" fill="#37c7d4" font-size="14.5" font-weight="700">Post-Incident</text>
+<text x="846" y="287" text-anchor="middle" fill="#37c7d4" font-size="14.5" font-weight="700">Activity</text>
+
+<!-- straight arrows between nodes -->
+<path d="M182 182 L284 182" stroke="#8ea3c8" stroke-width="6" stroke-linecap="round" marker-end="url(#na)"/>
+<path d="M402 182 L558 182" stroke="#8ea3c8" stroke-width="6" stroke-linecap="round" marker-end="url(#na)"/>
+<path d="M676 182 L786 182" stroke="#8ea3c8" stroke-width="6" stroke-linecap="round" marker-end="url(#na)"/>
+
+<text x="480" y="376" text-anchor="middle" fill="#5d6f96" font-size="10">Rebuilt in the ITGate theme from the Maharah "Incident Handling" course slide.</text>
+</svg>

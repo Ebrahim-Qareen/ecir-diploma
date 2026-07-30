@@ -99,68 +99,80 @@
       </div>
     </a>
 
-    <a class="card p-siem" href="session-05/index.html">
-      <div class="card-top"><span class="snum">S05</span><h3>Triage, IOCs &amp; Threat Intel</h3></div>
-      <p>Turn an alert queue into decisions: classify, enrich, score, escalate — and write the case report.</p>
+
+    <a class="card p-ir" href="session-05/index.html">
+      <div class="card-top"><span class="snum">S05</span><h3>IR Lifecycle, Platform &amp; Forensic Readiness</h3></div>
+      <p>NIST vs SANS vs EC-Council, preparation and playbooks, the full response arc, TheHive, SOAR, and handling evidence so it still counts.</p>
       <div class="card-meta">
-        <span class="tag siem">SIEM 4/4</span>
-        <span class="tag">Triage</span>
-        <span class="tag">Enrichment</span>
-        <span class="status soon">Planned</span>
+        <span class="tag ir">Incident Response</span>
+        <span class="tag">TheHive · SOAR</span>
+        <span class="tag">Forensic readiness</span>
+        <span class="status done">Delivered</span>
+      </div>
+    </a>
+
+    <a class="card p-dfir" href="review/index.html">
+      <div class="card-top"><span class="snum">★</span><h3>Milestone Review — Sessions 1–5</h3></div>
+      <p>Six rounds, 50 questions covering everything so far. It scores you and tells you exactly which session to revise. Do this before Session 6.</p>
+      <div class="card-meta">
+        <span class="tag dfir">Checkpoint</span>
+        <span class="tag">50 MCQ</span>
+        <span class="tag">Self-scoring</span>
+        <span class="status done">Ready</span>
       </div>
     </a>
 
     <a class="card p-ir" href="session-06/index.html">
-      <div class="card-top"><span class="snum">S06</span><h3>The IR Lifecycle &amp; Platform</h3></div>
-      <p>NIST and SANS lifecycles walked phase by phase, then run a real case in TheHive and automate it.</p>
+      <div class="card-top"><span class="snum">S06</span><h3>Malware Incident — IR + DF</h3></div>
+      <p>Detect it, run the full response arc, then prove what it did — memory forensics with Volatility and the disk artifacts it left behind.</p>
       <div class="card-meta">
-        <span class="tag ir">Incident Response</span>
-        <span class="tag">TheHive</span>
-        <span class="tag">SOAR</span>
+        <span class="tag ir">IR + DF</span>
+        <span class="tag">Volatility</span>
+        <span class="tag">Ransomware</span>
         <span class="status soon">Planned</span>
       </div>
     </a>
 
-    <a class="card p-analysis" href="session-07/index.html">
-      <div class="card-top"><span class="snum">S07</span><h3>First Response &amp; the Endpoint</h3></div>
-      <p>The first five minutes, evidence order of volatility, process trees, pivoting and timelines.</p>
+    <a class="card p-ir" href="session-07/index.html">
+      <div class="card-top"><span class="snum">S07</span><h3>Email &amp; Phishing Incident — IR + DF</h3></div>
+      <p>The kill chain behind a phishing email: header analysis, SPF/DKIM, the phishing playbook, and email forensics.</p>
       <div class="card-meta">
-        <span class="tag analysis">Analysis 1/2</span>
-        <span class="tag">Timelines</span>
-        <span class="tag">Pivoting</span>
+        <span class="tag ir">IR + DF</span>
+        <span class="tag">Headers · SPF/DKIM</span>
+        <span class="tag">Kill chain</span>
         <span class="status soon">Planned</span>
       </div>
     </a>
 
     <a class="card p-analysis" href="session-08/index.html">
-      <div class="card-top"><span class="snum">S08</span><h3>Network Analysis</h3></div>
-      <p>Read the wire: PCAP analysis, beaconing, exfiltration, IDS alerts and firewall logs together.</p>
+      <div class="card-top"><span class="snum">S08</span><h3>Network Incident — IR + DF</h3></div>
+      <p>Recon, brute force, DoS and exfiltration on the wire — Wireshark analysis and PCAP forensics end to end.</p>
       <div class="card-meta">
-        <span class="tag analysis">Analysis 2/2</span>
+        <span class="tag analysis">IR + DF</span>
         <span class="tag">Wireshark</span>
-        <span class="tag">Suricata</span>
+        <span class="tag">PCAP</span>
         <span class="status soon">Planned</span>
       </div>
     </a>
 
-    <a class="card p-dfir" href="session-09/index.html">
-      <div class="card-top"><span class="snum">S09</span><h3>DFIR: Evidence &amp; Acquisition</h3></div>
-      <p>Forensic principles, chain of custody, and acquiring memory, disk and artifacts that hold up.</p>
+    <a class="card p-analysis" href="session-09/index.html">
+      <div class="card-top"><span class="snum">S09</span><h3>Web App &amp; Insider Threat — IR + DF</h3></div>
+      <p>OWASP attacks in the logs, WAF response, and the insider case — user behaviour analysis and web log forensics.</p>
       <div class="card-meta">
-        <span class="tag dfir">DFIR 1/2</span>
-        <span class="tag">FTK · KAPE</span>
-        <span class="tag">Chain of custody</span>
+        <span class="tag analysis">IR + DF</span>
+        <span class="tag">OWASP · WAF</span>
+        <span class="tag">Insider · UBA</span>
         <span class="status soon">Planned</span>
       </div>
     </a>
 
     <a class="card p-dfir" href="session-10/index.html">
-      <div class="card-top"><span class="snum">S10</span><h3>Memory, Artifacts &amp; Capstone</h3></div>
-      <p>Volatility, malicious files, registry persistence — then a full attack simulation, start to report.</p>
+      <div class="card-top"><span class="snum">S10</span><h3>Capstone — Full Incident, End to End</h3></div>
+      <p>One breach, start to finish: detect in Wazuh, investigate, run the IR lifecycle, do the forensics, and write the report.</p>
       <div class="card-meta">
-        <span class="tag dfir">DFIR 2/2</span>
-        <span class="tag">Volatility</span>
-        <span class="tag">Capstone</span>
+        <span class="tag dfir">Capstone</span>
+        <span class="tag">Full arc</span>
+        <span class="tag">Report</span>
         <span class="status soon">Planned</span>
       </div>
     </a>
