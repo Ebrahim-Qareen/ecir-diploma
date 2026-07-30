@@ -31,7 +31,7 @@
 
   --radius:12px;
   --radius-sm:8px;
-  --maxw:1180px;
+  --maxw:1520px;
   --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --mono:"JetBrains Mono","Fira Code",Consolas,"Courier New",monospace;
 }
@@ -410,6 +410,9 @@ pre code{background:none;border:none;padding:0;color:#cfe0ff;font-size:13px;line
    ink). Without this they render dark-on-dark and become unreadable. */
 .fig.plate img{background:#f2f5fa;padding:16px}
 .fig.plate.tight img{padding:10px}
+/* Small figure — screenshots that are reference only, not something to read. */
+.fig.sm img{max-width:520px;margin:0 auto}
+.fig.sm figcaption{max-width:520px;margin-left:auto;margin-right:auto}
 .fig figcaption{
   margin-top:9px;font-size:12.5px;color:var(--text-3);text-align:center;font-style:italic;
 }
