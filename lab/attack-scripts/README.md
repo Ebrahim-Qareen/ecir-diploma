@@ -26,6 +26,20 @@ Do this once before class:
 3. Snapshot both victim VMs before running (`pre-shadowgate`) so you can revert after class.
 4. Make sure Wazuh is healthy: agents `Active`, dashboard reachable, `wazuh-logtest` clean.
 
+## 1b. Start the exfil receiver (required for Window C on Windows)
+
+The Windows script exfiltrates the stolen SAM/SYSTEM hive to SOC-CORE01 so the
+dump is a real artifact the class can examine, not just a log line. Start
+this on SOC-CORE01 before running `attack-windows.ps1`:
+
+```bash
+python3 exfil-receiver.py
+```
+
+Received files land in `./shadowgate-exfil/<timestamp>_WIN-VICTIM01_hives.zip`
+on SOC-CORE01. If the receiver isn't running, the script logs a failed exfil
+attempt and continues (the PowerShell command line still fires Rule 100221).
+
 ## 2. Run the scripts
 
 **LNX-VICTIM01:**
@@ -74,7 +88,7 @@ Same model as Linux: normal user activity through the day with **three separate 
 | 08:00–09:00 | — | — | Normal browsing, services, ~5 interactive logons (Type 2) | baseline | — |
 | **09:20** | **A** | T1110, T1078, T1021.001 | 15× failed logon (4625) → success (4624 Type 10) | src `198.51.100.24`, account `administrator` | 100200, 100201, 100202, 100203 |
 | **13:30** | **B** | T1053.005, T1547.001, T1059.001, T1105 | Scheduled task + Run key + encoded PS + download cradle pulling "malware" from C2 | testmynids + Feodo IP `162.243.103.246`, EICAR payload | 100210, 100211, 100215, 100216, 100230 |
-| **16:10** | **C** | T1003.002, T1562.001, T1070.001, T1490, T1486 | SAM/SYSTEM export, Defender off, shadow-copy delete, mass encrypt to `.shadowlock`, ransom note | `.shadowlock`, `HOW_TO_DECRYPT.txt` | 100220, 100222, 100223, 100225, 100226, 100227 |
+| **16:10** | **C** | T1003.002, T1041, T1562.001, T1070.001, T1490, T1486 | SAM/SYSTEM export → **exfiltrated to SOC-CORE01** → Defender off, shadow-copy delete, mass encrypt to `.shadowlock`, ransom note | `.shadowlock`, `HOW_TO_DECRYPT.txt`, `hives.zip` on SOC-CORE01 | 100220, 100221, 100222, 100223, 100225, 100226, 100227 |
 | 16:30 | — | — | Normal logons + cleanup (Run key, task, sandbox removed) | baseline | — |
 
 Windows scenario flow: **brute-force an account → succeed → persist (task + registry) → pull malware via PowerShell → steal creds → kill recovery → encrypt the PC.** Levels are high (12–14) with critical (15) on the success-after-brute, cred theft, shadow delete, encryption, and known-hash drop.
