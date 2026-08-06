@@ -1,0 +1,39 @@
+<!-- ==========================================================================
+     Windows_Homework_Ransomware_Rules.xml  -  Silent Breach payload B-1
+     ITGate Academy - eCIR SOC Lab - deploy to /var/ossec/etc/rules/
+     ==========================================================================
+     Fires when attack-windows-homework.ps1 runs with -Payload ransomware
+     (also the default). Requires Windows_Homework_Base_Rules.xml (acts 1-6)
+     to also be loaded - this file only covers the ransomware branch.
+
+     ID BLOCK : 100450-100459
+     MITRE    : T1490 (inhibit recovery), T1486 (encrypt)
+     ========================================================================== -->
+
+<group name="windows,silent_breach,ransomware,impact,">
+
+  <rule id="100450" level="15">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(vssadmin(\.exe)?\s+delete\s+shadows|wmic\s+shadowcopy\s+delete|wbadmin\s+delete\s+catalog|bcdedit.*recoveryenabled\s+no)</field>
+    <description>ECIR-100450-Sysmon-CRITICAL: shadow copy / backup deletion - ransomware inhibiting recovery</description>
+    <group>impact,ransomware,silent_breach_ransomware,</group>
+    <mitre><id>T1490</id></mitre>
+  </rule>
+
+  <rule id="100451" level="15" frequency="12" timeframe="30">
+    <if_matched_sid>61613,61614</if_matched_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)\.(silentlock|encrypted|locked|crypt|enc)$</field>
+    <description>ECIR-100451-Sysmon-CRITICAL: mass file encryption in progress - active ransomware (.silentlock)</description>
+    <group>impact,ransomware,silent_breach_ransomware,</group>
+    <mitre><id>T1486</id></mitre>
+  </rule>
+
+  <rule id="100452" level="14">
+    <if_sid>61613,61614</if_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)(HOW_TO_DECRYPT|READ_ME|_RECOVER_|RANSOM|DECRYPT_INSTRUCTION)</field>
+    <description>ECIR-100452-Sysmon-Ransom note file created - $(win.eventdata.targetFilename)</description>
+    <group>impact,ransomware,silent_breach_ransomware,</group>
+    <mitre><id>T1486</id></mitre>
+  </rule>
+
+</group>

@@ -1,0 +1,32 @@
+<!-- ==========================================================================
+     Windows_Homework_BloodHound_Rules.xml  -  Silent Breach payload B-3
+     ITGate Academy - eCIR SOC Lab - deploy to /var/ossec/etc/rules/
+     ==========================================================================
+     Fires when attack-windows-homework.ps1 runs with -Payload bloodhound.
+     Requires Windows_Homework_Base_Rules.xml (acts 1-6) to also be loaded -
+     this file only covers the AD-recon branch.
+
+     ID BLOCK : 100470-100479
+     MITRE    : T1087 (account discovery), T1482 (domain trust discovery),
+                T1074.001 (local data staging)
+     ========================================================================== -->
+
+<group name="windows,silent_breach,bloodhound,discovery,">
+
+  <rule id="100470" level="14">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(sharphound|bloodhound|invoke-bloodhound|-collectionmethod|-c\s+all|--collectionmethods|azurehound)</field>
+    <description>ECIR-100470-Sysmon-BloodHound/SharpHound AD reconnaissance command line detected</description>
+    <group>discovery,bloodhound,silent_breach_bloodhound,</group>
+    <mitre><id>T1087</id><id>T1482</id></mitre>
+  </rule>
+
+  <rule id="100471" level="13">
+    <if_sid>61613,61614</if_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)(bloodhound|sharphound|_computers|_users|_groups)\S*\.(zip|json)$</field>
+    <description>ECIR-100471-Sysmon-BloodHound collection archive written - $(win.eventdata.targetFilename)</description>
+    <group>discovery,collection,bloodhound,silent_breach_bloodhound,</group>
+    <mitre><id>T1074.001</id><id>T1087</id></mitre>
+  </rule>
+
+</group>

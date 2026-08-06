@@ -132,6 +132,35 @@ Set-ExecutionPolicy -Scope Process Bypass -Force ; .\attack-windows.ps1</code></
     </a>
   </div>
 
+  <!-- ============ SESSION 6 CARDS ============ -->
+  <h2 class="sec" id="s06" style="margin-top:34px">Session 6 · Malware — Full Incident (IR + DF)</h2>
+  <p class="sec-desc">Same Shadow Gate attack, but now you run the <strong>whole arc</strong>: detect → triage in TheHive →
+     investigate in Wazuh → contain with the EDR → forensics for root cause → recover from snapshot → report + MITRE map.</p>
+  <div class="chal-grid">
+    <a class="chal-card hard" href="#cf-sg-win">
+      <h4>Malware Incident · WIN-VICTIM01</h4>
+      <span class="cc-idx">TheHive · Wazuh · Sysmon/YARA · EDR</span>
+      <div class="cc-meta"><span class="diff hard">Full arc</span><span class="tag">5 MCQ + report</span><span class="mitre">T1059→T1486</span></div>
+    </a>
+    <a class="chal-card med" href="../../session-06/index.html">
+      <h4>Session 6 — guided walkthrough</h4>
+      <span class="cc-idx">session-06 · P20–P21</span>
+      <div class="cc-meta"><span class="diff med">Lecture + lab</span><span class="tag">graded</span><span class="mitre">IR + DF</span></div>
+    </a>
+  </div>
+
+  <div class="box tip" id="run-malware" style="margin-top:16px">
+    <span class="box-t">How to run &amp; investigate (Session 6)</span>
+    <p>Instructor disables Defender real-time on WIN-VICTIM01, then detonates the attack. Students take the alert from
+       the queue and run every phase:</p>
+<pre><code># WIN-VICTIM01 (Administrator PowerShell) — instructor
+Set-ExecutionPolicy -Scope Process Bypass -Force ; .\attack-windows.ps1</code></pre>
+    <p>Then: promote the Wazuh YARA alert to a <strong>TheHive case</strong>, log 4 IOCs, rebuild the Sysmon process tree,
+       confirm C2 in FortiGate, <strong>collect memory before you isolate</strong>, contain in the EDR, eradicate every
+       persistence foothold, revert to <code>CLEAN-BASE</code>, and submit the one-page report. Full brief on the
+       <a href="../../session-06/index.html">Session 6 page</a>.</p>
+  </div>
+
   <!-- ==================== CASE FILES ==================== -->
 
   <!-- CF: VPN -->

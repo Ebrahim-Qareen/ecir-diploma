@@ -1,0 +1,151 @@
+<!-- ==========================================================================
+     Windows_Homework_Base_Rules.xml  -  Operation Silent Breach (Challenge B)
+     ITGate Academy - eCIR SOC Lab - deploy to /var/ossec/etc/rules/
+     ==========================================================================
+     SHARED CHAIN - fires on every payload variant (ransomware/mimikatz/bloodhound
+     all run through these same 6 acts before branching). Always deploy this file.
+
+        ACT 1  Brute-force admin -> success        4625 xN -> 4624       T1110/T1078
+        ACT 2  Malware uploaded to host             Sysmon 11 + YARA      T1105
+        ACT 3  New local user created                4720                 T1136.001
+        ACT 4  User added to Administrators          4732                 T1098
+        ACT 5  RDP logon with new user               4624 type 10         T1021.001
+        ACT 6  Dropper runs, drops exe in %TEMP%     Sysmon 1 + 11        T1204.002/T1105
+
+     Payload-specific detections live in their own files:
+        Windows_Homework_Ransomware_Rules.xml   100450-100459
+        Windows_Homework_Mimikatz_Rules.xml     100460-100469
+        Windows_Homework_BloodHound_Rules.xml   100470-100479
+
+     CONVENTION (mirrors CyberTalents Merged ruleset)
+        NAMING : ECIR-<RuleID>-<Source>-<Detection name>
+        LEVELS : L15 = attack SUCCEEDED / critical impact (auto-block)
+                 L13-14 = high-confidence attempt (mandatory analysis)
+                 L12 = single attempt / critical change (enrichment)
+                 <=L11 = triage tier
+        MITRE  : every detection rule carries a <mitre> mapping
+        ID BLOCK : 100400-100449  (this file)
+
+     BASE SIDs (confirm each with wazuh-logtest - vary by ruleset version):
+        60009 / 18152  win eventchannel base
+        61603          Sysmon EID 1  (process create)
+        61613 / 61614  Sysmon EID 11 (file create) / EID 15 (filehash)
+        92004/92052/92200  PowerShell channels
+     NOTE: the attack script fires some Security events synthetically (into the
+     Application log via Write-EventLog), so discriminators (LogonType, account,
+     srcip) live in win.system.message. Rules below match BOTH win.eventdata.*
+     (real events) and win.system.message (synthetic) so they fire either way.
+     ========================================================================== -->
+
+<group name="windows,silent_breach,authentication,initial_access,account_manipulation,lateral_movement,execution,">
+
+<!-- ===== section: windows,silent_breach,authentication, ===== -->
+<!-- ACT 1 - Brute-force the local admin, then succeed -->
+
+  <rule id="100400" level="5">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4625$</field>
+    <description>ECIR-100400-Security-Failed logon (4625) - possible brute-force attempt</description>
+    <group>authentication_failed,silent_breach_act1,</group>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+
+  <rule id="100401" level="13" frequency="8" timeframe="120">
+    <if_matched_sid>100400</if_matched_sid>
+    <description>ECIR-100401-Security-Logon brute-force: 8+ failed logons in 120s</description>
+    <group>authentication_failed,brute_force,silent_breach_act1,</group>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+
+  <rule id="100402" level="15">
+    <if_sid>60009,18152</if_sid>
+    <if_matched_sid>100401</if_matched_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <description>ECIR-100402-Security-CRITICAL: successful logon after brute-force - account compromise</description>
+    <group>authentication_success,brute_force,silent_breach_act1,</group>
+    <mitre><id>T1078</id><id>T1110</id></mitre>
+  </rule>
+
+<!-- ===== section: windows,silent_breach,initial_access, ===== -->
+<!-- ACT 2 - Malware uploaded / written to the host  (file write + YARA) -->
+
+  <rule id="100410" level="12">
+    <if_sid>61613,61614</if_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)\\(update_installer|setup|installer|update)\.exe$</field>
+    <description>ECIR-100410-Sysmon-Suspicious executable written to disk (possible malware upload)</description>
+    <group>malware,initial_access,silent_breach_act2,</group>
+    <mitre><id>T1105</id></mitre>
+  </rule>
+
+  <rule id="100411" level="15">
+    <if_sid>61613,61614</if_sid>
+    <list field="win.eventdata.hashes" lookup="match_key">etc/lists/malicious-hashes</list>
+    <description>ECIR-100411-Sysmon-CRITICAL: file with KNOWN-MALICIOUS hash written - $(win.eventdata.targetFilename)</description>
+    <group>threat_intel,malicious_hash,silent_breach_act2,</group>
+    <mitre><id>T1204</id></mitre>
+  </rule>
+
+<!-- ===== section: windows,silent_breach,account_manipulation, ===== -->
+<!-- ACT 3 - New local user created  (4720) -->
+
+  <rule id="100420" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4720$</field>
+    <description>ECIR-100420-Security-New local user account created - possible attacker persistence</description>
+    <group>account_manipulation,persistence,silent_breach_act3,</group>
+    <mitre><id>T1136.001</id></mitre>
+  </rule>
+
+<!-- ACT 4 - New user added to Administrators  (4732) -->
+
+  <rule id="100421" level="14">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4732$</field>
+    <field name="win.system.message" type="pcre2">(?i)Administrators</field>
+    <description>ECIR-100421-Security-Account added to Administrators group - privilege escalation</description>
+    <group>account_manipulation,privilege_escalation,silent_breach_act4,</group>
+    <mitre><id>T1098</id><id>T1078.003</id></mitre>
+  </rule>
+
+<!-- ===== section: windows,silent_breach,lateral_movement, ===== -->
+<!-- ACT 5 - RDP logon (type 10) with the rogue user -->
+
+  <rule id="100430" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.system.message" type="pcre2">(?i)LogonType:\s*10</field>
+    <description>ECIR-100430-Security-RDP / RemoteInteractive logon (type 10) - lateral movement</description>
+    <group>lateral_movement,rdp,silent_breach_act5,</group>
+    <mitre><id>T1021.001</id></mitre>
+  </rule>
+
+  <!-- real 4624 events (structured eventdata) - same detection, eventdata path -->
+  <rule id="100431" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.logonType">^10$</field>
+    <description>ECIR-100431-Security-RDP / RemoteInteractive logon (type 10) - lateral movement</description>
+    <group>lateral_movement,rdp,silent_breach_act5,</group>
+    <mitre><id>T1021.001</id></mitre>
+  </rule>
+
+<!-- ===== section: windows,silent_breach,execution, ===== -->
+<!-- ACT 6 - Dropper executes, drops payload into %TEMP% -->
+
+  <rule id="100440" level="13">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(-enc\s|-encodedcommand\s|-e\s+[A-Za-z0-9+/=]{20,})</field>
+    <description>ECIR-100440-Sysmon-Encoded PowerShell launched (dropper stage) - obfuscated execution</description>
+    <group>execution,powershell,dropper,silent_breach_act6,</group>
+    <mitre><id>T1059.001</id><id>T1204.002</id></mitre>
+  </rule>
+
+  <rule id="100441" level="13">
+    <if_sid>61613,61614</if_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)\\(Temp|Tmp|AppData\\Local\\Temp)\\[^\\]+\.exe$</field>
+    <description>ECIR-100441-Sysmon-Executable dropped into a TEMP directory - staged payload</description>
+    <group>execution,dropper,silent_breach_act6,</group>
+    <mitre><id>T1105</id></mitre>
+  </rule>
+
+</group>

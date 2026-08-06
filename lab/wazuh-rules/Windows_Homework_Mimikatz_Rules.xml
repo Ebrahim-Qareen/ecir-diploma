@@ -1,0 +1,42 @@
+<!-- ==========================================================================
+     Windows_Homework_Mimikatz_Rules.xml  -  Silent Breach payload B-2
+     ITGate Academy - eCIR SOC Lab - deploy to /var/ossec/etc/rules/
+     ==========================================================================
+     Fires when attack-windows-homework.ps1 runs with -Payload mimikatz.
+     Requires Windows_Homework_Base_Rules.xml (acts 1-6) to also be loaded -
+     this file only covers the credential-dumping branch.
+
+     ID BLOCK : 100460-100469
+     MITRE    : T1003.001 (LSASS memory / credential dumping)
+     ========================================================================== -->
+
+<group name="windows,silent_breach,mimikatz,credential_access,">
+
+  <rule id="100460" level="15">
+    <if_sid>61603,92004,92052,92200</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(sekurlsa::logonpasswords|privilege::debug|lsadump::|mimikatz|kerberos::|crypto::|token::elevate)</field>
+    <description>ECIR-100460-Sysmon-CRITICAL: Mimikatz credential-dumping command line detected</description>
+    <group>credential_access,mimikatz,silent_breach_mimikatz,</group>
+    <mitre><id>T1003.001</id></mitre>
+  </rule>
+
+  <rule id="100461" level="15">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4656$</field>
+    <field name="win.system.message" type="pcre2">(?i)lsass\.exe</field>
+    <description>ECIR-100461-Security-CRITICAL: handle requested to LSASS - credential access</description>
+    <group>credential_access,lsass,silent_breach_mimikatz,</group>
+    <mitre><id>T1003.001</id></mitre>
+  </rule>
+
+  <!-- real Sysmon EID 10 ProcessAccess to lsass (if Sysmon EID 10 is enabled) -->
+  <rule id="100462" level="15">
+    <if_sid>61609,61610</if_sid>
+    <field name="win.eventdata.targetImage" type="pcre2">(?i)\\lsass\.exe$</field>
+    <field name="win.eventdata.grantedAccess" type="pcre2">(?i)0x1010|0x1410|0x1438|0x143a|0x1fffff</field>
+    <description>ECIR-100462-Sysmon-CRITICAL: suspicious LSASS process access (EID 10) - credential dumping</description>
+    <group>credential_access,lsass,silent_breach_mimikatz,</group>
+    <mitre><id>T1003.001</id></mitre>
+  </rule>
+
+</group>

@@ -1,0 +1,242 @@
+<!-- ==========================================================================
+     Windows_Security_Baseline_Rules.xml  -  General Windows Security Event Log detections
+     ITGate Academy - eCIR SOC Lab - deploy to /var/ossec/etc/rules/
+     ==========================================================================
+     PURPOSE: a real, general-purpose Windows Security-log detection baseline -
+     NOT tied to any one attack script or scenario. These match real Windows
+     Event IDs the way they actually appear on the wire, so they fire on ANY
+     attack that produces this behaviour (Silent Breach, Shadow Gate, a live
+     pentest, or a real intrusion).
+
+     CONVENTION (mirrors CyberTalents Merged ruleset)
+        NAMING : ECIR-<RuleID>-<Source>-<Detection name>
+        LEVELS : L15 = attack SUCCEEDED / critical impact (auto-block)
+                 L13-14 = high-confidence attempt (mandatory analysis)
+                 L12 = single attempt / critical change (enrichment)
+                 <=L11 = triage tier
+        MITRE  : every detection rule carries a <mitre> mapping
+        ID BLOCK : 101000-101049
+
+     BASE SID: 60009 / 18152 - win eventchannel base (confirm with wazuh-logtest;
+     varies by ruleset version). All fields below use win.eventdata.* - the real
+     structured fields Wazuh's Windows eventchannel decoder populates, not
+     synthetic message text. Deploy this file ALONGSIDE any scenario rules
+     (Shadow Gate 100200-100230, Silent Breach 100400-100479) - no ID overlap.
+
+     STRUCTURE: single top-level <group> (one root element) with all rules
+     inside - required by strict XML validators; tactic sections below are
+     comment-delimited only, not separate <group> containers.
+     ========================================================================== -->
+
+<group name="windows,win_security_baseline,">
+
+
+<!-- ===================== AUTHENTICATION ===================== -->
+
+  <rule id="101000" level="5">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4625$</field>
+    <description>ECIR-101000-WinSecurity-Failed logon attempt</description>
+    <group>authentication_failed,win_baseline,</group>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+
+  <rule id="101001" level="12" frequency="8" timeframe="120">
+    <if_matched_sid>101000</if_matched_sid>
+    <same_source_ip />
+    <description>ECIR-101001-WinSecurity-Brute-force: 8+ failed logons from the same source in 120s</description>
+    <group>authentication_failed,brute_force,win_baseline,</group>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+
+  <rule id="101002" level="13" frequency="6" timeframe="180">
+    <if_matched_sid>101000</if_matched_sid>
+    <same_source_ip />
+    <different_user />
+    <description>ECIR-101002-WinSecurity-Password spraying: same source, 6+ different accounts failed in 180s</description>
+    <group>authentication_failed,password_spray,win_baseline,</group>
+    <mitre><id>T1110.003</id></mitre>
+  </rule>
+
+  <rule id="101003" level="15">
+    <if_sid>60009,18152</if_sid>
+    <if_matched_sid>101001</if_matched_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <description>ECIR-101003-WinSecurity-CRITICAL: successful logon immediately after brute-force - likely account compromise</description>
+    <group>authentication_success,brute_force,win_baseline,</group>
+    <mitre><id>T1078</id><id>T1110</id></mitre>
+  </rule>
+
+  <rule id="101004" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.logonType">^10$</field>
+    <description>ECIR-101004-WinSecurity-RDP / RemoteInteractive logon (type 10)</description>
+    <group>lateral_movement,rdp,win_baseline,</group>
+    <mitre><id>T1021.001</id></mitre>
+  </rule>
+
+  <rule id="101005" level="10">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.logonType">^3$</field>
+    <field name="win.eventdata.ipAddress" type="pcre2" negate="yes">(?i)^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|-|::1|$)</field>
+    <description>ECIR-101005-WinSecurity-Network logon (type 3) from a non-private / external source</description>
+    <group>authentication_success,external_source,win_baseline,</group>
+    <mitre><id>T1078</id></mitre>
+  </rule>
+
+  <rule id="101006" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4648$</field>
+    <description>ECIR-101006-WinSecurity-Explicit credential logon (RunAs) - possible lateral movement prep</description>
+    <group>lateral_movement,explicit_creds,win_baseline,</group>
+    <mitre><id>T1078</id><id>T1550</id></mitre>
+  </rule>
+
+  <rule id="101007" level="10">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4740$</field>
+    <description>ECIR-101007-WinSecurity-Account lockout - possible brute-force side effect</description>
+    <group>authentication_failed,lockout,win_baseline,</group>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+
+
+<!-- ===================== ACCOUNT MANIPULATION ===================== -->
+
+  <rule id="101010" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4720$</field>
+    <description>ECIR-101010-WinSecurity-New local/domain user account created</description>
+    <group>account_manipulation,persistence,win_baseline,</group>
+    <mitre><id>T1136.001</id></mitre>
+  </rule>
+
+  <rule id="101011" level="14">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4732$</field>
+    <field name="win.eventdata.targetUserName" type="pcre2">(?i)(administrators|domain\s*admins|enterprise\s*admins|remote\s*desktop\s*users|schema\s*admins)</field>
+    <description>ECIR-101011-WinSecurity-CRITICAL: account added to a privileged local group - $(win.eventdata.targetUserName)</description>
+    <group>account_manipulation,privilege_escalation,win_baseline,</group>
+    <mitre><id>T1098</id><id>T1078.003</id></mitre>
+  </rule>
+
+  <rule id="101012" level="14">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4728|4756$</field>
+    <field name="win.eventdata.targetUserName" type="pcre2">(?i)(domain\s*admins|enterprise\s*admins|schema\s*admins)</field>
+    <description>ECIR-101012-WinSecurity-CRITICAL: account added to a privileged DOMAIN group - $(win.eventdata.targetUserName)</description>
+    <group>account_manipulation,privilege_escalation,win_baseline,</group>
+    <mitre><id>T1098</id></mitre>
+  </rule>
+
+  <rule id="101013" level="9">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4722$</field>
+    <description>ECIR-101013-WinSecurity-User account enabled</description>
+    <group>account_manipulation,win_baseline,</group>
+    <mitre><id>T1098</id></mitre>
+  </rule>
+
+  <rule id="101014" level="10">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4724$</field>
+    <description>ECIR-101014-WinSecurity-Password reset attempt for another account</description>
+    <group>account_manipulation,win_baseline,</group>
+    <mitre><id>T1098</id></mitre>
+  </rule>
+
+  <rule id="101015" level="9">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4726$</field>
+    <description>ECIR-101015-WinSecurity-User account deleted - possible anti-forensics / cleanup</description>
+    <group>account_manipulation,win_baseline,</group>
+    <mitre><id>T1531</id></mitre>
+  </rule>
+
+  <rule id="101016" level="13">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4672$</field>
+    <description>ECIR-101016-WinSecurity-Special/admin privileges assigned to a new logon</description>
+    <group>privilege_escalation,win_baseline,</group>
+    <mitre><id>T1078.003</id></mitre>
+  </rule>
+
+
+<!-- ===================== CREDENTIAL ACCESS ===================== -->
+
+  <rule id="101020" level="14">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4769$</field>
+    <field name="win.eventdata.ticketEncryptionType">^0x17$</field>
+    <description>ECIR-101020-WinSecurity-Kerberos service ticket requested with weak RC4 encryption - possible Kerberoasting</description>
+    <group>credential_access,kerberoasting,win_baseline,</group>
+    <mitre><id>T1558.003</id></mitre>
+  </rule>
+
+  <rule id="101021" level="15">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4662$</field>
+    <field name="win.eventdata.properties" type="pcre2">(?i)(1131f6aa-9c07-11d1-f79f-00c04fc2dcd2|1131f6ad-9c07-11d1-f79f-00c04fc2dcd2)</field>
+    <description>ECIR-101021-WinSecurity-CRITICAL: Directory Replication Service access requested - possible DCSync</description>
+    <group>credential_access,dcsync,win_baseline,</group>
+    <mitre><id>T1003.006</id></mitre>
+  </rule>
+
+
+<!-- ===================== PERSISTENCE ===================== -->
+
+  <rule id="101030" level="10">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4698$</field>
+    <description>ECIR-101030-WinSecurity-Scheduled task created - $(win.eventdata.taskName)</description>
+    <group>persistence,scheduled_task,win_baseline,</group>
+    <mitre><id>T1053.005</id></mitre>
+  </rule>
+
+  <rule id="101031" level="9">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^7045$</field>
+    <description>ECIR-101031-WinSecurity-New service installed - $(win.eventdata.serviceName)</description>
+    <group>persistence,service_install,win_baseline,</group>
+    <mitre><id>T1543.003</id></mitre>
+  </rule>
+
+  <rule id="101032" level="14">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^7045$</field>
+    <field name="win.eventdata.serviceFileName" type="pcre2">(?i)(psexec|paexec|\\\\admin\$|cmd\.exe\s*/c|powershell.*-enc)</field>
+    <description>ECIR-101032-WinSecurity-CRITICAL: service installed matching PsExec-style lateral-movement pattern</description>
+    <group>lateral_movement,psexec,win_baseline,</group>
+    <mitre><id>T1569.002</id><id>T1021.002</id></mitre>
+  </rule>
+
+
+<!-- ===================== DEFENSE EVASION ===================== -->
+
+  <rule id="101040" level="14">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^1102$</field>
+    <description>ECIR-101040-WinSecurity-CRITICAL: Security event log cleared - anti-forensics</description>
+    <group>defense_evasion,log_clearing,win_baseline,</group>
+    <mitre><id>T1070.001</id></mitre>
+  </rule>
+
+  <rule id="101041" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4719$</field>
+    <description>ECIR-101041-WinSecurity-System audit policy changed - possible evasion of logging</description>
+    <group>defense_evasion,win_baseline,</group>
+    <mitre><id>T1562.002</id></mitre>
+  </rule>
+
+  <rule id="101042" level="12">
+    <if_sid>60009,18152</if_sid>
+    <field name="win.system.eventID">^4946|4947|4950$</field>
+    <description>ECIR-101042-WinSecurity-Windows Firewall rule added or modified</description>
+    <group>defense_evasion,firewall,win_baseline,</group>
+    <mitre><id>T1562.004</id></mitre>
+  </rule>
+
+</group>

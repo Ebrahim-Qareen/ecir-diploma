@@ -1,0 +1,273 @@
+<!-- ==========================================================================
+     Sysmon_Baseline_Rules.xml  -  General Sysmon detection baseline
+     ITGate Academy - eCIR SOC Lab - deploy to /var/ossec/etc/rules/
+     ==========================================================================
+     PURPOSE: a real, general-purpose Sysmon detection baseline covering the
+     high-value techniques a Windows SOC monitors day one - LOLBins, injection,
+     credential access, persistence, lateral movement, C2, and ransomware impact.
+     NOT tied to any one attack script. Matches real Sysmon eventdata fields, so
+     it fires on ANY tool that produces this behaviour.
+
+     CONVENTION (mirrors CyberTalents Merged ruleset)
+        NAMING : ECIR-<RuleID>-<Source>-<Detection name>
+        LEVELS : L15 = attack SUCCEEDED / critical impact (auto-block)
+                 L13-14 = high-confidence attempt (mandatory analysis)
+                 L12 = single attempt / critical change (enrichment)
+                 <=L11 = triage tier
+        MITRE  : every detection rule carries a <mitre> mapping
+        ID BLOCK : 101100-101149
+
+     BASE SIDs (confirm each with wazuh-logtest - vary by ruleset version):
+        61603          Sysmon EID 1  (process creation)
+        61604/61605    Sysmon EID 3  (network connection) - VERIFY, ranges vary
+        61606/61607    Sysmon EID 7  (image/DLL load) - VERIFY
+        61609/61610    Sysmon EID 10 (process access)
+        61613/61614    Sysmon EID 11 (file create) / EID 15 (file create + hash)
+        (registry/pipe/WMI/DNS EIDs 13/17/18/19-22 vary more by version)
+     ROBUSTNESS: where the exact default SID is uncertain, rules chain on
+     <if_group>sysmon_eventN</if_group> - the Sysmon decoder group Wazuh assigns
+     per event type, which is far more stable across ruleset versions than the
+     numeric base SID. Confirm with wazuh-logtest on your manager.
+
+     STRUCTURE: single top-level <group> (one root element) with all rules
+     inside - required by strict XML validators; tactic sections below are
+     comment-delimited only, not separate <group> containers.
+     ========================================================================== -->
+
+<group name="windows,sysmon_baseline,">
+
+
+<!-- ===================== EXECUTION ===================== -->
+
+  <!-- Encoded / obfuscated PowerShell -->
+  <rule id="101100" level="12">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(-enc\s|-encodedcommand\s|-e\s+[A-Za-z0-9+/=]{20,}|-nop\s.*-w\s+hidden)</field>
+    <description>ECIR-101100-Sysmon-Encoded or obfuscated PowerShell execution</description>
+    <group>execution,powershell,win_baseline,</group>
+    <mitre><id>T1059.001</id></mitre>
+  </rule>
+
+  <!-- PowerShell / LOLBin download cradle -->
+  <rule id="101101" level="13">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(Net\.WebClient|DownloadString|DownloadFile|Invoke-WebRequest|iwr\s|IEX\s*\(|Invoke-RestMethod|Start-BitsTransfer|certutil.*-urlcache|bitsadmin.*transfer)</field>
+    <description>ECIR-101101-Sysmon-Download cradle / remote payload staging</description>
+    <group>execution,download,c2,win_baseline,</group>
+    <mitre><id>T1105</id><id>T1059.001</id></mitre>
+  </rule>
+
+  <!-- Living-off-the-land binary abuse -->
+  <rule id="101102" level="11">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(certutil.*-decode|regsvr32.*\/i:http|rundll32.*javascript:|mshta\s+http|installutil.*\/logfile=|msbuild.*\.xml)</field>
+    <description>ECIR-101102-Sysmon-Living-off-the-land binary (LOLBin) abuse for execution/proxy</description>
+    <group>execution,lolbin,defense_evasion,win_baseline,</group>
+    <mitre><id>T1218</id><id>T1140</id></mitre>
+  </rule>
+
+  <!-- Script host executing remote/inline content -->
+  <rule id="101103" level="12">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\(mshta|wscript|cscript)\.exe$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(http://|https://|\.hta|GetObject|CreateObject)</field>
+    <description>ECIR-101103-Sysmon-Script host (mshta/wscript/cscript) executing remote or inline content</description>
+    <group>execution,lolbin,win_baseline,</group>
+    <mitre><id>T1218.005</id><id>T1059.005</id></mitre>
+  </rule>
+
+  <!-- Office application spawning a shell/script host -->
+  <rule id="101104" level="14">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.parentImage" type="pcre2">(?i)\\(winword|excel|powerpnt|outlook|mspub)\.exe$</field>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32)\.exe$</field>
+    <description>ECIR-101104-Sysmon-CRITICAL: Office application spawned a shell or script host - likely macro/exploit execution</description>
+    <group>execution,initial_access,win_baseline,</group>
+    <mitre><id>T1566</id><id>T1204.002</id></mitre>
+  </rule>
+
+
+<!-- ===================== CREDENTIAL ACCESS ===================== -->
+
+  <!-- Mimikatz / credential-dumping command line -->
+  <rule id="101110" level="15">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(sekurlsa::|lsadump::|privilege::debug|mimikatz|kerberos::ptt|dcsync)</field>
+    <description>ECIR-101110-Sysmon-CRITICAL: credential-dumping tool command line detected (Mimikatz-style)</description>
+    <group>credential_access,mimikatz,win_baseline,</group>
+    <mitre><id>T1003.001</id></mitre>
+  </rule>
+
+  <!-- Suspicious LSASS process access -->
+  <rule id="101111" level="15">
+    <if_group>sysmon_event10</if_group>
+    <field name="win.eventdata.targetImage" type="pcre2">(?i)\\lsass\.exe$</field>
+    <field name="win.eventdata.grantedAccess" type="pcre2">(?i)^(0x1010|0x1410|0x1438|0x143a|0x1fffff)$</field>
+    <description>ECIR-101111-Sysmon-CRITICAL: suspicious LSASS process access (high-privilege handle) - credential dumping</description>
+    <group>credential_access,lsass,win_baseline,</group>
+    <mitre><id>T1003.001</id></mitre>
+  </rule>
+
+  <!-- LSASS memory dump via comsvcs.dll MiniDump trick -->
+  <rule id="101112" level="15">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(comsvcs\.dll.*minidump|rundll32.*comsvcs)</field>
+    <description>ECIR-101112-Sysmon-CRITICAL: LSASS memory dump via comsvcs.dll MiniDump (rundll32 living-off-the-land)</description>
+    <group>credential_access,lsass,win_baseline,</group>
+    <mitre><id>T1003.001</id></mitre>
+  </rule>
+
+
+<!-- ===================== DISCOVERY ===================== -->
+
+  <!-- AD / domain recon tooling -->
+  <rule id="101115" level="13">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(sharphound|bloodhound|invoke-bloodhound|adfind|nltest\s+/domain_trusts|net\s+group\s+.*\/domain)</field>
+    <description>ECIR-101115-Sysmon-AD / domain reconnaissance tooling detected</description>
+    <group>discovery,ad_recon,win_baseline,</group>
+    <mitre><id>T1087</id><id>T1482</id></mitre>
+  </rule>
+
+  <!-- Local recon command chaining (whoami/systeminfo/net user in sequence is typical of automated recon) -->
+  <rule id="101116" level="9">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(whoami\s*/all|systeminfo|net\s+user\s+/domain|net\s+group\s+.*admins|nltest)</field>
+    <description>ECIR-101116-Sysmon-Local/domain reconnaissance command executed</description>
+    <group>discovery,win_baseline,</group>
+    <mitre><id>T1082</id><id>T1033</id></mitre>
+  </rule>
+
+
+<!-- ===================== LATERAL MOVEMENT ===================== -->
+
+  <!-- Impacket / PsExec / WMI lateral movement tells -->
+  <rule id="101120" level="14">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(psexec|paexec|wmic.*\/node:|wmiexec|smbexec|atexec|invoke-command\s+-computername)</field>
+    <description>ECIR-101120-Sysmon-Remote execution / lateral-movement tooling command line detected</description>
+    <group>lateral_movement,win_baseline,</group>
+    <mitre><id>T1021.002</id><id>T1021.006</id><id>T1569.002</id></mitre>
+  </rule>
+
+
+<!-- ===================== PERSISTENCE ===================== -->
+
+  <!-- Registry Run key -->
+  <rule id="101125" level="13">
+    <if_group>sysmon_event13</if_group>
+    <field name="win.eventdata.targetObject" type="pcre2">(?i)\\CurrentVersion\\Run(Once)?\\\w</field>
+    <description>ECIR-101125-Sysmon-Registry Run key set for persistence - $(win.eventdata.targetObject)</description>
+    <group>persistence,registry,win_baseline,</group>
+    <mitre><id>T1547.001</id></mitre>
+  </rule>
+
+  <!-- Scheduled task creation via command line -->
+  <rule id="101126" level="12">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)schtasks(\.exe)?\s+.*\/create</field>
+    <description>ECIR-101126-Sysmon-Scheduled task created via command line</description>
+    <group>persistence,scheduled_task,win_baseline,</group>
+    <mitre><id>T1053.005</id></mitre>
+  </rule>
+
+  <!-- New Windows service via command line -->
+  <rule id="101127" level="11">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(sc(\.exe)?\s+create|new-service\s)</field>
+    <description>ECIR-101127-Sysmon-New Windows service created via command line</description>
+    <group>persistence,service_install,win_baseline,</group>
+    <mitre><id>T1543.003</id></mitre>
+  </rule>
+
+  <!-- WMI event subscription persistence -->
+  <rule id="101128" level="14">
+    <if_group>sysmon_event19,sysmon_event20,sysmon_event21</if_group>
+    <description>ECIR-101128-Sysmon-CRITICAL: WMI event filter/consumer/binding created - fileless persistence</description>
+    <group>persistence,wmi,win_baseline,</group>
+    <mitre><id>T1546.003</id></mitre>
+  </rule>
+
+
+<!-- ===================== DEFENSE EVASION ===================== -->
+
+  <!-- Defender / AV tampering -->
+  <rule id="101130" level="14">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(Set-MpPreference\s+-DisableRealtimeMonitoring\s+\$?true|sc\s+stop\s+WinDefend|DisableAntiSpyware|Add-MpPreference\s+-ExclusionPath)</field>
+    <description>ECIR-101130-Sysmon-Windows Defender / AV tampering - defense evasion</description>
+    <group>defense_evasion,win_baseline,</group>
+    <mitre><id>T1562.001</id></mitre>
+  </rule>
+
+  <!-- AMSI bypass patterns -->
+  <rule id="101131" level="14">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(amsiutils|amsiInitFailed|\[Ref\]\.Assembly\.GetType.*amsi|System\.Management\.Automation\.AmsiUtils)</field>
+    <description>ECIR-101131-Sysmon-CRITICAL: AMSI bypass pattern in PowerShell command line</description>
+    <group>defense_evasion,amsi_bypass,win_baseline,</group>
+    <mitre><id>T1562.001</id><id>T1027</id></mitre>
+  </rule>
+
+  <!-- Unsigned / suspicious DLL loaded from a user-writable path -->
+  <rule id="101132" level="12">
+    <if_group>sysmon_event7</if_group>
+    <field name="win.eventdata.imageLoaded" type="pcre2">(?i)\\(Temp|AppData\\Local\\Temp|ProgramData|Users\\Public)\\[^\\]+\.dll$</field>
+    <description>ECIR-101132-Sysmon-DLL loaded from a user-writable / temp path - possible side-loading</description>
+    <group>defense_evasion,dll_sideload,win_baseline,</group>
+    <mitre><id>T1574.002</id></mitre>
+  </rule>
+
+
+<!-- ===================== COMMAND AND CONTROL ===================== -->
+
+  <!-- Beaconing: connection to an external host on a known attack-tool default port -->
+  <rule id="101135" level="11">
+    <if_group>sysmon_event3</if_group>
+    <field name="win.eventdata.destinationIp" type="pcre2" negate="yes">(?i)^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.)</field>
+    <field name="win.eventdata.destinationPort" type="pcre2">(?i)^(4444|8080|8443|1337|31337)$</field>
+    <description>ECIR-101135-Sysmon-Outbound connection to an external host on a known C2/attack-tool default port</description>
+    <group>command_and_control,win_baseline,</group>
+    <mitre><id>T1071</id><id>T1095</id></mitre>
+  </rule>
+
+  <!-- Cobalt Strike default named pipes -->
+  <rule id="101136" level="15">
+    <if_group>sysmon_event17,sysmon_event18</if_group>
+    <field name="win.eventdata.pipeName" type="pcre2">(?i)(\\msagent_|\\postex_ssh_|\\status_|\\MSSE-|\\ntsvcs_)</field>
+    <description>ECIR-101136-Sysmon-CRITICAL: named pipe matching known C2 framework default pattern (Cobalt Strike-style)</description>
+    <group>command_and_control,c2_framework,win_baseline,</group>
+    <mitre><id>T1071.001</id><id>T1543</id></mitre>
+  </rule>
+
+
+<!-- ===================== IMPACT ===================== -->
+
+  <!-- Shadow copy / backup deletion -->
+  <rule id="101140" level="15">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(vssadmin(\.exe)?\s+delete\s+shadows|wmic\s+shadowcopy\s+delete|wbadmin\s+delete\s+catalog|bcdedit.*recoveryenabled\s+no)</field>
+    <description>ECIR-101140-Sysmon-CRITICAL: shadow copy / backup deletion - ransomware inhibiting recovery</description>
+    <group>impact,ransomware,win_baseline,</group>
+    <mitre><id>T1490</id></mitre>
+  </rule>
+
+  <!-- Mass file rename to a ransomware-style extension -->
+  <rule id="101141" level="15" frequency="12" timeframe="30">
+    <if_group>sysmon_event11</if_group>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)\.(locked|crypt|enc|encrypted|lock|ransom|crypto|wallet)$</field>
+    <description>ECIR-101141-Sysmon-CRITICAL: mass file rename to an encrypted/ransomware-style extension - active ransomware</description>
+    <group>impact,ransomware,win_baseline,</group>
+    <mitre><id>T1486</id></mitre>
+  </rule>
+
+  <!-- Ransom note dropped -->
+  <rule id="101142" level="14">
+    <if_group>sysmon_event11</if_group>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)(HOW_TO_DECRYPT|READ_ME|_RECOVER_|RANSOM|DECRYPT_INSTRUCTION|RESTORE_FILES)</field>
+    <description>ECIR-101142-Sysmon-Ransom note file created - $(win.eventdata.targetFilename)</description>
+    <group>impact,ransomware,win_baseline,</group>
+    <mitre><id>T1486</id></mitre>
+  </rule>
+
+</group>
