@@ -1052,8 +1052,12 @@ vol.py -f WIN-VICTIM01.raw windows.cmdline     # the full malicious command line
     </div>
     <div class="content">
       <div class="hw-head">
-        <div class="hw-count"><span id="hwDone">0</span>/<span id="hwTotal">0</span> done</div>
-        <button class="btn primary" id="addTask">＋ Add your own task</button>
+        <div class="hw-progress" id="hwProgress">Required: <b>0 / 2</b> &nbsp;·&nbsp; All tasks: <b>0 / 4</b></div>
+        <div class="hw-actions">
+          <a class="btn-sm" href="../resources/labs.html#s06" style="text-decoration:none">🧪 All practice labs</a>
+          <button class="btn-sm" id="btnNewTask">➕ Create task</button>
+          <button class="btn-sm" id="hwAddAll">📅 Add all deadlines</button>
+        </div>
       </div>
 
       <div id="taskList">

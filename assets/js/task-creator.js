@@ -41,10 +41,13 @@
     });
 
     /* open / close */
-    document.getElementById('btnNewTask').addEventListener('click', function () {
-      modal.classList.add('open');
-      form.title.focus();
-    });
+    var openBtn = document.getElementById('btnNewTask') || document.getElementById('addTask');
+    if (openBtn) {
+      openBtn.addEventListener('click', function () {
+        modal.classList.add('open');
+        form.title.focus();
+      });
+    }
     modal.querySelectorAll('[data-close]').forEach(function (b) {
       b.addEventListener('click', close);
     });
