@@ -943,7 +943,7 @@
       <p>Scanning is the loudest thing an attacker does. They probe your network for open ports and service versions
          to build a target list. Five scan types exist — each leaves a different fingerprint on the wire.</p>
 
-      <figure class="fig">
+      <figure class="fig sm plate">
         <img src="images/mitre-attack-reconnaissance.png" alt="MITRE ATT&amp;CK tactic chain with Reconnaissance highlighted as the first stage, before Resource Development and Initial Access" loading="lazy">
         <figcaption>Scanning maps to MITRE ATT&amp;CK's <strong>Reconnaissance</strong> tactic — the very first stage, before the attacker has touched anything.</figcaption>
       </figure>
@@ -1029,17 +1029,17 @@
 
       <h2>Horizontal vs vertical — what shape is the scan?</h2>
       <div class="split">
-        <figure class="fig" style="margin:0">
+        <figure class="fig sm plate" style="margin:0">
           <img src="images/horizontal-scan.png" alt="One attacker sweeping the same port range across five different destination IPs — 192.168.1.1 through .5" loading="lazy">
           <figcaption><strong>Horizontal scan</strong> — one port, many IPs. "Who has this service?" (e.g. WannaCry sweeping SMB/445 across a subnet)</figcaption>
         </figure>
-        <figure class="fig" style="margin:0">
+        <figure class="fig sm plate" style="margin:0">
           <img src="images/vertical-scan.png" alt="One attacker probing six different ports — 80, 25, 22, 445, 3389, 443 — on a single destination IP 192.168.1.25" loading="lazy">
           <figcaption><strong>Vertical scan</strong> — one IP, many ports. "What does this host run?"</figcaption>
         </figure>
       </div>
 
-      <figure class="fig">
+      <figure class="fig sm plate">
         <img src="images/mitre-attack-discovery.png" alt="MITRE ATT&amp;CK tactic chain with Discovery highlighted, positioned after Credential Access and before Lateral Movement" loading="lazy">
         <figcaption>An internal host scanning its own subnet is no longer Reconnaissance — it's <strong>Discovery</strong> (TA0007). The attacker is already inside and mapping the network from the inside.</figcaption>
       </figure>
@@ -1260,7 +1260,7 @@
          gratuitous ARP replies to rewrite the victim's cache, redirecting all traffic through themselves.
          Step through the simulator to see it happen.</p>
 
-      <figure class="fig">
+      <figure class="fig sm plate">
         <img src="images/mitm-normal-vs-attack.png" alt="Comparison of a normal user connection secured by a padlock versus a man-in-the-middle attack where a hooded attacker sits between the user and the server" loading="lazy">
         <figcaption>Normal traffic goes straight to the server behind its own security. Under MITM, the attacker inserts themselves into that path — the user and server never notice.</figcaption>
       </figure>
@@ -1339,11 +1339,11 @@
       </div>
 
       <div class="split">
-        <figure class="fig" style="margin:0">
+        <figure class="fig sm plate" style="margin:0">
           <img src="images/dns-resolution-vs-spoofing.png" alt="Normal DNS resolution where a user's query goes through a recursive resolver to the authoritative DNS server, versus DNS spoofing where an attacker returns a malicious IP directly" loading="lazy">
           <figcaption><strong>DNS spoofing</strong> — the attacker answers faster than the real resolver, pointing the victim at a malicious IP.</figcaption>
         </figure>
-        <figure class="fig" style="margin:0">
+        <figure class="fig sm plate" style="margin:0">
           <img src="images/https-to-http-downgrade.png" alt="A closed green HTTPS padlock next to an open, broken red HTTP padlock, illustrating an SSL stripping downgrade" loading="lazy">
           <figcaption><strong>SSL stripping</strong> — the attacker silently downgrades HTTPS to plain HTTP. The padlock disappears; almost nobody notices.</figcaption>
         </figure>
