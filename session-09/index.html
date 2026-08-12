@@ -89,6 +89,34 @@
 .logq-note{padding:9px 12px;background:#0d1526;color:#8ea3c9;font-size:12.5px;line-height:1.55;border-top:1px solid #1a2740;font-family:var(--font)}
 .logq-note b{color:#e8edf7}.logq-note .k{color:#5ee39b}
 
+/* ---- S3 attack-story components ---- */
+/* numbered attack-flow steps */
+.aflow{counter-reset:af;margin:16px 0;padding:0;list-style:none}
+.aflow li{counter-increment:af;position:relative;padding:9px 12px 9px 44px;margin-bottom:7px;
+          background:#0e1730;border:1px solid #1f2d52;border-left:3px solid #e0556b;border-radius:8px;
+          color:#c3d1ea;font-size:13.8px;line-height:1.55}
+.aflow li::before{content:counter(af);position:absolute;left:12px;top:9px;width:21px;height:21px;
+                  border-radius:50%;background:#3a1420;border:1px solid #6a2a3a;color:#ff9db0;
+                  font:700 11.5px var(--mono,monospace);display:flex;align-items:center;justify-content:center}
+.aflow li b{color:#fff}
+/* evidence-source table */
+table.evsrc td:first-child{width:23%;min-width:150px;color:var(--gold-soft);font-weight:600;vertical-align:top}
+table.evsrc td:nth-child(2){color:var(--text-2)}
+table.evsrc tr.none td:first-child{color:#7e91b8}
+table.evsrc tr.none td{color:#7e91b8;font-style:italic}
+table.evsrc tr.key td{background:rgba(63,168,122,.07)}
+table.evsrc tr.key td:first-child{color:#7fe0a0}
+/* story section headings */
+.content h3.st{display:flex;align-items:center;gap:9px;margin-top:24px}
+.content h3.st span.n{font:700 10.5px var(--mono,monospace);background:#16305c;border:1px solid #2a3c68;
+                      color:#7fd0ff;border-radius:5px;padding:2px 7px;letter-spacing:.5px}
+/* attack index cards */
+.atkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px;margin:16px 0}
+.atkgrid .a{border:1px solid #1f2d52;border-radius:9px;background:#0e1730;padding:10px 12px}
+.atkgrid .a .n{font:700 11px var(--mono,monospace);color:#37c7d4}
+.atkgrid .a .t{display:block;color:#e8edf7;font-weight:600;font-size:13.4px;margin:3px 0 2px}
+.atkgrid .a .s{color:#8ea3c9;font-size:11.6px;line-height:1.45}
+
 /* section divider banner */
 .secband{display:flex;align-items:center;gap:14px;margin:6px 0 4px}
 .secband .bignum{font:800 40px var(--mono,monospace);color:#1f2d52;line-height:1}
@@ -1588,6 +1616,1028 @@ Content-Length: 98
       </div>
       <p>Section 3 now takes ten of these weaknesses as they actually appear in the wild, and walks each one
         end-to-end: normal behaviour, the attack, the evidence it leaves, and the investigation.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================= SECTION 3 BANNER -->
+  <section class="page" data-title="3 · The 10 real-world attacks">
+    <div class="page-head">
+      <div class="secband">
+        <span class="bignum">3</span>
+        <div class="t"><h2>The 10 Most Common Real-World Web Attacks</h2>
+          <p>Each one told as a complete story — normal behaviour → attack → evidence → investigation</p></div>
+      </div>
+    </div>
+    <div class="content">
+      <p>Section 2 gave you categories of weakness. This section gives you the <strong>attacks that actually
+        arrive at your organisation</strong>, in the order you tend to see them, each told the same way so you
+        can compare them.</p>
+
+      <h3>The template — every attack, seven questions</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>Normal behaviour</strong></td><td>What this feature does when nothing is wrong</td></tr>
+          <tr><td><strong>Attack target</strong></td><td>Which part of the app, and what the attacker wants from it</td></tr>
+          <tr><td><strong>Vulnerability discovery</strong></td><td>What tells the attacker this target is worth attacking</td></tr>
+          <tr><td><strong>Attack flow</strong></td><td>Step by step, conceptually</td></tr>
+          <tr><td><strong>Why it succeeds</strong></td><td>The technical reason the app allows it</td></tr>
+          <tr><td class="mono">SOC perspective</td><td>What appears in web logs · WAF · SIEM · HTTP · network · auth logs · endpoint</td></tr>
+          <tr><td><strong>Incident response</strong></td><td>How you investigate and what you do about it</td></tr>
+        </tbody>
+      </table>
+
+      <h3>They are not ten separate events — they are one chain</h3>
+      <p>Real intrusions rarely use a single technique. The lab evidence you will study shows
+        <strong>three of these attacks inside one log file</strong>, from one attacker, in sequence:</p>
+
+      <figure class="fig thm">
+        <img src="images/webattacks_task4_full-condensed-access-log_attack-chain_gobuster1-9-directory-fuzz_hydra-bruteforce-login-php_sqlmap1-7-2-sqli-on-search.svg"
+             alt="A condensed web access log showing three stages of one attack: a gobuster directory fuzz producing 404s and a few 200s, a Hydra brute force against login.php producing repeated 401s then a 302, and finally sqlmap SQL injection payloads against the search endpoint">
+        <figcaption>One attacker, one log, three attacks: ① content discovery with <span class="mono">gobuster/1.9</span> → ② brute force on <span class="mono">/login.php</span> with <span class="mono">Hydra</span> → ③ SQL injection on <span class="mono">/search</span> with <span class="mono">sqlmap/1.7.2</span>.
+          <span class="src">Source: TryHackMe — Detecting Web Attacks</span></figcaption>
+      </figure>
+
+      <div class="box key-takeaway">
+        <span class="box-t">Read that log again — it is the whole session in one screenshot</span>
+        <p>Notice the User-Agent column changes with each phase. Notice the status codes tell the story on their
+          own: <strong>404s → a 200</strong> (found something), <strong>401s → a 302</strong> (got in),
+          then <strong>200s with payloads in the query string</strong> (took the data). You learned to read all
+          three patterns in Section 1. <strong>You can already triage this incident.</strong></p>
+      </div>
+
+      <h3>The ten, and where each lives in the journey</h3>
+      <div class="atkgrid">
+        <div class="a"><span class="n">01 · stage 6</span><span class="t">Content Discovery</span><span class="s">Fuzzing for hidden paths — the opening move</span></div>
+        <div class="a"><span class="n">02 · stage 7</span><span class="t">Brute Force</span><span class="s">Guessing credentials until one works</span></div>
+        <div class="a"><span class="n">03 · stage 8</span><span class="t">SQL Injection</span><span class="s">Rewriting the database query</span></div>
+        <div class="a"><span class="n">04 · stage 10</span><span class="t">Cross-Site Scripting</span><span class="s">Code executing in the victim's browser</span></div>
+        <div class="a"><span class="n">05 · stage 7</span><span class="t">File Upload → Web Shell</span><span class="s">Turning an upload form into a terminal</span></div>
+        <div class="a"><span class="n">06 · stage 7</span><span class="t">Command Injection</span><span class="s">Input reaching the operating system</span></div>
+        <div class="a"><span class="n">07 · stage 7</span><span class="t">Path Traversal</span><span class="s">Reading files outside the web root</span></div>
+        <div class="a"><span class="n">08 · stage 7</span><span class="t">IDOR</span><span class="s">Changing an ID to read someone else's data</span></div>
+        <div class="a"><span class="n">09 · stage 7</span><span class="t">SSRF</span><span class="s">Making the server fetch what you cannot</span></div>
+        <div class="a"><span class="n">10 · stage 5–6</span><span class="t">DoS / DDoS</span><span class="s">Removing availability entirely</span></div>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">Before we start — the access log fields, one more time</span>
+        <p>Every attack below is read from this one line format. If you can point at each field, you can read
+          every piece of evidence in this section.</p>
+      </div>
+      <figure class="fig thm">
+        <img src="images/webattacks_task4_annotated-sample-access-log-entry_6-fields_client-ip_timestamp-requested-page_status-code_response-size_referrer_useragent.svg"
+             alt="An annotated web server access log entry labelling six fields: client IP address, timestamp and requested page, status code, response size, referrer, and user agent">
+        <figcaption>The six fields of an access-log entry. Response size matters more than students expect — a sudden change in size on the same endpoint often reveals a successful injection.
+          <span class="src">Source: TryHackMe — Detecting Web Attacks</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 01 -->
+  <section class="page" data-title="Attack 01 · Content Discovery">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.01</span><span class="tag">Recon · OWASP A05</span><span class="time">Journey stage 6</span></div>
+      <h2>Attack 01 — Content Discovery (Directory Fuzzing)</h2>
+      <p class="lede">Before an attacker exploits anything, they need to know what exists. They ask your server
+        about thousands of paths and let it tell them which ones are real. <strong>This is the noisiest thing
+        an attacker ever does — and therefore your best chance to stop them early.</strong></p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A real user reaches pages by <em>following links</em>. Their journey is small, ordered and referred:
+        home → products → product detail → cart. Each request carries a <span class="mono">Referer</span> from
+        the previous page, arrives seconds apart, and returns <strong>200</strong>. A human generates perhaps
+        20–40 requests exploring a site.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Not a vulnerability — the <strong>attack surface itself</strong>. The attacker wants a map: admin
+        panels, login pages, upload forms, backups, <span class="mono">.git</span> directories, old versions,
+        test pages. Anything the developers forgot is worth more than anything they secured.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>The server itself is the oracle. It answers <strong>404</strong> for paths that don't exist and
+        <strong>200</strong>/<strong>403</strong> for paths that do — and that difference is all the attacker
+        needs. A <strong>403 Forbidden</strong> is arguably a better find than a 200: it confirms something is
+        there and someone bothered to protect it.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Attacker points a tool (<b>gobuster</b>, <b>ffuf</b>, <b>dirb</b>, <b>nikto</b>) at the site with a wordlist of common paths.</li>
+        <li>The tool fires <b>hundreds to thousands of requests per minute</b>, each to a different path.</li>
+        <li>Nearly all return <b>404</b>. The tool records the handful that don't.</li>
+        <li>Attacker reviews the hits: <span class="mono">/catalog</span>, <span class="mono">/wordpress</span>, <span class="mono">/login.php</span>, <span class="mono">/uploads/</span>.</li>
+        <li>Every subsequent phase of the attack targets <b>only what this scan found</b>.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>Because it is not an exploit — it is <strong>the web working as designed</strong>. HTTP is
+        request/response; you may ask about any path. Nothing is broken. The only real failures are the
+        <em>content</em> that shouldn't be reachable (OWASP A05) and the absence of rate limiting.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="key"><td>Web server logs</td><td><strong>The primary source, and unmistakable.</strong> A huge burst of <strong>404</strong>s from one client IP inside a short window, then one or more <strong>200</strong>s. Requests arrive milliseconds apart with <strong>no Referer</strong> — no human browses like that.</td></tr>
+          <tr><td>User-Agent</td><td>Often names the tool outright: <span class="mono">gobuster/1.9</span>, <span class="mono">ffuf/2.1.0</span>, <span class="mono">Nikto</span>. Careful attackers spoof a browser UA — so never rely on this alone; rely on the <em>rate</em>.</td></tr>
+          <tr><td>WAF logs</td><td>Rate-based rules and IP-reputation rules typically fire here. This is where a WAF earns its cost, because it can block mid-scan.</td></tr>
+          <tr class="key"><td>SIEM alerts</td><td>The threshold query: <span class="mono">status=404 | bin _time span=1m | stats count by clientip | where count &gt; 50</span>. Then the important second step — <strong>pivot to the same IP's 200s</strong>. That short list is your attacker's roadmap.</td></tr>
+          <tr><td>HTTP requests</td><td>Sequential, alphabetically-ordered paths from a wordlist. Identical headers on every request.</td></tr>
+          <tr><td>Network traffic</td><td>Sustained high connection count from a single source; visible as a burst in flow data even without payload inspection.</td></tr>
+          <tr class="none"><td>Auth logs</td><td>Nothing — no authentication is attempted at this stage.</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Nothing — the server only reads files it already serves. No process spawns.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Confirm it is a scan, not a broken link.</b> One IP, high 404 rate, no Referer, non-browser UA. A broken link produces repeated 404s to the <em>same</em> path from many users; a scan produces 404s to <em>many different</em> paths from one user.</li>
+        <li><b>List what the scan found.</b> Filter that IP to <span class="mono">status=200</span> or <span class="mono">403</span>. This is the single most valuable action — it tells you what the attacker now knows.</li>
+        <li><b>Check whether they came back.</b> Search the same IP <em>after</em> the scan window for targeted requests. Recon alone is background noise; recon followed by a POST to a discovered login page is an incident.</li>
+        <li><b>Assess each discovered path.</b> Should <span class="mono">/backup/</span> or <span class="mono">/.git/</span> be reachable at all? Each finding is an A05 remediation ticket.</li>
+        <li><b>Contain if active:</b> block or rate-limit the source IP at the WAF; expect a rotation to a new IP, so also add a rate-limit rule that isn't IP-specific.</li>
+        <li><b>Document</b> the source IP, time window, hit list and any follow-up activity — this becomes the timeline's first entry.</li>
+      </ol>
+
+      <div class="box tip">
+        <span class="box-t">Triage judgement — don't cry wolf</span>
+        <p>Internet-facing sites are scanned constantly; a lone scan with no follow-up is usually
+          <strong>informational, not an incident</strong>. What escalates it is <em>what happened next from the
+          same source</em>. Train yourself to always ask the second question rather than closing the ticket at
+          "scan detected".</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 02 -->
+  <section class="page" data-title="Attack 02 · Brute Force">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.02</span><span class="tag">Credential attack · OWASP A07</span><span class="time">Journey stage 7</span></div>
+      <h2>Attack 02 — Brute Force &amp; Credential Stuffing</h2>
+      <p class="lede">The login page does exactly what it was built to do: check a username and password. The
+        attacker simply asks it to do that <strong>ten thousand times</strong>.</p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A user submits a <span class="mono">POST</span> to <span class="mono">/login</span>. Typically one
+        attempt, occasionally two or three if they mistype. Success is a <strong>302</strong> redirect to their
+        account page; failure returns the login page again with an error. A handful of requests, spread over
+        seconds, from a residential IP, with a real browser User-Agent.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>The authentication endpoint found in Attack 01. The attacker wants <strong>one working credential
+        pair</strong> — after which every action they take is authenticated, legitimate-looking, and far harder
+        for you to spot.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>Two questions decide whether this is worth attempting:</p>
+      <ul>
+        <li><strong>Is there rate limiting or lockout?</strong> They send five deliberate failures and see whether the sixth is refused. Silence means unlimited attempts.</li>
+        <li><strong>Does it leak valid usernames?</strong> If "unknown user" and "wrong password" produce different messages — or measurably different response <em>times</em> or <em>sizes</em> — the attacker first enumerates valid accounts, then attacks only those. One unknown becomes two knowns.</li>
+      </ul>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Build a target list: usernames from enumeration, OSINT, or the company email format.</li>
+        <li>Choose a strategy — <b>brute force</b> (many passwords against one account), <b>password spraying</b> (one common password against many accounts, to dodge lockout), or <b>credential stuffing</b> (username/password pairs from previous breaches).</li>
+        <li>Automate with <b>Hydra</b>, <b>Burp Intruder</b> or a script; submit POSTs at high speed.</li>
+        <li>Watch for the response that differs — a different status code, size or redirect.</li>
+        <li>On success, capture the <b>session cookie</b>. From this point the attacker <em>is</em> that user.</li>
+      </ol>
+
+      <figure class="fig thm">
+        <img src="images/webattacks_task5_wireshark_follow-http-stream_tcpstream13_bruteforce-successful-login_packet13_password123.svg"
+             alt="Wireshark Follow HTTP Stream view of the successful brute force login attempt, showing the web request, user agent, the username and password submitted, and the server response">
+        <figcaption>The successful attempt in packet capture — the credential that worked was <span class="mono">password123</span>, on an admin account. <strong>Note carefully: the access log could not show you this.</strong> The password travelled in a POST body.
+          <span class="src">Source: TryHackMe — Detecting Web Attacks</span></figcaption>
+      </figure>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>Three failures compound: <strong>no rate limiting</strong> (unlimited guesses), <strong>weak
+        passwords</strong> (the guess space is tiny — <span class="mono">password123</span> is in every
+        wordlist), and <strong>no MFA</strong> (the password is the only thing standing in the way). Any one of
+        the three, fixed, would have stopped it.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="key"><td>Web server logs</td><td><strong>Many POSTs to the login path from one IP</strong>, then a status change. The signature is <strong>401/200 × N, then a 302</strong>. In the lab: <span class="mono">167.172.41.141</span> made <strong>160 requests</strong> with User-Agent <span class="mono">Hydra</span>.</td></tr>
+          <tr class="none"><td>The passwords tried</td><td><strong>Not in the log — ever.</strong> They are POST body data. The log proves attempts happened; it cannot tell you what was submitted or whether the winning password was weak.</td></tr>
+          <tr><td>WAF logs</td><td>Rate-limit rules fire; a good WAF can serve a CAPTCHA challenge instead of blocking, which stops automation while letting real users through.</td></tr>
+          <tr class="key"><td>SIEM alerts</td><td>The canonical query: <span class="mono">method=POST uri_path="/login" | bin _time span=5m | stats count by clientip | where count &gt; 25</span>. <strong>Then the high-value refinement: alert on failures followed by a success.</strong> Failures alone are noise; failures then a 302 is a compromise.</td></tr>
+          <tr><td>HTTP requests</td><td>Identical headers, identical content-length, only the credential differing. No <span class="mono">Referer</span>, or a static one.</td></tr>
+          <tr><td>Network traffic</td><td>Where you recover the <em>actual credentials</em> — as above. Also reveals whether the session cookie was subsequently reused from a different IP.</td></tr>
+          <tr class="key"><td>Auth logs</td><td>The application's own authentication log is the cleanest source if it exists: failed-login events with usernames, then a success. Correlate with the web log by timestamp and IP.</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Nothing at this stage — no code runs on the server. It becomes relevant only if the compromised account is later used to upload something.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box red-flag">
+        <span class="box-t">Brute-force red flags</span>
+        <ul>
+          <li>Login POST volume from one IP far above baseline</li>
+          <li>Many <em>different usernames</em> from one IP (credential stuffing, not brute force)</li>
+          <li>One password tried across many accounts (password spraying — <strong>stays under lockout thresholds</strong>)</li>
+          <li>Tool User-Agents: <span class="mono">Hydra</span>, <span class="mono">python-requests</span>, <span class="mono">curl</span></li>
+          <li>Login success from a country or ASN the user has never used before</li>
+          <li>Successful login with <strong>no preceding GET</strong> of the login page — a browser would have fetched the form first</li>
+        </ul>
+      </div>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Determine whether it succeeded.</b> This is the only question that matters first. Look for the status-code change (302/200) at the end of the failure run, or a session established from that IP.</li>
+        <li><b>If it failed:</b> block/rate-limit the source, confirm lockout policy actually works, and log it as an attempted intrusion. No user impact.</li>
+        <li><b>If it succeeded — treat it as account compromise immediately.</b> Identify the account, and pivot to <em>everything that session did afterwards</em>. The brute force is the beginning of the incident, not the end.</li>
+        <li><b>Contain:</b> invalidate the session token (not just a password reset — an active session may survive one), force a password change, enable MFA on the account, block the source.</li>
+        <li><b>Scope:</b> check the same source IP against other accounts, and check the compromised account for data access, changes to email/recovery settings, or new API keys — attackers establish persistence quickly.</li>
+        <li><b>Eradicate &amp; harden:</b> rate limiting on the login endpoint (e.g. <strong>5 attempts per minute per IP</strong>), account lockout with backoff, MFA, identical responses for bad username vs bad password, and screening against breached-password lists.</li>
+      </ol>
+
+      <div class="box soc">
+        <span class="box-t">The rule to remember</span>
+        <p><strong>Failed logins are noise. Failed logins followed by a successful one are an incident.</strong>
+          Build your alert on the transition, not on the count alone — otherwise you will either drown in
+          alerts or miss the one that mattered.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 03 -->
+  <section class="page" data-title="Attack 03 · SQL Injection">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.03</span><span class="tag">Injection · OWASP A03</span><span class="time">Journey stage 8</span></div>
+      <h2>Attack 03 — SQL Injection</h2>
+      <p class="lede">The search box was built to look up products. The attacker uses it to look up
+        <strong>everything</strong> — because the application glued their text directly into a database
+        instruction and the database has no way to tell the difference.</p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A user searches for <span class="mono">shoes</span>. The app builds
+        <span class="mono">SELECT name, price FROM products WHERE name = 'shoes'</span>, the database returns
+        matching rows, and the page shows a handful of products. Status <strong>200</strong>, consistent
+        response size, one request.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Any input that ends up in a query: search fields, login forms, <span class="mono">?id=</span>
+        parameters, sort/filter options, even HTTP headers that get logged into a database. The prize is the
+        <strong>database itself</strong> — credentials, customers, payment data.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>The attacker submits a single apostrophe (<span class="mono">'</span>) and watches what happens:</p>
+      <ul>
+        <li><strong>A database error appears</strong> → the input reached the SQL engine and broke its syntax. Confirmed, and the error may even name the DB engine.</li>
+        <li><strong>A 500 status with a generic page</strong> → same conclusion, less detail. <em>This is the spike you see in your logs.</em></li>
+        <li><strong>Nothing changes visibly</strong> → test with boolean logic (<span class="mono">' OR '1'='1</span> vs <span class="mono">' AND '1'='2</span>) and compare responses, or use a time delay to make the server pause. That is <strong>blind SQL injection</strong>.</li>
+      </ul>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li><b>Probe</b> — submit <span class="mono">'</span>, observe error or anomaly.</li>
+        <li><b>Confirm logic control</b> — <span class="mono">' OR '1'='1</span> returns everything, proving the attacker now writes part of the query.</li>
+        <li><b>Enumerate structure</b> — determine column count and types (often via <span class="mono">ORDER BY</span> or <span class="mono">UNION SELECT NULL,NULL…</span>).</li>
+        <li><b>Extract</b> — <span class="mono">UNION SELECT username, password FROM users</span> appends the real prize onto the product results.</li>
+        <li><b>Escalate</b> — crack the retrieved hashes (see A02), then log in legitimately. The intrusion goes quiet from here.</li>
+      </ol>
+
+      <figure class="fig thm">
+        <img src="images/webattacks_task5_wireshark_follow-http-stream_tcpstream15_sqli-dump-users-table_names-admin-gordon-brown-jane-lee-bob-smith.svg"
+             alt="Wireshark Follow HTTP Stream showing the SQL injection request and the server response containing the dumped users table, with first names and surnames including admin, Gordon Brown, Jane Lee and Bob Smith visible in clear text">
+        <figcaption>The payload <span class="mono">' OR '1'='1</span> and — on the right — <strong>what the attacker actually received</strong>: the Users table in clear text. The access log recorded the request; only the packet capture proves what left the building.
+          <span class="src">Source: TryHackMe — Detecting Web Attacks</span></figcaption>
+      </figure>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The query is assembled with <strong>string concatenation</strong>. The apostrophe closes the intended
+        string, so everything after it is read as <em>instruction</em> rather than <em>data</em>. The database
+        is not fooled or exploited — it faithfully executes the query it was handed. Compounding factors:
+        verbose errors (free reconnaissance) and an over-privileged DB account (so one injection reaches
+        every table).</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="key"><td>Web server logs</td><td><strong>Excellent — if the payload came in a GET.</strong> The query string is logged in full, so you see the attack verbatim: <span class="mono">/search?q=' OR '1'='1</span>. Also watch <strong>response size</strong>: the same endpoint suddenly returning a much larger page means the extra rows came back.</td></tr>
+          <tr><td>Status codes</td><td>A <strong>spike of 500s</strong> from one IP during the probing phase, then <strong>200s</strong> once the payload is syntactically valid. That 500-then-200 shift is the moment they got it working.</td></tr>
+          <tr><td>WAF logs</td><td>Strong here. Signature rules catch <span class="mono">UNION SELECT</span>, comment markers and quote patterns; heuristic rules catch long query strings full of special characters. <strong>Caveat:</strong> encoding and case-toggling evade naive signatures — which is why anomaly and IP-reputation rules matter too.</td></tr>
+          <tr class="key"><td>SIEM alerts</td><td>Search query strings for SQL keywords and their encoded forms (<span class="mono">%27</span>, <span class="mono">%20OR%20</span>). Alert on 500-rate per client IP. Correlate a WAF signature hit with a subsequent large-response 200 from the same source — that pairing means the attack likely worked.</td></tr>
+          <tr class="key"><td>HTTP / network</td><td><strong>The decisive evidence.</strong> Packet capture shows the response body — i.e. exactly which records were disclosed. Logs tell you an attack happened; the capture tells you <em>what was stolen</em>, which is what breach notification depends on.</td></tr>
+          <tr><td>Database logs</td><td>If query logging is enabled, the smoking gun: the malformed query as executed. Also check for unusual query volume or full-table scans from the web app's account.</td></tr>
+          <tr class="none"><td>Auth logs</td><td>Nothing directly — but expect <em>later</em> legitimate logins using credentials cracked from the dump. This is how a SQLi incident quietly becomes an account-compromise incident.</td></tr>
+          <tr><td>Endpoint telemetry</td><td>Usually nothing, unless the attacker escalated to command execution via database functions (e.g. <span class="mono">xp_cmdshell</span>) — then you'd see the DB process spawning a shell.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Establish whether data was actually returned</b>, not just whether payloads were sent. Compare response sizes for the affected endpoint; pull packet capture if available. "Attempted" and "successful" are different incidents.</li>
+        <li><b>Scope the data.</b> Which tables were reachable by that DB account? Assume everything it could read <em>was</em> read. This determines regulatory notification.</li>
+        <li><b>Contain:</b> block the source, deploy a WAF rule for the specific payload pattern, and — if exfiltration is confirmed and ongoing — consider taking the endpoint offline. Availability loss beats continued data loss.</li>
+        <li><b>Treat every credential in that database as compromised.</b> Force resets. This is the A02 link: stolen hashes keep paying the attacker long after you close the ticket.</li>
+        <li><b>Eradicate:</b> convert the vulnerable query to a <strong>parameterised statement</strong> — the actual fix. Then reduce the DB account's privileges, disable verbose errors, and re-scan for the same pattern elsewhere in the codebase.</li>
+        <li><b>Verify:</b> retest the endpoint, confirm the WAF rule fires, and add a detection rule so a recurrence alerts immediately.</li>
+      </ol>
+
+      <div class="box warn">
+        <span class="box-t">The one that gets missed</span>
+        <p>Everything above assumes the payload arrived in a <strong>GET</strong>. Move the same attack into a
+          <strong>POST</strong> body — a login form, a JSON API — and your access logs show a perfectly ordinary
+          <span class="mono">POST /api/search 200</span>. Nothing else. For POST-heavy applications, the WAF and
+          packet capture are not "nice to have"; they are <strong>the only place the attack exists</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 04 -->
+  <section class="page" data-title="Attack 04 · Cross-Site Scripting">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.04</span><span class="tag">Client-side · OWASP A03</span><span class="time">Journey stage 10</span></div>
+      <h2>Attack 04 — Cross-Site Scripting (XSS)</h2>
+      <p class="lede">Every other attack in this section targets your server. This one targets
+        <strong>your users</strong> — and it executes in a place your SOC cannot see.</p>
+    </div>
+    <div class="content">
+      <figure class="fig thm">
+        <img src="images/webattacks_task2_clientside-attack-diagram_attacker-steals-data-directly-in-browser_no-soc-visibility_vs-serverside-soc-visible-path.svg"
+             alt="Diagram contrasting a client-side attack, where the attacker steals user data directly in the browser outside SOC visibility, with the server-side path through the WAF and web server where the SOC does have visibility">
+        <figcaption>The defining problem of client-side attacks. The red box — attacker to victim's browser and back — never crosses your infrastructure. Only the green box is instrumented.
+          <span class="src">Source: TryHackMe — Detecting Web Attacks</span></figcaption>
+      </figure>
+
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A user posts a comment: <span class="mono">Great product!</span>. The app stores it and renders it on
+        the page for other visitors. Text in, text out — the browser displays it as words.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Anywhere user input is <strong>reflected back into a page</strong>: comments, profile names, search
+        result headers ("You searched for …"), error messages, URL parameters. The target is not the server —
+        it is <strong>the next person to load that page</strong>, and specifically their session cookie.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>Submit a harmless marker such as <span class="mono">&lt;b&gt;test&lt;/b&gt;</span> or a unique string,
+        then view the page source. If it comes back as <strong>bold text</strong> (rather than the literal
+        characters), the input is being parsed as HTML — meaning a <span class="mono">&lt;script&gt;</span> tag
+        will run too. That is the whole test.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <p>Three variants, in ascending order of how much they should worry you:</p>
+      <table>
+        <thead><tr><th>Type</th><th>How it reaches the victim</th><th>SOC visibility</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Reflected</strong></td><td>Payload is in a crafted URL the victim must click (phishing, malicious link)</td><td>🟡 Payload appears in <strong>GET query strings</strong> in your logs</td></tr>
+          <tr><td><strong>Stored</strong></td><td>Payload saved in the database (a comment); fires for <em>every</em> visitor automatically</td><td>🔴 Arrives via <strong>POST</strong> — invisible in access logs</td></tr>
+          <tr><td><strong>DOM-based</strong></td><td>Client-side JavaScript writes attacker-controlled data into the page; payload may sit after a <span class="mono">#</span> fragment</td><td>⚫ <strong>Never reaches your server at all</strong></td></tr>
+        </tbody>
+      </table>
+      <ol class="aflow">
+        <li>Attacker submits <span class="mono">&lt;script&gt;…&lt;/script&gt;</span> into an unfiltered field.</li>
+        <li>The application stores or reflects it <b>without encoding the output</b>.</li>
+        <li>A victim loads the page. Their browser cannot distinguish attacker markup from developer markup — <b>so it executes it</b>.</li>
+        <li>The script reads <span class="mono">document.cookie</span> and sends the session token to the attacker's server.</li>
+        <li>The attacker replays that cookie and is now logged in as the victim — <b>with no password and no login event</b>.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>Output is not encoded, so data crosses into code — the same root cause as SQL injection, with the
+        browser as the interpreter instead of the database. It pays off because <strong>HTTP is stateless and
+        the cookie is the identity</strong> (Section 1): stealing the token is equivalent to stealing the
+        account. Two missing defences make it worse — no <span class="mono">HttpOnly</span> flag (so JavaScript
+        can read the cookie) and no Content-Security-Policy (so injected scripts are allowed to run).</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <div class="box warn">
+        <span class="box-t">Be honest with students here</span>
+        <p>TryHackMe's own material states it plainly: detecting client-side attacks from a SOC perspective is
+          <em>"often difficult or even impossible without additional browser-side security controls or endpoint
+          monitoring."</em> Do not teach a confident detection story for XSS that does not exist. Teach the
+          real one: <strong>partial visibility, and prevention doing most of the work.</strong></p>
+      </div>
+      <table class="evsrc">
+        <tbody>
+          <tr><td>Web server logs</td><td><strong>Reflected XSS only:</strong> the payload appears in the GET query string — <span class="mono">?q=&lt;script&gt;</span> or its encoded form <span class="mono">%3Cscript%3E</span>. <strong>Stored XSS: nothing</strong>, because it arrived in a POST body.</td></tr>
+          <tr class="none"><td>The actual attack</td><td><strong>Invisible.</strong> The script executing, the cookie being read, and the token leaving the victim's browser all happen on a machine you do not control and do not log.</td></tr>
+          <tr class="key"><td>WAF logs</td><td><strong>Your best server-side control.</strong> Heuristic rules flag script tags, event handlers (<span class="mono">onerror=</span>, <span class="mono">onload=</span>) and encoded angle brackets in any parameter — including POST bodies, which the WAF can inspect and the access log cannot.</td></tr>
+          <tr><td>SIEM alerts</td><td>Alert on script-like patterns in URLs and WAF XSS signatures. <strong>The far more valuable rule:</strong> the <em>same session token used from two different IPs or geographies</em> — that is stolen-cookie reuse, and it catches the consequence when you missed the cause.</td></tr>
+          <tr><td>HTTP responses</td><td>Rarely inspected in practice, but the definitive evidence: the payload appearing in the <em>response body</em> proves the app reflected it unencoded.</td></tr>
+          <tr class="key"><td>Network traffic</td><td>The <strong>outbound</strong> side is your real signal: victim browsers making requests to an unfamiliar external host immediately after loading one of your pages. That is the exfiltration channel.</td></tr>
+          <tr><td>Auth logs</td><td>An account active <em>without a corresponding login event</em> — the classic fingerprint of session hijacking rather than credential theft.</td></tr>
+          <tr><td>Endpoint telemetry</td><td>Where visibility genuinely exists, if you have it: browser isolation, EDR with browser modules, or CSP violation reports sent back to you.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">Turn CSP into a detection feed</span>
+        <p><span class="mono">Content-Security-Policy-Report-Only</span> with a <span class="mono">report-uri</span>
+          makes victims' browsers <em>tell you</em> when a script tried to run from an unexpected source. It is
+          the one practical way to get telemetry from stage 10 — a prevention control doubling as your only
+          client-side sensor. Recommend it whenever XSS risk is on the table.</p>
+      </div>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Identify the injection point and the variant.</b> Reflected (a link was distributed) or stored (it fires for everyone)? Stored is far more urgent — it is actively attacking users right now.</li>
+        <li><b>For stored XSS, remove the payload from the database immediately.</b> This is containment; every page load until then is another victim.</li>
+        <li><b>Scope the victims.</b> Who loaded the affected page while the payload was live? Web logs give you that list even though they cannot show the exploitation.</li>
+        <li><b>Assume session compromise for those users.</b> Invalidate their sessions and force re-authentication — a password reset alone does not kill a stolen cookie.</li>
+        <li><b>Hunt the consequence:</b> search for one session token used from multiple IPs, and for account activity with no matching login event.</li>
+        <li><b>Eradicate:</b> context-aware output encoding at the injection point, plus <span class="mono">HttpOnly</span> and <span class="mono">Secure</span> cookie flags, plus a Content-Security-Policy. Encoding fixes this bug; the flags and CSP limit the damage of the next one.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 05 -->
+  <section class="page" data-title="Attack 05 · Web Shell">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.05</span><span class="tag">RCE · MITRE T1505.003</span><span class="time">Journey stage 7</span></div>
+      <h2>Attack 05 — File Upload → Web Shell</h2>
+      <p class="lede">The most consequential attack in this section. An "upload your profile picture" feature
+        becomes a <strong>remote terminal on your server</strong> — reachable from a browser, running as your
+        web server's user, and persistent across reboots.</p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A user uploads <span class="mono">avatar.jpg</span>. The app stores it under
+        <span class="mono">/uploads/</span> and later serves it back with
+        <span class="mono">Content-Type: image/jpeg</span>. The web server <em>reads</em> the file and sends the
+        bytes. It never <em>executes</em> it.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Any upload feature — avatars, CVs, support attachments, bulk import. The goal is <strong>arbitrary code
+        execution</strong>: the top of the value chain, because from here everything else (data theft, lateral
+        movement, ransomware staging) becomes possible.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>The attacker needs two conditions to hold at once:</p>
+      <ol class="aflow">
+        <li><b>Can I upload a script?</b> Try <span class="mono">.php</span>, then bypasses: double extension (<span class="mono">image.jpg.php</span>), a spoofed <span class="mono">Content-Type</span>, a fake magic-number header, or a null byte.</li>
+        <li><b>Where does it land, and will it execute?</b> Upload a harmless image first and note the URL it is served from. That path is where the shell will go — and if the directory permits execution, the attack works.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <p>This is the sequence, and it is the one you must be able to recognise in a log at a glance:</p>
+      <figure class="fig thm">
+        <img src="images/webshells_task4_sample-attack-sequence_access-log_directory-fuzz_upload-form-php-found_post-upload_then-repeated-get_uploads-webshell-php.svg"
+             alt="An access log showing the full web shell attack sequence: repeated 404s while hunting for a valid upload directory, a 200 on /uploads/, discovery of upload_form.php, a POST to upload_form.php, then repeated GET requests to /uploads/webshell.php as the attacker interacts with the shell">
+        <figcaption><strong>The canonical web-shell signature.</strong> Hunt for a writable directory (404s → a 200 on <span class="mono">/uploads/</span>) → find the form (<span class="mono">upload_form.php</span>) → <strong>POST</strong> to it (the upload) → <strong>repeated GETs</strong> to <span class="mono">/uploads/webshell.php</span> (each GET is one command). Note: <span class="mono">upload_form.php</span> is the vulnerable <em>form</em>; <span class="mono">webshell.php</span> is the <em>shell</em>.
+          <span class="src">Source: TryHackMe — Detecting Web Shells</span></figcaption>
+      </figure>
+      <ol class="aflow">
+        <li>Recon finds an upload feature and a writable, web-accessible directory.</li>
+        <li>Attacker uploads a script — often a single-file PHP shell relying on <span class="mono">system()</span>, <span class="mono">exec()</span>, <span class="mono">shell_exec()</span> or <span class="mono">passthru()</span>.</li>
+        <li><b>POST</b> succeeds with <b>200</b> — the file is now on disk.</li>
+        <li>Attacker requests the uploaded file directly. The server <b>executes</b> it instead of serving it.</li>
+        <li>Each subsequent <b>GET</b> carries a command: <span class="mono">?cmd=whoami</span>, then <span class="mono">?cmd=ls</span>, then enumeration and privilege escalation.</li>
+      </ol>
+
+      <figure class="fig thm">
+        <img src="images/webshells_task3_awebshell-php_browser_screenshot_running_ls-la_command_output.png"
+             alt="A browser showing a PHP web shell interface at 10.10.10.100/uploads/awebshell.php, with a command input box running ls -la and returning a directory listing that includes customerinfo.pdf, financial PDFs and webdevnotes.txt, all owned by www-data">
+        <figcaption>What the attacker sees. A text box, a Run button, and full filesystem access as <span class="mono">www-data</span> — here listing customer and financial documents. This is a browser tab, not a hacking tool.
+          <span class="src">Source: TryHackMe — Detecting Web Shells</span></figcaption>
+      </figure>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>Two independent failures must both be present — which is also why you have <strong>two chances to stop
+        it</strong>:</p>
+      <ul>
+        <li><strong>Validation failure</strong> — file type/extension/content not properly checked (deny-list instead of allow-list, or trusting the client-supplied <span class="mono">Content-Type</span>).</li>
+        <li><strong>Configuration failure</strong> — the upload directory permits script execution. <em>Fix this one and an uploaded shell is just a harmless file on disk.</em></li>
+      </ul>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="key"><td>Web server logs</td><td><strong>The pattern is the detection.</strong> A <span class="mono">POST</span> to an upload endpoint returning 200, immediately followed by <strong>repeated GETs to a script file in an upload directory</strong>. Normal users never request <span class="mono">.php</span> files inside <span class="mono">/uploads/</span> — that path should only ever serve images.</td></tr>
+          <tr class="key"><td>SIEM query</td><td><span class="mono">uri_path IN (*.php,*.asp,*.aspx,*.jsp) AND status=200 | stats count by uri, clientip | where count &gt; 2</span> — scoped to upload directories. Same threshold skeleton as brute force, different filter.</td></tr>
+          <tr><td>User-Agent</td><td>Frequently <span class="mono">curl</span> or <span class="mono">python-requests</span> — the attacker is now scripting against their own shell, not browsing. A blacklisted UA hitting a file in <span class="mono">/uploads/</span> is close to conclusive.</td></tr>
+          <tr><td>Query strings</td><td>Command parameters in the URL: <span class="mono">?cmd=</span>, <span class="mono">?exec=</span>, or base64-encoded equivalents. Repeated requests to one file with a <em>changing</em> parameter = an interactive session.</td></tr>
+          <tr><td>WAF logs</td><td>Can block the upload (file-type rules) and the interaction (command patterns in query strings). Note it cannot see what is <em>inside</em> the uploaded file unless configured for content inspection.</td></tr>
+          <tr class="key"><td>Endpoint telemetry</td><td><strong>The strongest confirmation available.</strong> The web server process (<span class="mono">apache2</span>, <span class="mono">php-fpm</span>, <span class="mono">w3wp</span>) <strong>spawning a child shell</strong> (<span class="mono">sh</span>, <span class="mono">bash</span>, <span class="mono">cmd.exe</span>) is abnormal in almost every environment. On Linux, <span class="mono">auditd</span> also records the file write: <span class="mono">ausearch -k web_shell</span> shows the path and the owning account.</td></tr>
+          <tr><td>File system</td><td>A new script file with a recent timestamp in a content directory. Hunt: <span class="mono">find /var/www -name "*.php" -newerct "2025-07-01"</span> and <span class="mono">grep -rE "eval\(|system\(|shell_exec\(" /var/www</span>.</td></tr>
+          <tr><td>Network traffic</td><td>Command output flowing back in HTTP responses; later, an <strong>outbound</strong> connection when the attacker upgrades to a reverse shell or downloads tooling.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box key-takeaway">
+        <span class="box-t">Two independent sources agreeing = proof</span>
+        <p>The access log says <em>"a POST created a file and something keeps requesting it."</em>
+          <span class="mono">auditd</span> says <em>"this exact file was written to disk at this time by
+          www-data."</em> Neither alone is conclusive; together they are. <strong>This is what log correlation
+          is for</strong> — and it is why the next section's project has you build a timeline from more than
+          one source.</p>
+      </div>
+
+      <div class="box red-flag">
+        <span class="box-t">Web-shell red flags</span>
+        <ul>
+          <li>A <span class="mono">.php</span>/<span class="mono">.aspx</span>/<span class="mono">.jsp</span> file requested from an <strong>upload</strong> directory</li>
+          <li>POST to an upload endpoint followed within seconds by GETs to a new filename</li>
+          <li>A file on disk that <strong>was not there yesterday</strong> — you are not looking for a file called <span class="mono">shell.php</span>, you are looking for one that is <em>new</em></li>
+          <li>Double extensions: <span class="mono">image.jpg.php</span></li>
+          <li>Web server process with a shell as a child process</li>
+          <li>The shell downloading enumeration tooling (e.g. a privilege-escalation script) — <strong>escalate severity immediately</strong>; the attacker is moving from web to host</li>
+        </ul>
+      </div>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Treat as server compromise from the outset.</b> Code has executed on your infrastructure — this is not a web-app bug ticket, it is an intrusion.</li>
+        <li><b>Preserve evidence before you clean up.</b> Copy the shell file, capture <span class="mono">auditd</span>/EDR records and the relevant log window. Deleting the file first destroys the chain of custody.</li>
+        <li><b>Determine every command run.</b> Reconstruct from the query strings in the access log and from process telemetry. This defines the scope of the incident.</li>
+        <li><b>Contain:</b> remove the shell, block the source IP, and — if the shell has been used interactively — <strong>isolate the host</strong>. Assume there is a second shell; attackers commonly upload a backup.</li>
+        <li><b>Hunt for persistence:</b> other new files, cron jobs, new user accounts, new services, SSH keys. The shell was the entry, not necessarily the foothold.</li>
+        <li><b>Credentials:</b> rotate anything reachable from that host — DB connection strings in config files, API keys, cloud credentials. The shell read the filesystem as <span class="mono">www-data</span>; assume it read those.</li>
+        <li><b>Eradicate:</b> fix upload validation (allow-list), and <strong>disable script execution in upload directories</strong> — the control that makes the whole class of attack fail. Consider rebuilding the host if execution was confirmed.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 06 -->
+  <section class="page" data-title="Attack 06 · Command Injection">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.06</span><span class="tag">RCE · OWASP A03</span><span class="time">Journey stage 7</span></div>
+      <h2>Attack 06 — OS Command Injection</h2>
+      <p class="lede">Same outcome as a web shell — code running on your server — but with <strong>no file
+        written to disk</strong>. The application already had permission to run commands; the attacker just
+        appended one of their own.</p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A feature legitimately shells out to the operating system: a network-diagnostics page running
+        <span class="mono">ping</span>, a converter calling <span class="mono">ffmpeg</span>, a report generator
+        invoking a PDF tool. The app builds a command like
+        <span class="mono">ping -c 4 192.168.1.1</span> and returns the output.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Any input that becomes part of a system command — hostnames, filenames, format options, export
+        parameters. The attacker wants <strong>direct execution as the web server user</strong>, and unlike a
+        web shell it leaves no artefact to find later.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>They append a shell metacharacter and see whether two commands run instead of one:</p>
+      <ul>
+        <li><span class="mono">;</span> — run the next command regardless (<span class="mono">127.0.0.1; whoami</span>)</li>
+        <li><span class="mono">&amp;&amp;</span> / <span class="mono">|</span> — chain or pipe</li>
+        <li><span class="mono">`cmd`</span> or <span class="mono">$(cmd)</span> — command substitution</li>
+      </ul>
+      <p>If the response contains the output of <em>both</em> commands, it is confirmed. If the page returns
+        nothing useful, they test <strong>blind</strong> — inject <span class="mono">sleep 10</span> and time
+        the response, or trigger an outbound DNS lookup to a domain they control.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Identify a feature that plausibly calls a system binary.</li>
+        <li>Append a separator plus a harmless command (<span class="mono">; whoami</span>) and inspect the response.</li>
+        <li>Confirmed — enumerate: <span class="mono">id</span>, <span class="mono">uname -a</span>, read config files for credentials.</li>
+        <li>Establish something durable: write a web shell (converging with Attack 05) or open a <b>reverse shell</b> back to attacker infrastructure.</li>
+        <li>Escalate privileges and move laterally from a now fully-controlled host.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>User input is concatenated into a command string passed to a shell interpreter. The shell's job is to
+        interpret metacharacters — so <span class="mono">;</span> means "next command" whether a developer or an
+        attacker typed it. Worse, the command inherits <strong>the web server's privileges</strong>, so anything
+        that account can read, the attacker can read.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr><td>Web server logs</td><td>If the injection is in a <strong>GET</strong>, you may see metacharacters in the query string — <span class="mono">;</span>, <span class="mono">|</span>, <span class="mono">&amp;&amp;</span>, backticks, or encoded (<span class="mono">%3B</span>, <span class="mono">%7C</span>). If it is in a <strong>POST</strong> body, you see nothing at all.</td></tr>
+          <tr><td>WAF logs</td><td>Good coverage — command-injection signatures target exactly these metacharacter patterns and common binary names (<span class="mono">whoami</span>, <span class="mono">cat /etc/passwd</span>, <span class="mono">nc</span>).</td></tr>
+          <tr class="key"><td>Endpoint telemetry</td><td><strong>This is the detection.</strong> Process-creation events showing a web server process as the <strong>parent</strong> of a shell or utility: <span class="mono">apache2 → sh → whoami</span>. In Windows terms, <span class="mono">w3wp.exe</span> spawning <span class="mono">cmd.exe</span>. Sysmon Event ID 1 with that parent/child relationship is one of the highest-fidelity web alerts you can build.</td></tr>
+          <tr class="key"><td>Network traffic</td><td>For <strong>blind</strong> injection the only evidence: an unexpected <strong>outbound</strong> DNS query or connection from the web server. Also how you catch the reverse shell — a long-lived outbound session on an unusual high port.</td></tr>
+          <tr><td>SIEM alerts</td><td>Correlate a WAF command-injection hit with a process-spawn event on that host inside the same minute. That pairing turns two medium alerts into one confirmed compromise.</td></tr>
+          <tr><td>Response timing</td><td>An endpoint that normally responds in 50 ms suddenly taking 10 seconds is a classic blind-injection tell.</td></tr>
+          <tr class="none"><td>File system</td><td>Typically nothing — unlike a web shell, this attack may write no file at all. <strong>Do not rely on file-based hunting here.</strong></td></tr>
+          <tr class="none"><td>Auth logs</td><td>Nothing. No authentication is involved; the app runs the command with its own identity.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box soc">
+        <span class="box-t">The one detection that catches three attacks</span>
+        <p>"A web server process spawned a shell" catches command injection, web-shell interaction, and most
+          post-exploitation from vulnerable components. "A web server made an unexpected outbound connection"
+          catches blind command injection, SSRF, Log4Shell-style callbacks, and reverse shells. <strong>Build
+          those two rules and you cover a remarkable amount of this syllabus.</strong></p>
+      </div>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Confirm execution occurred</b> — process telemetry or an outbound connection, not just a WAF signature. A blocked payload is an attempt; a spawned shell is a breach.</li>
+        <li><b>Reconstruct the commands run</b> from process-creation logs. This is your scope.</li>
+        <li><b>Isolate the host</b> if execution is confirmed. This attack gives full application-user access instantly.</li>
+        <li><b>Hunt for persistence and a reverse shell</b> — established outbound sessions, cron/scheduled tasks, new accounts, modified startup files.</li>
+        <li><b>Rotate every credential accessible from that host.</b></li>
+        <li><b>Eradicate:</b> remove the shell call entirely and use a safe API; if a command is unavoidable, pass arguments as an array (never a concatenated string) and allow-list acceptable values. Add egress filtering so the next attempt cannot call home.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 07 -->
+  <section class="page" data-title="Attack 07 · Path Traversal">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.07</span><span class="tag">Access · OWASP A01</span><span class="time">Journey stage 7</span></div>
+      <h2>Attack 07 — Path Traversal / Local File Inclusion</h2>
+      <p class="lede">A feature designed to serve one folder is persuaded to serve <strong>the entire
+        filesystem</strong> — using nothing more exotic than <span class="mono">../</span>.</p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A page loads an image or document via a filename parameter:
+        <span class="mono">/download?file=report.pdf</span>. The app joins that name onto a base directory —
+        <span class="mono">/var/www/files/</span> + <span class="mono">report.pdf</span> — reads the file and
+        returns it. Users only ever see the handful of names the UI links to.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Any parameter carrying a filename or path. The attacker wants files the web root was never meant to
+        expose: <span class="mono">/etc/passwd</span> to confirm the flaw, then <strong>application config
+        files containing database credentials</strong>, SSH keys, source code, and log files.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>Replace the filename with a traversal sequence and see what comes back. <span class="mono">../</span>
+        means "parent directory", so enough of them reach the filesystem root regardless of where the app
+        started. Encoded variants (<span class="mono">%2e%2e%2f</span>, double-encoded
+        <span class="mono">%252e%252e%252f</span>) exist purely to slip past naive filters.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Submit <span class="mono">../../../../etc/passwd</span> — a universally readable file, so it is a clean yes/no test.</li>
+        <li>File contents returned → confirmed. If filtered, retry with encoding or by nesting sequences (<span class="mono">....//</span>).</li>
+        <li><b>Pivot to what is valuable:</b> application config (<span class="mono">config.php</span>, <span class="mono">.env</span>) for DB credentials and API keys.</li>
+        <li>Read source code to discover further vulnerabilities — traversal is often a stepping stone rather than the goal.</li>
+        <li>If the app <em>includes</em> rather than reads the file (LFI), attempt to make it execute attacker-controlled content — converging with Attack 05.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The application concatenates user input into a filesystem path without
+        <strong>canonicalising</strong> it — i.e. without resolving <span class="mono">../</span> first and then
+        verifying the final path still sits inside the intended directory. Deny-list filtering fails because
+        there are too many encodings; only resolve-then-verify works.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="key"><td>Web server logs</td><td><strong>Highly visible and easy to alert on.</strong> Literal <span class="mono">../</span> or encoded <span class="mono">%2e%2e%2f</span> in a URL is not something a legitimate client ever sends. Expect a <em>burst</em> as the attacker adjusts depth — several 404/403 responses, then a <strong>200</strong> when they hit the right number of levels.</td></tr>
+          <tr class="key"><td>SIEM alerts</td><td>A simple, high-value rule: alert on any request whose URI contains <span class="mono">../</span> or its encoded forms. Very low false-positive rate. Then pivot to that IP's <strong>200</strong> responses — that list is exactly which files were disclosed.</td></tr>
+          <tr><td>WAF logs</td><td>Standard signature coverage; also normalises encodings before matching, which catches the evasion attempts a plain log search might miss.</td></tr>
+          <tr><td>Response size</td><td>A useful confirmation signal: the same endpoint returning a wildly different size means a different (larger or smaller) file was served.</td></tr>
+          <tr><td>File system / host</td><td>Unusual read access by the web server account to paths outside the web root — visible via <span class="mono">auditd</span> file-access rules if configured.</td></tr>
+          <tr class="none"><td>Auth logs</td><td>Nothing directly — but if config credentials were read, expect subsequent <em>legitimate-looking</em> database or service logins using them.</td></tr>
+          <tr><td>Endpoint telemetry</td><td>Generally quiet unless the flaw was escalated to file inclusion and execution.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Enumerate exactly which files were successfully read</b> — filter the attacker's IP to status 200. Unlike most attacks, the log tells you precisely what was taken.</li>
+        <li><b>Assess the value of each file.</b> <span class="mono">/etc/passwd</span> alone is low impact (no password hashes on modern systems). A <span class="mono">.env</span> or <span class="mono">config.php</span> is a <strong>credential breach</strong>.</li>
+        <li><b>Rotate every secret in any disclosed file immediately</b> — DB passwords, API keys, tokens, signing keys.</li>
+        <li><b>Contain:</b> WAF rule blocking traversal patterns, block the source IP.</li>
+        <li><b>Check for escalation:</b> did they progress to file inclusion or use the harvested credentials elsewhere? Search for logins using those credentials from unfamiliar sources.</li>
+        <li><b>Eradicate:</b> canonicalise and validate the resolved path stays within the intended directory; better still, map user input to an <strong>allow-listed identifier</strong> rather than accepting a filename at all.</li>
+      </ol>
+
+      <div class="box tip">
+        <span class="box-t">Why this one is worth a rule tonight</span>
+        <p>Of everything in this section, path traversal has the <strong>best signal-to-noise ratio of any single
+          detection rule</strong>: the pattern is unambiguous, legitimate traffic never contains it, and the
+          successful requests self-identify the stolen files. If you can only ship one new web detection this
+          week, ship this one.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 08 -->
+  <section class="page" data-title="Attack 08 · IDOR">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.08</span><span class="tag">Access · OWASP A01</span><span class="time">Journey stage 7</span></div>
+      <h2>Attack 08 — IDOR (Insecure Direct Object Reference)</h2>
+      <p class="lede">No payload. No malformed request. No error. The attacker changes
+        <strong>one number</strong> and your application politely hands over someone else's data —
+        with a <span class="mono">200 OK</span>.</p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A logged-in user opens their invoice: <span class="mono">GET /invoice?id=1043</span>. The app looks up
+        invoice 1043 and renders it. The user only ever sees IDs the interface links to, so from the outside it
+        looks like the system is enforcing something. It isn't — it is simply not showing them the other links.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Any object addressed by a predictable identifier: invoices, orders, messages, documents, user
+        profiles, API records. The attacker wants <strong>bulk data belonging to other users</strong> — and
+        because IDs are usually sequential, they can have all of it.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>Change <span class="mono">1043</span> to <span class="mono">1042</span>. That is the entire discovery
+        process. If the response is another user's invoice instead of <strong>403 Forbidden</strong>, the
+        vulnerability is confirmed in one request.</p>
+
+      <div class="box soc">
+        <span class="box-t">You have already done this twice in this session</span>
+        <p>Section 1's HTTP emulator: you sent <span class="mono">DELETE /user/1</span> and
+          <span class="mono">PUT /user/2</span>, and nothing asked whether those accounts were yours. Section 2
+          named it A01. Now you are seeing it as the SOC sees it — which is to say, <strong>barely at
+          all</strong>.</p>
+      </div>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Log in as a legitimate (often free or trial) user — the attacker needs a valid session, which is cheap to obtain.</li>
+        <li>Observe how their own records are addressed and note the identifier format.</li>
+        <li>Change the identifier by one. Confirm another user's data returns.</li>
+        <li><b>Automate.</b> Script a loop over the ID range and save every response — this is where a single vulnerability becomes a mass-disclosure breach.</li>
+        <li>Try the same trick on <b>write</b> operations (PUT/DELETE) — reading others' data is bad; modifying it is worse.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The application <strong>authenticates but does not authorise</strong>. It confirms you are a valid
+        logged-in user, then trusts the object identifier you supplied without asking the second question:
+        <em>"does this record belong to this user?"</em> Predictable sequential IDs make enumeration trivial,
+        and hiding links in the UI is not a control — it is decoration.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <div class="box warn">
+        <span class="box-t">The hardest attack in this section to detect — and the #1 OWASP risk</span>
+        <p>Every request is authenticated, well-formed, and returns <strong>200</strong>. There is no payload
+          for a WAF to match, no error to spike, no anomalous status code. <strong>If your only detection
+          strategy is signature matching, this attack is completely invisible to you.</strong></p>
+      </div>
+      <table class="evsrc">
+        <tbody>
+          <tr class="none"><td>Web server logs (per request)</td><td><strong>Nothing suspicious.</strong> A single IDOR request is indistinguishable from legitimate use.</td></tr>
+          <tr class="key"><td>Web server logs (in aggregate)</td><td><strong>This is where it becomes visible.</strong> One session requesting an abnormal <em>number of distinct object IDs</em>, often sequentially and far faster than a human reads. Count distinct IDs per session, not requests per IP.</td></tr>
+          <tr class="key"><td>SIEM query</td><td><span class="mono">uri_path="/invoice" | stats dc(id) as ids, count by session_id | where ids &gt; 20</span>. Baseline first: how many invoices does a real user open in an hour? Alert on the outliers. This is <strong>behavioural analytics, not signatures</strong>.</td></tr>
+          <tr class="none"><td>WAF logs</td><td><strong>Nothing.</strong> There is no malicious pattern to match. A WAF will never catch this.</td></tr>
+          <tr><td>Status codes</td><td>Watch for <strong>403 → 200 transitions</strong> on the same endpoint from one session — evidence they probed until something worked. And note: an all-200 sequence across many IDs is <em>worse</em>, because it means nothing was ever denied.</td></tr>
+          <tr><td>Response size</td><td>Similar-size responses to a rapid run of sequential IDs is a strong scraping signal.</td></tr>
+          <tr><td>Auth logs</td><td>One legitimate login, then activity far outside that account's normal pattern. UEBA territory — the value here is knowing what "normal" looks like per user.</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Nothing — no code executes on the server beyond normal application logic.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Determine the full set of records accessed.</b> Extract every distinct object ID that session requested with a 200. Unlike most attacks, the log gives you an exact list of affected data subjects — which is precisely what breach notification requires.</li>
+        <li><b>Identify the account used</b> and whether it is a real customer, a trial account, or itself compromised.</li>
+        <li><b>Contain:</b> suspend the account, invalidate its session, block the source. Then <strong>fix the authorisation check</strong> — blocking one account does nothing if the endpoint is still open to the next one.</li>
+        <li><b>Check for write operations.</b> Reading others' records is a confidentiality incident; modifying or deleting them is an integrity incident with a different response and different legal exposure.</li>
+        <li><b>Assess regulatory obligations</b> — you have a precise list of exposed personal data, so notification timelines likely apply.</li>
+        <li><b>Eradicate:</b> enforce a server-side ownership check on <em>every</em> object access; consider non-sequential identifiers (UUIDs) as defence in depth — but never as the primary control, since obscurity is not authorisation.</li>
+        <li><b>Detect next time:</b> ship the "distinct IDs per session" rule for this endpoint and any others with the same pattern. You just learned what your baseline is — encode it.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 09 -->
+  <section class="page" data-title="Attack 09 · SSRF">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.09</span><span class="tag">Server-side · OWASP A10</span><span class="time">Stage 7 → outbound</span></div>
+      <h2>Attack 09 — Server-Side Request Forgery</h2>
+      <p class="lede">The attacker cannot reach your internal network. Your web server can. So they ask your web
+        server to go and fetch it for them — and it does, because it was built to fetch URLs.</p>
+    </div>
+    <div class="content">
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>A feature fetches a remote resource on the user's behalf: a link-preview generator, a webhook tester, a
+        "import image from URL" field, a PDF renderer pulling assets. The user supplies
+        <span class="mono">https://example.com/logo.png</span>; the server retrieves it and returns or stores
+        the result.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>The URL parameter itself. The prize is not the web app — it is <strong>everything the web server can
+        reach that the attacker cannot</strong>: cloud metadata endpoints holding temporary credentials,
+        internal admin panels that assume "inside = trusted", databases bound to localhost, and other internal
+        hosts to port-scan by proxy.</p>
+
+      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
+      <p>Point the parameter at a host the attacker controls and watch their own logs. If a connection arrives
+        <em>from your server's IP</em>, SSRF is confirmed — even if the application shows them nothing at all.
+        That is <strong>blind SSRF</strong>, and it is the common case.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Find a parameter containing a URL.</li>
+        <li>Substitute a callback URL they control; confirm the server connects out.</li>
+        <li>Pivot inward: <span class="mono">http://127.0.0.1/admin</span>, then internal RFC1918 ranges, then the <b>cloud metadata address</b> <span class="mono">169.254.169.254</span>.</li>
+        <li>If metadata is reachable, retrieve <b>temporary cloud credentials</b> — frequently a far larger compromise than the web application itself.</li>
+        <li>Use those credentials directly against the cloud provider's API, entirely outside your web stack.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The application treats the destination as <em>data</em> rather than as a <em>security decision</em> —
+        it fetches whatever it is given. Two environmental factors make it devastating: internal services that
+        trust network position instead of authenticating, and unrestricted egress, which lets the server reach
+        both the internet and the internal network freely.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="none"><td>Web server logs</td><td>Weak. If the URL is in a GET parameter you may see it; in a POST body (common for APIs and webhooks) you see <strong>nothing but a normal 200</strong>.</td></tr>
+          <tr class="key"><td>Egress / firewall logs</td><td><strong>The detection.</strong> Your web server initiating connections to <span class="mono">169.254.169.254</span>, <span class="mono">127.0.0.1</span> on unusual ports, or internal ranges it has no business reaching. A web server should mostly <em>receive</em> connections — it making novel outbound ones is the signal.</td></tr>
+          <tr class="key"><td>DNS logs</td><td>Catches blind SSRF: the server resolving an unfamiliar external domain (the attacker's callback) with no business reason. Often the earliest evidence available.</td></tr>
+          <tr><td>SIEM alerts</td><td>Alert on any connection from a web-tier host to the metadata IP — that has essentially <strong>zero legitimate use</strong> from application code in most architectures. Also alert on first-seen outbound destinations for web servers.</td></tr>
+          <tr><td>Cloud audit logs</td><td>Critical for scoping: API calls made with the instance role from an <em>unexpected source IP</em> indicate the stolen credentials are being used externally.</td></tr>
+          <tr><td>WAF logs</td><td>Limited. Can block obvious internal IPs in parameters, but is easily evaded via redirects, DNS names resolving to internal addresses, or alternate IP encodings.</td></tr>
+          <tr><td>Response timing / size</td><td>Subtle side channel: differing response times reveal which internal ports are open — the app becomes a port scanner.</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Usually nothing — the server is making a normal network request from its normal process. Only network context makes it suspicious.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box key-takeaway">
+        <span class="box-t">One rule, three attacks — again</span>
+        <p>"Web server initiated an unexpected outbound connection" detects <strong>SSRF</strong> (Attack 09),
+          <strong>blind command injection</strong> (Attack 06), and <strong>exploitation of a vulnerable
+          component</strong> calling home (A06). Different attacks, one behaviour. This is why egress
+          monitoring is the highest-leverage web detection you can build.</p>
+      </div>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Establish what the server actually reached</b> from egress and DNS logs — internal hosts, ports, and whether the metadata service was among them.</li>
+        <li><b>If cloud metadata was accessed, treat it as a cloud credential compromise, not a web incident.</b> This is the escalation that matters and it is easy to under-scope.</li>
+        <li><b>Revoke and rotate</b> the instance role credentials; review cloud audit logs for API activity from unexpected sources.</li>
+        <li><b>Contain:</b> apply egress filtering immediately (block the metadata IP and internal ranges from the web tier), and disable or gate the vulnerable feature.</li>
+        <li><b>Scope internal exposure:</b> which internal services responded? Any that returned data should be treated as accessed.</li>
+        <li><b>Eradicate:</b> allow-list permitted destinations, reject internal ranges and redirects to them, disable unused URL schemes, and enforce session-authenticated metadata access (IMDSv2-style).</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 10 -->
+  <section class="page" data-title="Attack 10 · DoS / DDoS">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.10</span><span class="tag">Availability</span><span class="time">Journey stages 5–6</span></div>
+      <h2>Attack 10 — Denial of Service (Layer 7)</h2>
+      <p class="lede">The other nine attacks steal confidentiality or integrity. This one takes
+        <strong>availability</strong> — and it is the only attack your customers notice before you do.</p>
+    </div>
+    <div class="content">
+      <div class="figrow" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <figure class="fig thm" style="margin:8px 0">
+          <img src="images/webddos_task2_dos-diagram_single-attacker-sends-malicious-requests-to-web-server_breaks-web-app.svg"
+               alt="Diagram of a denial of service attack: a single attacker sends malicious requests to a web server, which becomes unavailable, breaking the web application for a legitimate user">
+          <figcaption><strong>DoS</strong> — one machine, capped by its own bandwidth and CPU.</figcaption>
+        </figure>
+        <figure class="fig thm" style="margin:8px 0">
+          <img src="images/webddos_task2_ddos-diagram_attacker-controls-botnet_overwhelms-web-server_breaks-web-app.svg"
+               alt="Diagram of a distributed denial of service attack: an attacker commands a botnet of compromised devices which together overwhelm the web server">
+          <figcaption><strong>DDoS</strong> — a botnet of compromised devices, distributed worldwide.</figcaption>
+        </figure>
+      </div>
+      <p style="text-align:center;color:var(--text-3);font-size:12.5px;font-style:italic;margin-top:-4px">
+        Source: TryHackMe — Detecting Web DDoS</p>
+
+      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
+      <p>Traffic follows a daily rhythm: a morning ramp, a lunchtime peak, an evening decline. Requests spread
+        across many pages, from many IPs, with diverse browser User-Agents, from the geographies where your
+        customers actually live. Response times are stable and status codes are overwhelmingly 2xx/3xx.</p>
+
+      <h3 class="st"><span class="n">02</span> Attack target</h3>
+      <p>Not data — <strong>capacity</strong>. Attackers deliberately choose the <em>most expensive</em>
+        endpoints, because each request costs the server far more than it costs them:</p>
+      <table>
+        <thead><tr><th>Endpoint</th><th>Why it is expensive</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">/login</td><td>password hashing + database lookup on every attempt</td></tr>
+          <tr><td class="mono">/search</td><td>complex database queries, often unindexed</td></tr>
+          <tr><td class="mono">/cart</td><td>session handling, inventory checks, payment logic</td></tr>
+          <tr><td class="mono">/api/*</td><td>dynamic content generation, downstream service calls</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">03</span> Attack types you will actually see</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>HTTP flood</strong></td><td>Overwhelming volume of ordinary-looking requests</td></tr>
+          <tr><td><strong>Slowloris</strong></td><td>Many <em>partial</em> requests held open, exhausting connection slots with very little bandwidth</td></tr>
+          <tr><td><strong>Cache bypass</strong></td><td>Random query parameters (<span class="mono">?a=abcd</span>) so the CDN cannot serve a cached copy and every request hits the origin</td></tr>
+          <tr><td><strong>Oversized / logic abuse</strong></td><td><span class="mono">?limit=999999</span> — one request forcing enormous work</td></tr>
+          <tr><td><strong>Login/form abuse</strong></td><td>Hammering authentication or password-reset logic</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">04</span> Why they do it — motive changes your triage</h3>
+      <table>
+        <thead><tr><th>Motive</th><th>Example</th><th>What you check next</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Financial loss</strong></td><td>Flooding a retailer during peak sales</td><td>Revenue impact; is timing tied to a campaign?</td></tr>
+          <tr><td><strong>Extortion</strong></td><td>Ransom DDoS against a bank</td><td><strong>Check email</strong> — there is usually a demand</td></tr>
+          <tr><td><strong>Hacktivism</strong></td><td>Government sites during an election</td><td>Look for a public claim of responsibility</td></tr>
+          <tr class="key"><td><strong>Distraction</strong></td><td>DDoS while attacking elsewhere</td><td>⭐ <strong>Check other logs from the same window</strong></td></tr>
+          <tr><td><strong>Competition</strong></td><td>A rival during your product launch</td><td>Timing correlation with business events</td></tr>
+          <tr><td><strong>Denial of wallet</strong></td><td>Driving up per-request cloud costs</td><td><strong>Check billing</strong>, not just uptime</td></tr>
+          <tr><td><strong>Reputation</strong></td><td>Game servers down on launch day</td><td>Social/press monitoring</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box warn">
+        <span class="box-t">The trap: DoS as a smokescreen</span>
+        <p>A loud outage pulls every analyst onto one incident. That is sometimes the point. <strong>Whenever
+          you respond to a DDoS, assign someone to review unrelated logs from the same time window</strong> —
+          quiet authentication events, data access, outbound connections. This exact trap is built into the
+          Section 6 project deliberately.</p>
+      </div>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>Asymmetry of cost. A botnet request is nearly free to send and expensive to serve. No software flaw is
+        required — only the absence of rate limiting, caching, and absorption capacity.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <figure class="fig thm">
+        <img src="images/webddos_task4_sample-condensed-access-log_normal-traffic_then-dos-attack-ip-203-0-113-55-curl-login-php_then-503-service-unavailable.svg"
+             alt="A condensed access log in three parts: normal user traffic returning 200s, then a burst of repeated GET requests to login.php from IP 203.0.113.55 with a curl user agent, then legitimate users receiving 503 Service Unavailable responses">
+        <figcaption>The three-beat signature: ① normal traffic → ② the flood begins (<span class="mono">203.0.113.55</span>, <span class="mono">curl/7.68.0</span>, repeated <span class="mono">/login.php</span>) → ③ real users start receiving <strong>503</strong>. The 503s are your customers being turned away.
+          <span class="src">Source: TryHackMe — Detecting Web DDoS</span></figcaption>
+      </figure>
+
+      <table class="evsrc">
+        <tbody>
+          <tr class="key"><td>Web server logs</td><td><strong>Six classic indicators:</strong> a high request rate from few sources; odd User-Agents (<span class="mono">curl</span>, <span class="mono">python-urllib</span>); geographic anomalies; burst timestamps (dozens of requests in the same second); a wall of <strong>5xx</strong>; and logic abuse (<span class="mono">?limit=999999</span>).</td></tr>
+          <tr class="key"><td>SIEM query</td><td>The same skeleton again: <span class="mono">status=503 | bin _time span=10m | stats count by clientip | where count &gt; 100000</span>. In the reference lab this surfaced <strong>1.5 million requests in ten minutes</strong>.</td></tr>
+          <tr><td>Splunk visualisation</td><td>A timechart makes it unmistakable — a flat baseline and a vertical spike. Then break out by <span class="mono">useragent</span> and <span class="mono">clientip</span> to separate attack traffic from real users.</td></tr>
+          <tr><td>WAF / CDN dashboards</td><td>Bandwidth and request-rate graphs, plus a geographic map. A CDN also tells you how much it <em>absorbed</em> — the gap between total and origin traffic is what saved you.</td></tr>
+          <tr><td>Network traffic</td><td>Connection counts, SYN rates, and (for Slowloris) many long-lived half-open connections consuming slots at very low bandwidth — <strong>volume metrics alone will miss that one</strong>.</td></tr>
+          <tr><td>Infrastructure metrics</td><td>CPU, memory, connection-pool and database saturation — often your <em>first</em> alert, before anyone looks at a log.</td></tr>
+          <tr class="none"><td>Auth logs</td><td>Usually noise, unless the flood targets the login endpoint — in which case distinguishing DoS from brute force matters (see below).</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Nothing — no code executes. Resource exhaustion only.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box tip">
+        <span class="box-t">DoS on /login vs brute force on /login</span>
+        <p>Same endpoint, same request volume, different intent. <strong>Brute force</strong> varies the
+          credentials and stops when one works. <strong>DoS</strong> repeats indiscriminately and keeps going
+          after failures — it wants the server busy, not an account. Check whether the payload varies and
+          whether the flood ends on a success.</p>
+      </div>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Confirm it is an attack, not a success.</b> A marketing campaign or viral link looks similar in volume. Attack traffic concentrates on expensive endpoints, has low UA diversity, and produces no conversions.</li>
+        <li><b>Characterise it:</b> which endpoints, which sources, what rate, distributed or single-source, volumetric or slow-and-low. This determines the mitigation.</li>
+        <li><b>Mitigate:</b> rate limiting (e.g. <strong>5 requests/minute to <span class="mono">/login.php</span> per IP</strong>), CAPTCHA or JavaScript challenges for suspect traffic, CDN absorption, geo-blocking if the sources are clearly outside your market, and caching for anything cacheable.</li>
+        <li><b>⭐ Check for the second incident.</b> Review authentication, data access and egress logs from the same window. Do not let the noise hide the real objective.</li>
+        <li><b>Communicate:</b> availability incidents are visible to customers — status page and stakeholder updates are part of the response, not an afterthought.</li>
+        <li><b>Post-incident:</b> capture attack signatures, right-size capacity and rate limits, and — if extortion was involved — engage legal and law enforcement. Do not pay based on a technical decision alone.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= SECTION 3 RECAP -->
+  <section class="page" data-title="3 · Attack recap &amp; detection matrix">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.11</span><span class="tag soc">Section 3 recap</span></div>
+      <h2>Ten attacks, one detection matrix</h2>
+      <p class="lede">The single page to keep. Where each attack leaves evidence, and which source proves it.</p>
+    </div>
+    <div class="content">
+      <table>
+        <thead><tr><th>Attack</th><th>Best evidence source</th><th>The signature</th></tr></thead>
+        <tbody>
+          <tr><td><strong>01</strong> Content discovery</td><td>Web logs</td><td>Many 404s from one IP → then a 200</td></tr>
+          <tr><td><strong>02</strong> Brute force</td><td>Web + auth logs</td><td>Many 401s → then a 302</td></tr>
+          <tr><td><strong>03</strong> SQL injection</td><td>Web logs (GET) / packet capture</td><td>Quotes &amp; <span class="mono">UNION</span> in query string; 500 spike; response-size jump</td></tr>
+          <tr><td><strong>04</strong> XSS</td><td>WAF + endpoint (weak overall)</td><td>Script patterns in params; one token used from two IPs</td></tr>
+          <tr><td><strong>05</strong> Web shell</td><td>Web logs + endpoint/auditd</td><td>POST upload → repeated GETs to a script in <span class="mono">/uploads/</span></td></tr>
+          <tr><td><strong>06</strong> Command injection</td><td>Endpoint telemetry</td><td>Web server process spawns a shell</td></tr>
+          <tr><td><strong>07</strong> Path traversal</td><td>Web logs</td><td><span class="mono">../</span> or <span class="mono">%2e%2e%2f</span> in the URI</td></tr>
+          <tr><td><strong>08</strong> IDOR</td><td>Behavioural analytics</td><td>One session, many distinct object IDs</td></tr>
+          <tr><td><strong>09</strong> SSRF</td><td>Egress + DNS logs</td><td>Server connects to metadata IP / internal ranges</td></tr>
+          <tr><td><strong>10</strong> DoS / DDoS</td><td>Web logs + infra metrics</td><td>503 wall; request-rate spike on an expensive endpoint</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Three patterns worth more than the ten rows above</h3>
+      <div class="box key-takeaway">
+        <span class="box-t">1 · The status-code story</span>
+        <p><strong>404s → 200</strong> = they found something. <strong>401s → 302</strong> = they got in.
+          <strong>500 spike</strong> = they are probing injection. <strong>503 wall</strong> = availability is
+          gone. Four patterns; most web intrusions announce themselves in one of them.</p>
+      </div>
+      <div class="box key-takeaway">
+        <span class="box-t">2 · "The server started talking outbound"</span>
+        <p>One behavioural rule catches <strong>SSRF</strong>, <strong>blind command injection</strong>,
+          <strong>reverse shells</strong>, and <strong>exploited components calling home</strong>. A web server
+          should receive connections, not initiate novel ones.</p>
+      </div>
+      <div class="box key-takeaway">
+        <span class="box-t">3 · GET is logged; POST bodies are not</span>
+        <p>The same attack is loud or silent depending only on how it was delivered. For POST-heavy
+          applications, the WAF and packet capture are not optional extras — <strong>they are the only place
+          the attack exists</strong>.</p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">And the honest limitation</span>
+        <p>Two of these ten — <strong>XSS</strong> and <strong>IDOR</strong> — cannot be reliably caught by
+          signatures at all, and IDOR is the number-one risk on the OWASP list. That is not a gap in your
+          tooling knowledge; it is the actual state of the discipline. It is why behavioural analytics,
+          business context, and prevention-by-design carry as much weight as detection rules.</p>
+      </div>
+
+      <p>Next: <strong>Section 5</strong> puts you on the other side of these attacks. You will perform four of
+        them yourself in free PortSwigger labs — and then immediately return to the analyst's chair and find
+        your own attack in the logs.</p>
     </div>
   </section>
 
