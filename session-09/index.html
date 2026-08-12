@@ -664,7 +664,7 @@ Content-Length: 98
               <text x="20" y="252" fill="#37c7d4" font-weight="700" font-size="13" text-anchor="middle">6</text>
               <text x="54" y="247" fill="#d9c9ff" font-weight="600" font-size="12.5">Web server — writes the access log</text>
               <text x="54" y="260" fill="#8ea3c9" font-size="11">Apache / Nginx / IIS routes the request</text>
-              <text x="524" y="251" fill="#c8b3ff" font-size="11">⭐ evidence is created here — POST bodies are NOT logged</text>
+              <text x="524" y="251" fill="#c8b3ff" font-size="11" font-weight="700">◆ evidence is created here — POST bodies are NOT logged</text>
             </g>
             <g>
               <rect x="40" y="274" width="470" height="34" rx="7" fill="#132244" stroke="#2a3c68"/>
@@ -726,7 +726,870 @@ Content-Length: 98
     </div>
   </section>
 
-  <!-- ===== more sections are appended here in later builds ===== -->
+  <!-- ============================================================= SECTION 2 BANNER / P08 -->
+  <section class="page" data-title="2 · OWASP Top 10 — how to read it">
+    <div class="page-head">
+      <div class="secband">
+        <span class="bignum">2</span>
+        <div class="t"><h2>Web Attacks &amp; the OWASP Top 10</h2>
+          <p>Why web applications become vulnerable — and what each weakness looks like from the SOC</p></div>
+      </div>
+    </div>
+    <div class="content">
+      <h3>Why web applications are vulnerable at all</h3>
+      <p>Section 1 ended with a ten-stage journey. Notice what stages 4 and 7 have in common: <strong>the
+        application receives data it did not create, and then acts on it</strong>. Almost every vulnerability
+        in this section is a variation of one mistake:</p>
+      <div class="oneline">The application <strong>trusted something it should not have trusted</strong> —
+        user input, a client-side value, an object reference, a serialized blob, a URL, or a default setting.</div>
+
+      <h3>What OWASP is, and which list we use</h3>
+      <p>The <strong>OWASP Top 10</strong> is a community-built, evidence-based list of the ten most critical
+        web application security risks. It is not a list of attacks — it is a list of <em>categories of
+        weakness</em>. We teach the <strong>2021</strong> edition, which regrouped the older 2017 list around
+        root causes rather than symptoms.</p>
+      <table>
+        <thead><tr><th>2021 change</th><th>What it tells you</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Broken Access Control</strong> jumped to <strong>#1</strong></td><td>Authorisation flaws are now the most commonly found issue of all — and they are almost invisible to signature-based detection.</td></tr>
+          <tr><td>XSS was folded <em>into</em> <strong>Injection</strong></td><td>OWASP now treats "untrusted data interpreted as code" as one root cause, whether the interpreter is SQL or a browser.</td></tr>
+          <tr><td>New: <strong>Insecure Design</strong></td><td>Some systems are not built wrong — they are <em>designed</em> wrong. No patch fixes a missing control.</td></tr>
+          <tr><td>New: <strong>Logging &amp; Monitoring Failures</strong></td><td>⭐ OWASP formally recognises that <strong>failing to detect</strong> is itself a vulnerability. That is our job, on their list.</td></tr>
+          <tr><td>New: <strong>SSRF</strong> as its own entry</td><td>Serious enough, and distinct enough, to stand alone.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box key-takeaway">
+        <span class="box-t">A09 is the SOC's entry on the OWASP list</span>
+        <p>Every other item is something a developer must fix. <strong>A09 — Security Logging and Monitoring
+          Failures — is something <em>you</em> fix.</strong> When you finish this session and go argue for
+          better web logging, you are not asking for a nice-to-have; you are remediating an OWASP Top 10 risk.</p>
+      </div>
+
+      <h3>How every item on this section is presented</h3>
+      <p>Each of the ten gets the same ten questions answered, so you can compare them fairly — and each ends
+        with the two that matter most to us: <strong>how defenders detect it</strong> and <strong>how it is
+        prevented</strong>. Each also gets a diagram showing the normal flow, the malicious flow, and exactly
+        where the weakness lives.</p>
+      <div class="flowlegend">
+        <span><i></i> normal request flow</span>
+        <span><i class="bad"></i> malicious request flow</span>
+        <span><i class="dash"></i> where the vulnerability lives</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A01 -->
+  <section class="page" data-title="A01 · Broken Access Control">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A01</span><span class="tag">OWASP 2021 · #1</span><span class="time">Stage 7</span></div>
+      <h2>A01 — Broken Access Control</h2>
+      <p class="lede">The application knows <em>who you are</em>, but never checks <em>whether you are allowed
+        to touch this particular thing</em>. Authentication answers "who?"; authorisation answers "may you?" —
+        and this is what happens when the second question is never asked.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Broken access control flow: a logged-in user changes an object id in the request and the application returns another user's record because no ownership check exists">
+          <defs>
+            <marker id="a01g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#3fa87a"/></marker>
+            <marker id="a01r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="60" width="126" height="52" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="73" y="82" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12.5">Logged-in user</text>
+            <text x="73" y="99" text-anchor="middle" fill="#c58ea0">valid session</text>
+
+            <rect x="196" y="60" width="150" height="52" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="271" y="82" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">Web server</text>
+            <text x="271" y="99" text-anchor="middle" fill="#8ea3c9">authenticates ✓</text>
+
+            <rect x="406" y="52" width="170" height="68" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="491" y="76" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Application</text>
+            <text x="491" y="93" text-anchor="middle" fill="#c8b3ff">“is this record yours?”</text>
+            <text x="491" y="109" text-anchor="middle" fill="#ff9db0" font-weight="700">— never asked</text>
+
+            <rect x="636" y="60" width="150" height="52" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="711" y="82" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">Database</text>
+            <text x="711" y="99" text-anchor="middle" fill="#8ea3c9">returns record 2</text>
+
+            <rect x="838" y="60" width="132" height="52" rx="9" fill="#3a1414" stroke="#5a2020"/>
+            <text x="904" y="82" text-anchor="middle" fill="#ffc9c0" font-weight="700" font-size="12.5">Other user's</text>
+            <text x="904" y="99" text-anchor="middle" fill="#ffab9c">data disclosed</text>
+
+            <g stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a01r)">
+              <path d="M136 86 H194"/><path d="M346 86 H404"/><path d="M576 86 H634"/><path d="M786 86 H836"/>
+            </g>
+            <text x="170" y="46" text-anchor="middle" fill="#ff9db0" font-size="10.5" font-family="monospace">/account?id=2</text>
+            <text x="491" y="150" text-anchor="middle" fill="#c8b3ff" font-size="11">▲ the vulnerability: authentication passed, authorisation was never enforced</text>
+            <text x="491" y="176" text-anchor="middle" fill="#8ea3c9" font-size="11">Normal flow is identical — only the value of the id changes. That is why logs look clean.</text>
+          </g>
+        </svg>
+        <figcaption>A01 in one picture: every control passes, one number changes, and the app hands over someone else's data.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A01</span><span class="nm">Broken Access Control</span><span class="cwe">CWE-284 · CWE-639 · CWE-22</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Users can act outside their intended permissions — reading, modifying or deleting records that belong to someone else, or reaching admin functions as a normal user.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Authorisation is enforced in the UI (hiding a button) or assumed from authentication, instead of being checked on the server for <em>every</em> object on <em>every</em> request.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 7 — the application layer. Anywhere an object is addressed by an identifier: <span class="mono">?id=</span>, <span class="mono">/api/user/1</span>, a filename, an account number, a hidden form field.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>Other users' data, admin functionality, or the ability to modify records they don't own — usually as a stepping stone to a full account takeover.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>They change a value and watch the response. <span class="mono">id=1</span> → <span class="mono">id=2</span>. A <strong>200</strong> instead of a <strong>403</strong> is the whole discovery process. Also: browsing to <span class="mono">/admin</span> directly.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Enumerate identifiers sequentially and harvest whatever comes back. No payload, no injection, no malformed request — just a legitimate request with a different number in it.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>The application returns data or performs an action for a record the attacker has no right to. Repeat in a loop and it becomes bulk data theft.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Mass disclosure of customer records, privilege escalation to admin, unauthorised transactions. Frequently the root cause of large "API leaked all our users" breaches.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>Behavioural, not signature.</strong> One session touching an abnormal number of distinct object IDs in a short window. Hunt: count distinct <span class="mono">id</span> values per session — <span class="mono">stats dc(object_id) by session</span> — and alert on outliers. Also watch for <strong>403 → 200</strong> transitions on the same path, and any non-admin session hitting admin routes.</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p>Deny by default. Enforce ownership checks <strong>server-side on every object access</strong>, never trust an identifier from the client, use unguessable references where practical, and log all access-control failures so A09 doesn't hide A01.</p></div>
+        </div>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">You already did this attack</span>
+        <p>In Section 1 you used the HTTP emulator to send <span class="mono">DELETE /user/1</span> and
+          <span class="mono">PUT /user/2</span>. Nothing asked whether those users were yours. That was Broken
+          Access Control, before it had a name. You will do it again deliberately in the PortSwigger lab in
+          Section 5.</p>
+      </div>
+      <div class="box warn">
+        <span class="box-t">Why this one is the hardest to catch</span>
+        <p>There is no malicious string to match on. The request is well-formed, authenticated, and returns
+          <strong>200 OK</strong>. A WAF will never flag it. If your only detection strategy is pattern
+          matching, <strong>the number-one item on the OWASP list is completely invisible to you</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A02 -->
+  <section class="page" data-title="A02 · Cryptographic Failures">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A02</span><span class="tag">OWASP 2021 · #2</span><span class="time">Stages 3 &amp; 8</span></div>
+      <h2>A02 — Cryptographic Failures</h2>
+      <p class="lede">Formerly "Sensitive Data Exposure". OWASP renamed it deliberately: exposure is the
+        <em>symptom</em>; the <em>cause</em> is data that was never properly protected in transit or at rest.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cryptographic failure: data travelling unencrypted or stored unhashed is captured by an attacker on the network or lifted from the database">
+          <defs>
+            <marker id="a02g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#3fa87a"/></marker>
+            <marker id="a02r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="46" width="120" height="50" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="70" y="67" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">User</text>
+            <text x="70" y="84" text-anchor="middle" fill="#8ea3c9">submits password</text>
+
+            <rect x="300" y="46" width="150" height="50" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="375" y="67" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">Web server</text>
+            <text x="375" y="84" text-anchor="middle" fill="#8ea3c9">stage 3 · TLS?</text>
+
+            <rect x="620" y="46" width="160" height="50" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="700" y="67" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Database</text>
+            <text x="700" y="84" text-anchor="middle" fill="#ff9db0">plaintext / weak hash</text>
+
+            <path d="M130 71 H298" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a02r)" stroke-dasharray="6 4"/>
+            <text x="214" y="36" text-anchor="middle" fill="#ff9db0" font-size="10.5">HTTP, or downgraded TLS</text>
+            <path d="M450 71 H618" stroke="#3fa87a" stroke-width="2" fill="none" marker-end="url(#a02g)"/>
+
+            <rect x="152" y="126" width="124" height="44" rx="9" fill="#3a1414" stroke="#5a2020"/>
+            <text x="214" y="146" text-anchor="middle" fill="#ffc9c0" font-weight="700">Sniffed in transit</text>
+            <text x="214" y="162" text-anchor="middle" fill="#ffab9c" font-size="10.5">packet capture reads it</text>
+            <path d="M214 96 V124" stroke="#e0556b" stroke-width="1.8" fill="none" marker-end="url(#a02r)"/>
+
+            <rect x="638" y="126" width="124" height="44" rx="9" fill="#3a1414" stroke="#5a2020"/>
+            <text x="700" y="146" text-anchor="middle" fill="#ffc9c0" font-weight="700">Dumped at rest</text>
+            <text x="700" y="162" text-anchor="middle" fill="#ffab9c" font-size="10.5">one SQLi = every password</text>
+            <path d="M700 96 V124" stroke="#e0556b" stroke-width="1.8" fill="none" marker-end="url(#a02r)"/>
+
+            <text x="880" y="71" fill="#8ea3c9" font-size="11">Two failure points,</text>
+            <text x="880" y="87" fill="#8ea3c9" font-size="11">one root cause.</text>
+          </g>
+        </svg>
+        <figcaption>Data is exposed either <em>in transit</em> (stage 3, no/weak TLS) or <em>at rest</em> (stage 8, unhashed storage). A02 covers both.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A02</span><span class="nm">Cryptographic Failures</span><span class="cwe">CWE-259 · CWE-327 · CWE-331</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Sensitive data is transmitted or stored without adequate cryptographic protection — or with protection that is obsolete, misconfigured, or incorrectly implemented.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Plain HTTP on internal pages, TLS that permits downgrade, passwords stored as MD5/SHA-1 or plaintext, hard-coded keys, home-made "encryption", secrets committed to source control.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 3 (the transport) and stage 8 (storage). Also backups, log files that record tokens, and error pages that echo secrets.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>Credentials, session tokens, payment data, personal information — anything that is valuable precisely because it was supposed to be secret.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>Check whether the login page is HTTPS. Inspect the certificate and supported ciphers. Look for tokens in URLs. After any database access, check whether the password column is readable or trivially crackable.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Passive capture on the network path, or offline cracking of a stolen hash dump. Note that neither step requires exploiting the application again — the damage compounds after the initial breach.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>The attacker holds valid credentials or data in cleartext. Because people reuse passwords, this often extends the breach into <em>other</em> systems entirely.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Regulatory exposure (GDPR/PCI-DSS), mass credential compromise, and long-tail damage — a hash dump stolen today is still being cracked years later.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p>Mostly <strong>posture monitoring rather than event detection</strong>: alert on cleartext HTTP to sensitive endpoints, TLS versions/ciphers below policy, expired or self-signed certs, and secrets appearing in logs or repos. Post-incident, treat any DB access as a <em>credential</em> incident, not just a data incident — the response includes forcing a password reset.</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p>HTTPS everywhere with <strong>HSTS</strong>; classify data and encrypt what matters at rest; hash passwords with a slow, salted algorithm (bcrypt/scrypt/Argon2); keep secrets in a vault, never in code; and don't store what you don't need.</p></div>
+        </div>
+      </div>
+
+      <div class="box note">
+        <span class="box-t">A real chain — and why this one is worth telling</span>
+        <p>A classic breach story runs: a misconfigured store exposes a database → the database holds card
+          numbers in a recoverable form → an <em>insider</em> with legitimate access walks out with millions of
+          records. Each individual failure looks minor. The chain is catastrophic. Remember this when we reach
+          insider threat later in the course: <strong>A02 is what turns an access problem into a headline.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A03 -->
+  <section class="page" data-title="A03 · Injection">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A03</span><span class="tag">OWASP 2021 · #3</span><span class="time">Stages 7–8</span></div>
+      <h2>A03 — Injection</h2>
+      <p class="lede">The application takes text from the user and mixes it into a command that some interpreter
+        will execute — SQL, a shell, an LDAP query, a template, or the victim's own browser. The interpreter
+        cannot tell the developer's instructions from the attacker's. <strong>In 2021, XSS lives here too.</strong></p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Injection: user input concatenated into a database query changes the meaning of the query and dumps the users table">
+          <defs>
+            <marker id="a03g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#3fa87a"/></marker>
+            <marker id="a03r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="70" width="120" height="50" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="70" y="91" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12.5">Attacker</text>
+            <text x="70" y="108" text-anchor="middle" fill="#c58ea0">search box</text>
+
+            <rect x="184" y="70" width="176" height="50" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="272" y="91" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">Web server</text>
+            <text x="272" y="108" text-anchor="middle" fill="#8ea3c9">logs the query string ✓</text>
+
+            <rect x="414" y="58" width="200" height="74" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="514" y="80" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Application</text>
+            <text x="514" y="97" text-anchor="middle" fill="#c8b3ff" font-size="10.5">builds query by</text>
+            <text x="514" y="112" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="10.5">string concatenation</text>
+            <text x="514" y="126" text-anchor="middle" fill="#c8b3ff" font-size="10">⬅ the vulnerability</text>
+
+            <rect x="668" y="70" width="150" height="50" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="743" y="91" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">Database</text>
+            <text x="743" y="108" text-anchor="middle" fill="#8ea3c9">executes as written</text>
+
+            <rect x="856" y="70" width="114" height="50" rx="9" fill="#3a1414" stroke="#5a2020"/>
+            <text x="913" y="91" text-anchor="middle" fill="#ffc9c0" font-weight="700" font-size="12.5">Users table</text>
+            <text x="913" y="108" text-anchor="middle" fill="#ffab9c">dumped</text>
+
+            <g stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a03r)">
+              <path d="M130 95 H182"/><path d="M360 95 H412"/><path d="M614 95 H666"/><path d="M818 95 H854"/>
+            </g>
+            <text x="272" y="52" text-anchor="middle" fill="#5ee39b" font-family="monospace" font-size="10.5">?q=' OR '1'='1</text>
+            <text x="120" y="170" fill="#8ea3c9" font-size="11">Intended:</text>
+            <text x="184" y="170" fill="#7fe0a0" font-size="10.5" font-family="monospace">…WHERE name = 'shoes'</text>
+            <text x="392" y="170" fill="#8ea3c9" font-size="11">→</text>
+            <text x="418" y="170" fill="#8ea3c9" font-size="11">Actual:</text>
+            <text x="470" y="170" fill="#ff9db0" font-size="10.5" font-family="monospace">…WHERE name = '' OR '1'='1'</text>
+            <text x="490" y="192" text-anchor="middle" fill="#c8b3ff" font-size="11">The quote character escaped the data context and became part of the instruction.</text>
+          </g>
+        </svg>
+        <figcaption>Injection in one picture: data crosses the line into code. Note the web server <em>does</em> log this one — because it arrived in a GET query string.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A03</span><span class="nm">Injection (incl. SQLi, command injection, XSS)</span><span class="cwe">CWE-79 · CWE-89 · CWE-78</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Untrusted data is sent to an interpreter as part of a command or query, tricking it into executing unintended instructions or accessing unauthorised data.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Queries and commands are assembled by concatenating strings, instead of using parameterised APIs that keep data and instructions structurally separate.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 7 (the app builds the command) and stage 8 (the interpreter runs it). For XSS, stage 10 — the interpreter is the victim's browser.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>SQLi: the contents of the database. Command injection: execution on the host. XSS: the victim's session token — which, per Section 1, <em>is</em> the victim.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>Submit a single quote and watch for an error or a changed response. Then boolean tests (<span class="mono">OR 1=1</span> vs <span class="mono">OR 1=2</span>), then time delays if the response gives nothing away (blind injection).</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Break out of the data context with a delimiter, append attacker-controlled logic, and comment out the rest of the original statement so it still parses.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>Authentication bypass, whole tables returned via <span class="mono">UNION</span>, data modified or destroyed, and in some configurations command execution on the database host itself.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Total loss of database confidentiality and integrity. Historically the cause of some of the largest breaches on record, including supply-chain incidents affecting thousands of downstream organisations at once.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>The most detectable item on this list — if it comes in a GET.</strong> Watch for quote characters, <span class="mono">UNION</span>/<span class="mono">SELECT</span>, comment markers (<span class="mono">--</span>, <span class="mono">#</span>) and encoded equivalents in query strings; a <strong>spike of 500s</strong> from one source (probing that broke a query); scanner User-Agents like <span class="mono">sqlmap</span>. WAF signature and heuristic rules both fire here. <strong>Caveat:</strong> a payload delivered in a POST body is invisible in access logs — you need the WAF or packet capture.</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p><strong>Parameterised queries / prepared statements</strong> — the actual fix, not a mitigation. Plus allow-list validation, least-privilege database accounts (so a successful injection reaches little), escaping on output for XSS, and <strong>CSP</strong> as defence in depth.</p></div>
+        </div>
+      </div>
+
+      <div class="box red-flag">
+        <span class="box-t">Injection red flags in a web log</span>
+        <ul>
+          <li>Quote characters, <span class="mono">--</span>, or <span class="mono">%27</span> in a query string</li>
+          <li><span class="mono">UNION SELECT</span> in any parameter, in any encoding</li>
+          <li>A burst of <strong>500</strong> responses from a single client IP</li>
+          <li>User-Agent naming a tool: <span class="mono">sqlmap</span>, <span class="mono">nikto</span></li>
+          <li>Identical requests differing only in a numeric or boolean payload (blind injection)</li>
+          <li>Response-size changes on the same endpoint — a small page suddenly returning a large one</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A04 -->
+  <section class="page" data-title="A04 · Insecure Design">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A04</span><span class="tag">OWASP 2021 · #4 · NEW</span><span class="time">Stage 7</span></div>
+      <h2>A04 — Insecure Design</h2>
+      <p class="lede">Every other item is a control that was implemented badly. This one is a control that was
+        <strong>never designed at all</strong>. You cannot patch your way out of a missing requirement.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Insecure design: the business workflow itself permits an abusive sequence, so every individual request is valid">
+          <defs>
+            <marker id="a04r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+            <marker id="a04g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#3fa87a"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <text x="20" y="30" fill="#7fe0a0" font-size="11.5" font-weight="700">INTENDED WORKFLOW</text>
+            <rect x="20" y="40" width="130" height="40" rx="8" fill="#10261a" stroke="#1c5230"/>
+            <text x="85" y="65" text-anchor="middle" fill="#bdf0cf">Add to cart</text>
+            <rect x="182" y="40" width="130" height="40" rx="8" fill="#10261a" stroke="#1c5230"/>
+            <text x="247" y="65" text-anchor="middle" fill="#bdf0cf">Apply 1 coupon</text>
+            <rect x="344" y="40" width="130" height="40" rx="8" fill="#10261a" stroke="#1c5230"/>
+            <text x="409" y="65" text-anchor="middle" fill="#bdf0cf">Pay full price</text>
+            <g stroke="#3fa87a" stroke-width="1.8" fill="none" marker-end="url(#a04g)">
+              <path d="M150 60 H180"/><path d="M312 60 H342"/>
+            </g>
+
+            <text x="20" y="118" fill="#ff9db0" font-size="11.5" font-weight="700">ABUSED WORKFLOW — every request individually valid</text>
+            <rect x="20" y="128" width="130" height="40" rx="8" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="85" y="153" text-anchor="middle" fill="#ff9db0">Add to cart</text>
+            <rect x="182" y="128" width="130" height="40" rx="8" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="247" y="147" text-anchor="middle" fill="#ff9db0">Apply coupon</text>
+            <text x="247" y="161" text-anchor="middle" fill="#c58ea0" font-size="10">× 50 times</text>
+            <rect x="344" y="128" width="130" height="40" rx="8" fill="#3a1414" stroke="#5a2020"/>
+            <text x="409" y="153" text-anchor="middle" fill="#ffc9c0">Pay £0.00</text>
+            <g stroke="#e0556b" stroke-width="1.8" fill="none" marker-end="url(#a04r)">
+              <path d="M150 148 H180"/><path d="M312 148 H342"/>
+            </g>
+            <path d="M247 128 V96 M247 96 H247" stroke="#8a5cff" stroke-width="1.6" fill="none"/>
+            <text x="256" y="104" fill="#c8b3ff" font-size="10.5">no rule was ever written saying “only once”</text>
+
+            <rect x="530" y="40" width="430" height="128" rx="10" fill="#0e1730" stroke="#1f2d52"/>
+            <text x="745" y="66" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">Why signature detection fails here</text>
+            <text x="745" y="90" text-anchor="middle" fill="#8ea3c9" font-size="11">No payload. No malformed input. No error.</text>
+            <text x="745" y="110" text-anchor="middle" fill="#7fe0a0" font-size="11">Every request returns 200 OK.</text>
+            <text x="745" y="134" text-anchor="middle" fill="#ffc9c0" font-size="11">The attack is the SEQUENCE, not any single request.</text>
+            <text x="745" y="155" text-anchor="middle" fill="#c8b3ff" font-size="11">Detection must be behavioural / business-logic aware.</text>
+          </g>
+        </svg>
+        <figcaption>A04 is a flaw in the rules of the game, not in the code that enforces them. The classic tell: a perfectly legal sequence of legal actions produces an illegal outcome.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A04</span><span class="nm">Insecure Design</span><span class="cwe">CWE-209 · CWE-256 · CWE-501 · CWE-522</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Missing or ineffective security controls at the <em>design</em> level — the threat was never modelled, so no control exists to implement correctly.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>No threat modelling, no abuse-case analysis, business requirements written only for the happy path, and security treated as a testing phase rather than a design input.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 7 — but really it lives in the requirements document, months before any code exists.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>Free goods, unlimited retries, bypassed workflow steps, refunds without returns — economic abuse rather than data theft.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>They read the workflow and ask "what if I do this twice? out of order? with a negative number? and never finish?" No tooling required — just adversarial curiosity.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Perform a legitimate sequence of legitimate actions in an order or quantity the designer never anticipated. Nothing is malformed at any point.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>The business logic produces an outcome that harms the organisation while the application reports complete success.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Direct financial loss, inventory manipulation, fraud at scale — and it may run for months because nothing ever "errors".</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>Only through business-context anomaly detection.</strong> Alert on outcomes, not requests: order totals below cost, discount stacking, one account redeeming an implausible number of coupons, refunds exceeding purchases. This requires the SOC to understand the business — the strongest argument in this session for analysts talking to product owners.</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p><strong>Threat modelling during design.</strong> Write abuse cases alongside use cases, enforce business limits server-side, add rate/quantity limits per workflow, and use a secure design pattern library so the same control isn't reinvented per feature.</p></div>
+        </div>
+      </div>
+      <div class="box tip">
+        <span class="box-t">How to tell A04 from A01</span>
+        <p>If the attacker accessed something <em>that wasn't theirs</em> → Broken Access Control. If they did
+          something <em>that was theirs to do, but in a way nobody sanctioned</em> → Insecure Design.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A05 -->
+  <section class="page" data-title="A05 · Security Misconfiguration">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A05</span><span class="tag">OWASP 2021 · #5</span><span class="time">Stages 5–7</span></div>
+      <h2>A05 — Security Misconfiguration</h2>
+      <p class="lede">The software is fine. The way it was <em>deployed</em> is not. Default credentials, an open
+        directory listing, debug mode left on in production, a storage bucket set to public.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Security misconfiguration: attacker probes for default paths and finds an exposed admin console, directory listing and verbose errors">
+          <defs>
+            <marker id="a05r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="76" width="120" height="50" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="70" y="97" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12.5">Attacker</text>
+            <text x="70" y="114" text-anchor="middle" fill="#c58ea0">runs a wordlist</text>
+
+            <rect x="214" y="66" width="170" height="70" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="299" y="90" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Web server</text>
+            <text x="299" y="107" text-anchor="middle" fill="#c8b3ff" font-size="10.5">hardening never applied</text>
+            <text x="299" y="123" text-anchor="middle" fill="#ff9db0" font-size="10.5">⬅ the vulnerability</text>
+
+            <path d="M130 101 H212" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a05r)"/>
+            <text x="171" y="60" text-anchor="middle" fill="#ff9db0" font-size="10">404 ×200…</text>
+
+            <g>
+              <rect x="470" y="18" width="220" height="38" rx="8" fill="#3a1414" stroke="#5a2020"/>
+              <text x="580" y="42" text-anchor="middle" fill="#ffc9c0" font-size="11.5">/admin — default creds work</text>
+              <rect x="470" y="66" width="220" height="38" rx="8" fill="#3a1414" stroke="#5a2020"/>
+              <text x="580" y="90" text-anchor="middle" fill="#ffc9c0" font-size="11.5">/backup/ — directory listing</text>
+              <rect x="470" y="114" width="220" height="38" rx="8" fill="#3a1414" stroke="#5a2020"/>
+              <text x="580" y="138" text-anchor="middle" fill="#ffc9c0" font-size="11.5">stack trace — version leaked</text>
+              <rect x="470" y="162" width="220" height="34" rx="8" fill="#3a1414" stroke="#5a2020"/>
+              <text x="580" y="184" text-anchor="middle" fill="#ffc9c0" font-size="11.5">.git/ — source code exposed</text>
+            </g>
+            <g stroke="#e0556b" stroke-width="1.6" fill="none" marker-end="url(#a05r)">
+              <path d="M384 92 C 420 92, 430 37, 468 37"/>
+              <path d="M384 98 H468"/>
+              <path d="M384 108 C 420 108, 430 133, 468 133"/>
+              <path d="M384 114 C 420 114, 430 179, 468 179"/>
+            </g>
+            <text x="826" y="86" text-anchor="middle" fill="#8ea3c9" font-size="11">Each 200 among the 404s</text>
+            <text x="826" y="104" text-anchor="middle" fill="#8ea3c9" font-size="11">is a finding. That contrast</text>
+            <text x="826" y="122" text-anchor="middle" fill="#7fe0a0" font-size="11">is also your detection.</text>
+          </g>
+        </svg>
+        <figcaption>The attacker's discovery method and the defender's detection signal are the same event: a wall of 404s with a few 200s hiding inside it.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A05</span><span class="nm">Security Misconfiguration</span><span class="cwe">CWE-16 · CWE-611</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Insecure default settings, incomplete hardening, unnecessary features enabled, verbose errors, or permissions left open anywhere in the stack.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Software ships insecure-by-default for convenience; environments drift; "temporary" debug settings become permanent; nobody owns the hardening checklist after go-live.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stages 5–7: the CDN/WAF config, the web server config, the framework, the container, the cloud storage bucket.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>The cheapest possible entry: an admin panel with default credentials, an exposed backup, or source code that reveals everything else.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>Automated content discovery — a wordlist of common paths fired at the site. Tools leave a distinctive fingerprint: hundreds of rapid requests and a tool name in the User-Agent.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Enumerate → identify what responded 200 → use it. Often no exploitation is needed at all; the door was simply unlocked.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>Administrative access, source code disclosure, or enough version information to select a working public exploit (which leads straight to A06).</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Ranges from information disclosure to immediate full compromise — an admin console with default credentials is game over on first contact.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>This is the easiest attack in the section to catch.</strong> Alert on a high rate of <strong>404s from a single IP</strong> in a short window, then look for the <strong>200</strong> that follows — that is what the attacker found. Watch for scanner User-Agents (<span class="mono">gobuster</span>, <span class="mono">ffuf</span>, <span class="mono">dirb</span>, <span class="mono">nikto</span>), requests to <span class="mono">/admin</span>, <span class="mono">/.git/</span>, <span class="mono">/backup</span>, and any successful login to an admin path from an unusual source.</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p>Hardened, repeatable builds; remove unused features and sample content; change every default credential; disable directory listing and debug mode; generic error pages; suppress the <span class="mono">Server</span> version header; and audit configuration continuously, not once.</p></div>
+        </div>
+      </div>
+      <div class="box soc">
+        <span class="box-t">This is the first thing you'll see in the lab</span>
+        <p>In the Detecting Web Attacks lab, the log opens with a directory fuzz from
+          <span class="mono">gobuster/1.9</span> — a run of 404s with a handful of 200s (<span class="mono">/catalog</span>,
+          <span class="mono">/wordpress</span>, <span class="mono">/login.php</span>). Everything the attacker
+          does afterwards depends on what that scan found. <strong>Catch A05 and you end the attack at
+          stage one.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A06 -->
+  <section class="page" data-title="A06 · Vulnerable Components">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A06</span><span class="tag">OWASP 2021 · #6</span><span class="time">Stage 7</span></div>
+      <h2>A06 — Vulnerable and Outdated Components</h2>
+      <p class="lede">Your application is mostly other people's code. When a critical flaw is published in a
+        library you depend on, the exploit becomes public the same day — and attackers scan the entire internet
+        for it within hours.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vulnerable component: a CVE is published, mass scanning begins, and the unpatched library is exploited through normal application input">
+          <defs>
+            <marker id="a06r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="30" width="150" height="44" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="85" y="49" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12">CVE published</text>
+            <text x="85" y="65" text-anchor="middle" fill="#8ea3c9" font-size="10.5">day 0 · score 10.0</text>
+
+            <rect x="10" y="106" width="150" height="44" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="85" y="125" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12">Mass scanning</text>
+            <text x="85" y="141" text-anchor="middle" fill="#c58ea0" font-size="10.5">hours later</text>
+            <path d="M85 74 V104" stroke="#e0556b" stroke-width="1.8" fill="none" marker-end="url(#a06r)"/>
+
+            <rect x="222" y="66" width="176" height="52" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="310" y="88" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">Your web app</text>
+            <text x="310" y="105" text-anchor="middle" fill="#8ea3c9" font-size="10.5">input looks totally normal</text>
+            <path d="M160 122 C 190 122, 195 95, 220 92" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a06r)"/>
+
+            <rect x="450" y="56" width="190" height="72" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="545" y="80" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Bundled library</text>
+            <text x="545" y="97" text-anchor="middle" fill="#c8b3ff" font-size="10.5">unpatched version</text>
+            <text x="545" y="114" text-anchor="middle" fill="#ff9db0" font-size="10.5">⬅ the vulnerability</text>
+            <path d="M398 92 H448" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a06r)"/>
+
+            <rect x="700" y="56" width="150" height="72" rx="9" fill="#3a1414" stroke="#5a2020"/>
+            <text x="775" y="80" text-anchor="middle" fill="#ffc9c0" font-weight="700" font-size="12.5">Code execution</text>
+            <text x="775" y="97" text-anchor="middle" fill="#ffab9c" font-size="10.5">on your server</text>
+            <text x="775" y="114" text-anchor="middle" fill="#ffab9c" font-size="10.5">outbound callback</text>
+            <path d="M640 92 H698" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a06r)"/>
+
+            <text x="490" y="168" text-anchor="middle" fill="#8ea3c9" font-size="11">The request that triggers it may be an ordinary header or form field — the app never validates it.</text>
+            <text x="490" y="188" text-anchor="middle" fill="#7fe0a0" font-size="11">Best detection is often the OUTBOUND connection, not the inbound request.</text>
+          </g>
+        </svg>
+        <figcaption>You are exposed the moment a CVE drops, whether or not you wrote a line of the affected code. The exploit arrives disguised as normal input.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A06</span><span class="nm">Vulnerable and Outdated Components</span><span class="cwe">CWE-1104 · CWE-937</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Running software — libraries, frameworks, runtimes, servers — with known published vulnerabilities, or versions no longer supported.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Nobody maintains an inventory of what is deployed; transitive dependencies are invisible; patching is deferred for stability; end-of-life components are never replaced.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 7, inside code you did not write but are fully responsible for.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>Remote code execution with minimum effort. A public exploit for a widespread library is the highest-return attack available.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>They don't target you — they scan everyone. Version disclosure (the <span class="mono">Server</span> header from A05, a stack trace, a JS file path) tells them whether you are worth a second request.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Send the published payload inside an ordinary-looking field. Because the vulnerable code is deep in a dependency, the application's own validation never sees anything unusual.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>Typically code execution on the server, often followed immediately by an outbound connection to attacker infrastructure to fetch a second-stage payload.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Full server compromise, at internet scale, affecting every organisation using that component — this is the mechanism behind the largest coordinated exploitation events of recent years.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p>Two angles. <strong>Before:</strong> vulnerability scanning + an accurate software inventory (SBOM) tells you that you're exposed. <strong>During:</strong> because the inbound payload is hard to signature reliably, watch for the consequence — <strong>an unexpected outbound connection from a web server</strong> (DNS/LDAP/HTTP callback to an unknown host) and a web-server process spawning a shell. A server that suddenly starts <em>initiating</em> connections is the loudest quiet signal in this whole section.</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p>Maintain an inventory; subscribe to advisories for what you actually run; patch on a defined SLA; remove unused dependencies; and add <strong>egress filtering</strong> so a successful exploit still cannot call home.</p></div>
+        </div>
+      </div>
+      <div class="box key-takeaway">
+        <span class="box-t">Why A05 and A06 are a pair</span>
+        <p>A05 leaks your version. A06 is what happens next. Suppressing the <span class="mono">Server</span>
+          header is not security by obscurity here — it removes the cheap targeting signal that turns
+          <em>mass</em> scanning into a <em>confirmed</em> target.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A07 -->
+  <section class="page" data-title="A07 · Auth Failures">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A07</span><span class="tag">OWASP 2021 · #7</span><span class="time">Stages 4 &amp; 7</span></div>
+      <h2>A07 — Identification and Authentication Failures</h2>
+      <p class="lede">Weaknesses in proving <em>who</em> someone is: guessable passwords with no rate limiting,
+        login pages that reveal which usernames exist, and session tokens that can be stolen, fixed or reused.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Authentication failure: repeated failed logins from one source finally succeed, producing the classic 401 to 302 log signature">
+          <defs>
+            <marker id="a07r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="72" width="120" height="52" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="70" y="94" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12.5">Attacker</text>
+            <text x="70" y="111" text-anchor="middle" fill="#c58ea0">credential list</text>
+
+            <rect x="196" y="62" width="180" height="72" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="286" y="86" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Login endpoint</text>
+            <text x="286" y="103" text-anchor="middle" fill="#ff9db0" font-size="10.5">no rate limit · no lockout</text>
+            <text x="286" y="120" text-anchor="middle" fill="#c8b3ff" font-size="10.5">⬅ the vulnerability</text>
+            <path d="M130 98 H194" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a07r)"/>
+            <text x="162" y="56" text-anchor="middle" fill="#ff9db0" font-size="10">×160 POSTs</text>
+
+            <g font-family="monospace" font-size="11">
+              <rect x="440" y="28" width="230" height="26" rx="6" fill="#1d1013" stroke="#5a2020"/>
+              <text x="452" y="46" fill="#ffc9c0">POST /login → 401</text>
+              <rect x="440" y="60" width="230" height="26" rx="6" fill="#1d1013" stroke="#5a2020"/>
+              <text x="452" y="78" fill="#ffc9c0">POST /login → 401</text>
+              <rect x="440" y="92" width="230" height="26" rx="6" fill="#1d1013" stroke="#5a2020"/>
+              <text x="452" y="110" fill="#ffc9c0">POST /login → 401  …×157</text>
+              <rect x="440" y="124" width="230" height="26" rx="6" fill="#101f16" stroke="#1c5230"/>
+              <text x="452" y="142" fill="#bdf0cf">POST /login → 302  ✓</text>
+              <rect x="440" y="156" width="230" height="26" rx="6" fill="#101f16" stroke="#1c5230"/>
+              <text x="452" y="174" fill="#bdf0cf">GET  /account → 200</text>
+            </g>
+            <path d="M376 98 H438" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a07r)"/>
+
+            <text x="828" y="80" text-anchor="middle" fill="#e8edf7" font-size="12" font-weight="700">The signature</text>
+            <text x="828" y="102" text-anchor="middle" fill="#8ea3c9" font-size="11">many 401s, then one 302,</text>
+            <text x="828" y="120" text-anchor="middle" fill="#8ea3c9" font-size="11">then a 200 to a user page —</text>
+            <text x="828" y="140" text-anchor="middle" fill="#ffc9c0" font-size="11">all from one client IP.</text>
+          </g>
+        </svg>
+        <figcaption>The redirect is the moment of compromise. Alert on the <em>transition</em>, not just on the failures — failures alone are noise, failures followed by success are an incident.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A07</span><span class="nm">Identification and Authentication Failures</span><span class="cwe">CWE-297 · CWE-287 · CWE-384</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>The application fails to reliably establish and maintain user identity — permitting credential guessing, session hijacking, or reuse of tokens that should be invalid.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>No rate limiting or lockout, weak password policy, credential stuffing not considered, session IDs exposed in URLs, tokens that never expire or don't rotate on login, missing MFA.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 4 (the credentials/token travel in the request) and stage 7 (the app decides whether to accept them).</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>A valid session. Once they have one, every subsequent request is legitimate — which is why this is such a clean way in.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p><strong>Username enumeration first:</strong> if "invalid username" and "wrong password" produce different responses (or noticeably different timings), one unknown becomes two knowns. Then automated guessing against the confirmed account.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Automated tools submit credential pairs at high speed. Because the login body is a <strong>POST</strong>, the passwords tried are <em>not</em> in the access log — only that attempts occurred.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>Account takeover. If the account is an administrator, the attacker inherits the whole application; if it's a normal user, it becomes a foothold for A01.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Data theft under a legitimate identity, fraudulent transactions, and — because activity now looks authentic — significantly delayed detection.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>The canonical threshold query.</strong> Filter POSTs to the login path, bucket by time, count per source, alert over a threshold: <span class="mono">stats count by clientip</span> in 5-minute bins, <span class="mono">where count &gt; 25</span>. Then the high-value refinement: <strong>alert on failures followed by a success</strong>. Enrich with User-Agent (tools like <span class="mono">Hydra</span> announce themselves) and geolocation. Also monitor impossible-travel logins and one IP attempting many <em>different</em> usernames (credential stuffing).</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p><strong>MFA</strong> is the single highest-value control here. Add rate limiting and progressive lockout, identical responses for invalid username vs. password, screening against breached-password lists, session rotation on login, and short idle timeouts.</p></div>
+        </div>
+      </div>
+      <div class="box tip">
+        <span class="box-t">The query you will reuse all session</span>
+        <p><span class="mono">filter → bin _time span=5m → stats count by entity → where count &gt; N</span> — you
+          will use this exact skeleton for brute force, for web-shell hunting, and for DDoS. Learn it once here;
+          it is the most transferable thing in the whole session.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A08 -->
+  <section class="page" data-title="A08 · Integrity Failures">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A08</span><span class="tag">OWASP 2021 · #8 · NEW</span><span class="time">Stages 7 &amp; 10</span></div>
+      <h2>A08 — Software and Data Integrity Failures</h2>
+      <p class="lede">Code or data is accepted <strong>without verifying it hasn't been tampered with</strong> —
+        an unsigned update, a third-party script loaded from someone else's server, or a serialized object
+        rebuilt straight from a cookie.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Integrity failure: a serialized cookie is decoded, an admin flag is flipped, re-encoded and accepted by the server without any signature check">
+          <defs>
+            <marker id="a08r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="40" width="150" height="46" rx="9" fill="#132244" stroke="#2a3c68"/>
+            <text x="85" y="60" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12">Server issues cookie</text>
+            <text x="85" y="77" text-anchor="middle" fill="#5ee39b" font-family="monospace" font-size="10">{admin:false}</text>
+
+            <rect x="222" y="40" width="150" height="46" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="297" y="60" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12">Attacker decodes</text>
+            <text x="297" y="77" text-anchor="middle" fill="#c58ea0" font-size="10">base64 → readable</text>
+            <path d="M160 63 H220" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a08r)"/>
+
+            <rect x="434" y="40" width="150" height="46" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="509" y="60" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12">Flips the flag</text>
+            <text x="509" y="77" text-anchor="middle" fill="#ffc9c0" font-family="monospace" font-size="10">{admin:true}</text>
+            <path d="M372 63 H432" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a08r)"/>
+
+            <rect x="646" y="30" width="180" height="66" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="736" y="53" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Server rebuilds object</text>
+            <text x="736" y="70" text-anchor="middle" fill="#ff9db0" font-size="10.5">no signature verified</text>
+            <text x="736" y="87" text-anchor="middle" fill="#c8b3ff" font-size="10.5">⬅ the vulnerability</text>
+            <path d="M584 63 H644" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a08r)"/>
+
+            <rect x="646" y="120" width="180" height="44" rx="9" fill="#3a1414" stroke="#5a2020"/>
+            <text x="736" y="140" text-anchor="middle" fill="#ffc9c0" font-weight="700" font-size="12">Admin access granted</text>
+            <text x="736" y="156" text-anchor="middle" fill="#ffab9c" font-size="10.5">no exploit, no payload</text>
+            <path d="M736 96 V118" stroke="#e0556b" stroke-width="1.8" fill="none" marker-end="url(#a08r)"/>
+
+            <text x="330" y="128" fill="#8ea3c9" font-size="11">Same family of failure, different targets:</text>
+            <text x="330" y="148" fill="#8ea3c9" font-size="11">• unsigned software update → backdoored build</text>
+            <text x="330" y="166" fill="#8ea3c9" font-size="11">• third-party CDN script → compromised at source</text>
+            <text x="330" y="184" fill="#8ea3c9" font-size="11">• serialized object from client → rebuilt as-is</text>
+            <text x="330" y="110" fill="#c8b3ff" font-size="11" font-weight="700">The common root: trusting data you did not verify.</text>
+          </g>
+        </svg>
+        <figcaption>The cookie was never signed, so the server has no way to know it was edited. This is Section 1's "the token is the identity" lesson at its most literal.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A08</span><span class="nm">Software and Data Integrity Failures</span><span class="cwe">CWE-502 · CWE-829 · CWE-494</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Code and data are used without integrity verification: insecure deserialization, unsigned updates, and dependence on plugins or scripts from untrusted sources.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Native deserialization is convenient; CI/CD pipelines pull dependencies without pinning or signature checks; client-side state is trusted because it "came from us originally".</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 7 (the server rebuilds an object) and stage 10 (the browser loads a third-party script). Also the build pipeline, which is outside the request path entirely.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>Privilege escalation via tampered state, or — in the worst case — remote code execution through a crafted serialized object.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>Recognisable encodings in cookies or hidden fields (base64 that decodes to structured data, PHP/Java serialization markers). If it decodes to something readable and the app accepts an edit, it's unverified.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Decode, modify, re-encode, replay. For RCE, craft an object whose reconstruction triggers a chain of method calls (a "gadget chain") already present in the app's libraries.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>Escalated privileges, forged application state, or code execution — and in supply-chain cases, malicious code shipped to every customer as a legitimate signed-looking release.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>At the low end, an ordinary user becomes an admin. At the high end, a compromised build affects thousands of downstream organisations simultaneously.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>Hard from web logs</strong> — the tampering is inside a cookie or POST body. Practical angles: alert on <strong>deserialization exceptions</strong> in application logs (failed gadget attempts are noisy before a successful one), on sessions whose privilege level changes without an authorisation event, and on the <em>consequences</em> (admin actions from an account never granted admin). For supply chain, monitor build-pipeline integrity and use <strong>Subresource Integrity</strong> so a tampered third-party script simply fails to load.</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p>Don't deserialize untrusted input; if you must, use a data-only format (JSON) with strict schemas. <strong>Sign and verify</strong> serialized state, updates and artefacts. Pin dependencies, verify signatures in CI/CD, and apply SRI to external scripts.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A09 -->
+  <section class="page" data-title="A09 · Logging &amp; Monitoring">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A09</span><span class="tag soc">OWASP 2021 · #9 · YOUR ENTRY</span><span class="time">Stage 6</span></div>
+      <h2>A09 — Security Logging and Monitoring Failures</h2>
+      <p class="lede">The only item on the list that is <strong>not</strong> a developer's problem. This is the
+        vulnerability that says: the attack happened, the evidence existed or should have — and nobody saw it.
+        <strong>This entry is the SOC's job description written as a risk.</strong></p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logging and monitoring failure: the same attack timeline either produces an alert and short dwell time, or goes unnoticed for months">
+          <defs>
+            <marker id="a09r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+            <marker id="a09g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#3fa87a"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <text x="20" y="26" fill="#7fe0a0" font-weight="700" font-size="11.5">WITH LOGGING &amp; MONITORING</text>
+            <rect x="20" y="36" width="112" height="38" rx="8" fill="#10261a" stroke="#1c5230"/>
+            <text x="76" y="60" text-anchor="middle" fill="#bdf0cf">Recon 404s</text>
+            <rect x="152" y="36" width="112" height="38" rx="8" fill="#10261a" stroke="#1c5230"/>
+            <text x="208" y="60" text-anchor="middle" fill="#bdf0cf">Alert fires</text>
+            <rect x="284" y="36" width="112" height="38" rx="8" fill="#10261a" stroke="#1c5230"/>
+            <text x="340" y="60" text-anchor="middle" fill="#bdf0cf">Contained</text>
+            <g stroke="#3fa87a" stroke-width="1.8" fill="none" marker-end="url(#a09g)"><path d="M132 55 H150"/><path d="M264 55 H282"/></g>
+            <text x="420" y="60" fill="#7fe0a0" font-weight="700">dwell: minutes</text>
+
+            <text x="20" y="114" fill="#ff9db0" font-weight="700" font-size="11.5">WITHOUT — same attack, no visibility</text>
+            <rect x="20" y="124" width="112" height="38" rx="8" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="76" y="148" text-anchor="middle" fill="#ff9db0">Recon 404s</text>
+            <rect x="152" y="124" width="112" height="38" rx="8" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="208" y="148" text-anchor="middle" fill="#ff9db0">Web shell</text>
+            <rect x="284" y="124" width="112" height="38" rx="8" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="340" y="148" text-anchor="middle" fill="#ff9db0">Exfiltration</text>
+            <rect x="416" y="124" width="150" height="38" rx="8" fill="#3a1414" stroke="#5a2020"/>
+            <text x="491" y="141" text-anchor="middle" fill="#ffc9c0" font-size="10.5">Found by a 3rd party</text>
+            <text x="491" y="156" text-anchor="middle" fill="#ffab9c" font-size="10">months later</text>
+            <g stroke="#e0556b" stroke-width="1.8" fill="none" marker-end="url(#a09r)">
+              <path d="M132 143 H150"/><path d="M264 143 H282"/><path d="M396 143 H414"/>
+            </g>
+
+            <rect x="600" y="30" width="360" height="150" rx="10" fill="#0e1730" stroke="#1f2d52"/>
+            <text x="780" y="56" text-anchor="middle" fill="#e8edf7" font-weight="700" font-size="12.5">What “failure” actually means</text>
+            <text x="618" y="80" fill="#8ea3c9" font-size="11">• logins &amp; access-control failures not logged</text>
+            <text x="618" y="100" fill="#8ea3c9" font-size="11">• logs kept locally, never centralised</text>
+            <text x="618" y="120" fill="#8ea3c9" font-size="11">• no alerting — logs written, never read</text>
+            <text x="618" y="140" fill="#8ea3c9" font-size="11">• retention too short to investigate</text>
+            <text x="618" y="160" fill="#ffc9c0" font-size="11">• logs deletable by the attacker</text>
+          </g>
+        </svg>
+        <figcaption>Identical attack, two outcomes. The difference is not a patch — it is whether anyone was watching.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A09</span><span class="nm">Security Logging and Monitoring Failures</span><span class="cwe">CWE-778 · CWE-117 · CWE-223</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>Security-relevant events are not logged, not centralised, not monitored, or not retained long enough to detect and investigate a breach.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Logging is treated as a debugging feature; alerting is never tuned so real events drown in noise; retention is set by storage cost; and nobody tests whether an attack would actually raise an alert.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 6 — where evidence is created — plus everywhere that evidence should have been shipped, stored and watched.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>Time. Every hour without detection is another hour of access. Mature attackers actively help this along by clearing logs.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>They probe noisily and see whether anything changes. No block, no challenge, no call from your SOC — that silence tells them they can proceed at their own pace.</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>This isn't exploited directly — it <em>amplifies every other item on this list</em>, turning a contained incident into a long-running compromise.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>Extended dwell time, and — critically — <strong>no evidence left to reconstruct what happened</strong>. You cannot scope a breach you cannot see.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Breaches discovered by outsiders rather than by you; inability to determine what data was taken; regulatory penalties for failing to demonstrate what occurred.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>You detect it by testing yourself.</strong> Run a controlled attack simulation and ask: did an alert fire? Was the evidence there? Could we build a timeline? Audit for coverage gaps: are login failures, access-control denials, admin actions and file uploads all logged? Do POST-heavy endpoints have compensating telemetry (WAF or packet capture) given bodies aren't logged?</p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p>Log authentication events, access-control failures and high-value actions with enough context to investigate. Centralise to a SIEM the attacker can't reach, normalise timestamps to UTC, set retention to match realistic investigation windows, build and <em>tune</em> alerts, and rehearse the response.</p></div>
+        </div>
+      </div>
+
+      <div class="box key-takeaway">
+        <span class="box-t">Take this one personally</span>
+        <p>Every other entry gets fixed by someone else. When you leave this session and ask for web logs to be
+          shipped to the SIEM, for POST endpoints to get WAF coverage, or for 90-day retention — you are not
+          making an operational request. <strong>You are remediating OWASP A09.</strong> Use that language;
+          it changes the conversation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= A10 -->
+  <section class="page" data-title="A10 · SSRF">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">A10</span><span class="tag">OWASP 2021 · #10 · NEW</span><span class="time">Stage 7 → outbound</span></div>
+      <h2>A10 — Server-Side Request Forgery (SSRF)</h2>
+      <p class="lede">You give the application a URL; it fetches that URL <em>for</em> you. The trick is that the
+        server sits inside the network — so the attacker borrows its position to reach things they never could
+        from outside.</p>
+    </div>
+    <div class="content">
+      <figure class="fig">
+        <svg viewBox="0 0 980 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SSRF: an attacker supplies an internal URL and the trusted web server fetches internal resources such as cloud metadata on their behalf">
+          <defs>
+            <marker id="a10r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker>
+            <marker id="a10g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#3fa87a"/></marker>
+          </defs>
+          <g font-family="sans-serif" font-size="11.5">
+            <rect x="10" y="80" width="120" height="52" rx="9" fill="#2a1622" stroke="#6a2a3a"/>
+            <text x="70" y="102" text-anchor="middle" fill="#ff9db0" font-weight="700" font-size="12.5">Attacker</text>
+            <text x="70" y="119" text-anchor="middle" fill="#c58ea0">outside</text>
+
+            <line x1="176" y1="20" x2="176" y2="200" stroke="#5a2020" stroke-width="1.6" stroke-dasharray="6 5"/>
+            <text x="176" y="14" text-anchor="middle" fill="#ff9db0" font-size="10">firewall</text>
+
+            <rect x="222" y="70" width="184" height="72" rx="9" fill="#26183a" stroke="#8a5cff"/>
+            <text x="314" y="94" text-anchor="middle" fill="#d9c9ff" font-weight="700" font-size="12.5">Web server</text>
+            <text x="314" y="111" text-anchor="middle" fill="#c8b3ff" font-size="10.5">fetches any URL given</text>
+            <text x="314" y="128" text-anchor="middle" fill="#ff9db0" font-size="10.5">⬅ the vulnerability</text>
+            <path d="M130 106 H220" stroke="#e0556b" stroke-width="2" fill="none" marker-end="url(#a10r)"/>
+            <text x="176" y="60" text-anchor="middle" fill="#5ee39b" font-family="monospace" font-size="10">url=http://169.254.169.254</text>
+
+            <g>
+              <rect x="486" y="20" width="210" height="40" rx="8" fill="#3a1414" stroke="#5a2020"/>
+              <text x="591" y="38" text-anchor="middle" fill="#ffc9c0" font-size="11.5">Cloud metadata service</text>
+              <text x="591" y="53" text-anchor="middle" fill="#ffab9c" font-size="10">→ temporary credentials</text>
+              <rect x="486" y="72" width="210" height="40" rx="8" fill="#3a1414" stroke="#5a2020"/>
+              <text x="591" y="90" text-anchor="middle" fill="#ffc9c0" font-size="11.5">Internal admin panel</text>
+              <text x="591" y="105" text-anchor="middle" fill="#ffab9c" font-size="10">→ no auth from inside</text>
+              <rect x="486" y="124" width="210" height="40" rx="8" fill="#3a1414" stroke="#5a2020"/>
+              <text x="591" y="142" text-anchor="middle" fill="#ffc9c0" font-size="11.5">localhost services</text>
+              <text x="591" y="157" text-anchor="middle" fill="#ffab9c" font-size="10">→ databases, caches</text>
+            </g>
+            <g stroke="#e0556b" stroke-width="1.8" fill="none" marker-end="url(#a10r)">
+              <path d="M406 96 C 440 96, 450 40, 484 40"/>
+              <path d="M406 106 H484"/>
+              <path d="M406 116 C 440 116, 450 144, 484 144"/>
+            </g>
+
+            <text x="838" y="86" text-anchor="middle" fill="#e8edf7" font-size="12" font-weight="700">The key idea</text>
+            <text x="838" y="108" text-anchor="middle" fill="#8ea3c9" font-size="11">The attacker never</text>
+            <text x="838" y="126" text-anchor="middle" fill="#8ea3c9" font-size="11">crosses the firewall.</text>
+            <text x="838" y="148" text-anchor="middle" fill="#ffc9c0" font-size="11">Your server does it</text>
+            <text x="838" y="166" text-anchor="middle" fill="#ffc9c0" font-size="11">for them, and is trusted.</text>
+
+            <text x="490" y="200" text-anchor="middle" fill="#7fe0a0" font-size="11">Detection lives in EGRESS telemetry — the inbound request may be a POST body you never logged.</text>
+          </g>
+        </svg>
+        <figcaption>SSRF converts a trusted server into a proxy. Perimeter controls don't help, because the request originates inside the perimeter.</figcaption>
+      </figure>
+
+      <div class="tenpt">
+        <div class="tenpt-h"><span class="rank">A10</span><span class="nm">Server-Side Request Forgery</span><span class="cwe">CWE-918</span></div>
+        <div class="tenpt-grid">
+          <div class="cell"><span class="lb">What it is</span><p>The application fetches a remote resource using a URL supplied by the user, without validating where that URL points.</p></div>
+          <div class="cell"><span class="lb">Why it happens</span><p>Legitimate features need to fetch URLs — webhooks, link previews, PDF generators, image importers, stock checkers. The destination is treated as data rather than as a security decision.</p></div>
+          <div class="cell"><span class="lb">Where it lives</span><p>Stage 7, but the <em>impact</em> lands outside the normal request path entirely — on the internal network the server can reach.</p></div>
+          <div class="cell"><span class="lb">What the attacker wants</span><p>Cloud instance credentials from the metadata endpoint, internal admin interfaces that assume "inside = trusted", and a map of the internal network via port scanning by proxy.</p></div>
+          <div class="cell"><span class="lb">How they find it</span><p>Any parameter containing a URL. They point it at a host they control and watch for the callback — if the server connects, SSRF is confirmed even when the response is never shown to them (blind SSRF).</p></div>
+          <div class="cell"><span class="lb">How the attack works</span><p>Replace the intended URL with an internal one — <span class="mono">127.0.0.1</span>, an RFC1918 address, or the cloud metadata IP — and let the server's network position do the rest.</p></div>
+          <div class="cell"><span class="lb">On success</span><p>Internal resources are returned to the attacker, or credentials are harvested that grant direct access to cloud infrastructure — often a far bigger prize than the web app itself.</p></div>
+          <div class="cell"><span class="lb">Impact</span><p>Pivot from a single web vulnerability to cloud-account compromise. This is why OWASP promoted it to its own entry despite relatively low incidence: when it works, the blast radius is enormous.</p></div>
+          <div class="cell det"><span class="lb">How defenders detect it</span><p><strong>Watch egress, not ingress.</strong> Alert on the web server initiating connections to <span class="mono">169.254.169.254</span>, <span class="mono">localhost</span>, or internal ranges it has no business reaching; on DNS lookups for attacker-controlled domains from a server; and on any new outbound destination for a host whose normal profile is inbound-only. Same detection shape as the A06 callback and a reverse shell — <strong>learn "server started talking outbound" once and it catches three different attacks.</strong></p></div>
+          <div class="cell prev"><span class="lb">Prevention &amp; mitigation</span><p>Allow-list permitted destinations rather than blocking bad ones; reject internal IP ranges and redirects to them; disable unused URL schemes; enforce <strong>egress filtering</strong> at the network layer; and require session tokens on the cloud metadata service (IMDSv2-style).</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= SECTION 2 RECAP -->
+  <section class="page" data-title="2 · OWASP → detection recap">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">2.11</span><span class="tag soc">Section 2 recap</span></div>
+      <h2>The OWASP Top 10, read as a detection problem</h2>
+      <p class="lede">Ten weaknesses, ranked by how visible they are to <em>you</em>. This is the table to keep —
+        it converts a developer's checklist into an analyst's worklist.</p>
+    </div>
+    <div class="content">
+      <table class="codemap">
+        <thead><tr><th>Item</th><th>Primary detection signal</th><th>Visibility</th></tr></thead>
+        <tbody>
+          <tr><td><strong>A05</strong> Misconfiguration</td><td>burst of 404s from one IP, then a 200; scanner User-Agent</td><td>🟢 <strong>High</strong> — loud and early</td></tr>
+          <tr><td><strong>A07</strong> Auth failures</td><td>many 401s then a 302 from one source; threshold query</td><td>🟢 <strong>High</strong></td></tr>
+          <tr><td><strong>A03</strong> Injection</td><td>payload visible in GET query strings; 500 spikes; WAF hits</td><td>🟡 <strong>High for GET, low for POST</strong></td></tr>
+          <tr><td><strong>A06</strong> Vulnerable components</td><td>unexpected <em>outbound</em> connection; server spawns a shell</td><td>🟡 <strong>Medium</strong> — detect the effect, not the payload</td></tr>
+          <tr><td><strong>A10</strong> SSRF</td><td>server connects to metadata IP / internal ranges</td><td>🟡 <strong>Medium</strong> — egress telemetry only</td></tr>
+          <tr><td><strong>A02</strong> Crypto failures</td><td>cleartext HTTP, weak TLS, secrets in logs</td><td>🟡 <strong>Medium</strong> — posture, not events</td></tr>
+          <tr><td><strong>A08</strong> Integrity failures</td><td>deserialization errors; privilege changed with no auth event</td><td>🔴 <strong>Low</strong></td></tr>
+          <tr><td><strong>A01</strong> Broken access control</td><td>one session enumerating many object IDs; 403→200</td><td>🔴 <strong>Low</strong> — behavioural only</td></tr>
+          <tr><td><strong>A04</strong> Insecure design</td><td>business outcomes that shouldn't be possible</td><td>🔴 <strong>Low</strong> — needs business context</td></tr>
+          <tr><td><strong>A09</strong> Logging failures</td><td>—</td><td>⚫ <strong>None</strong> — it <em>is</em> the absence of detection</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box key-takeaway">
+        <span class="box-t">The uncomfortable pattern</span>
+        <p>Read the visibility column top to bottom. <strong>The two highest-ranked risks on the OWASP list
+          (A01 and A02) are among the hardest for a SOC to see</strong>, while the ones we detect most easily
+          (A05, A07) rank in the middle. Detection difficulty and business risk are <em>not</em> the same axis.
+          If you only chase what's easy to alert on, you will systematically miss the biggest risks — which is
+          precisely why behavioural analytics and business context matter, and why "no alerts" never means
+          "no attacks".</p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">Three questions to carry into Section 3</span>
+        <ul>
+          <li>Did the payload arrive in a <strong>GET</strong> (logged) or a <strong>POST</strong> (not logged)?</li>
+          <li>Is there a <strong>status-code pattern</strong> that gives it away?</li>
+          <li>If neither — what <strong>behaviour</strong> or <strong>outbound connection</strong> would betray it?</li>
+        </ul>
+      </div>
+      <p>Section 3 now takes ten of these weaknesses as they actually appear in the wild, and walks each one
+        end-to-end: normal behaviour, the attack, the evidence it leaves, and the investigation.</p>
+    </div>
+  </section>
 
   <div class="pagenav">
     <a href="#" id="btnPrev"><small>Previous</small><span class="lbl">—</span></a>
