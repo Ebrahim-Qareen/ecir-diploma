@@ -164,6 +164,34 @@ table.evsrc tr.key td:first-child{color:#7fe0a0}
 .atkgrid .a .t{display:block;color:#e8edf7;font-weight:600;font-size:13.4px;margin:3px 0 2px}
 .atkgrid .a .s{color:#8ea3c9;font-size:11.6px;line-height:1.45}
 
+/* dataset chips */
+.dsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:16px 0}
+.dsgrid .ds{border:1px solid #21324f;border-radius:9px;background:#0b1220;padding:10px 12px}
+.dsgrid .ds .f{font:700 12px var(--mono,monospace);color:#7fd0ff;word-break:break-all}
+.dsgrid .ds .m{color:#8ea3c9;font-size:11.4px;margin:3px 0}
+.dsgrid .ds .c{color:#c3d1ea;font-size:12.4px;line-height:1.45}
+.dsgrid .ds.key{border-color:#8a5cff;background:#160f26}
+.dsgrid .ds.key .f{color:#c8b3ff}
+/* phase blocks */
+.phase{border-left:3px solid #37c7d4;background:#0e1730;border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0}
+.phase .ph{font-weight:700;color:#7fd0ff;font-size:13.5px;margin-bottom:3px}
+.phase.trap{border-left-color:#e0556b}.phase.trap .ph{color:#ff9db0}
+.phase p{margin:0;font-size:13.4px;color:#c3d1ea;line-height:1.55}
+/* homework ladder */
+.ladder{position:relative;margin:16px 0;padding-left:26px}
+.ladder::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:#22304e}
+.ladder .rung{position:relative;margin-bottom:12px;background:#0e1730;border:1px solid #1f2d52;
+              border-radius:9px;padding:10px 13px}
+.ladder .rung::before{content:"";position:absolute;left:-22px;top:15px;width:11px;height:11px;border-radius:50%;
+                      background:#132244;border:2px solid #37c7d4}
+.ladder .rung.t1::before{border-color:#3fa87a}.ladder .rung.t2::before{border-color:#f0c860}
+.ladder .rung.t3::before{border-color:#e0556b}.ladder .rung.t4::before{border-color:#8a5cff}
+.ladder .rung .hn{font-weight:700;color:#e8edf7;font-size:14px}
+.ladder .rung .plat{font:11px var(--mono,monospace);color:#7fd0ff;margin-left:6px}
+.ladder .rung .meta{color:#8ea3c9;font-size:12.6px;margin-top:4px;line-height:1.5}
+.ladder .rung .meta b{color:#c3d1ea}
+.tiername{font:700 11px var(--mono,monospace);letter-spacing:.6px;text-transform:uppercase;margin:14px 0 2px}
+
 /* section divider banner */
 .secband{display:flex;align-items:center;gap:14px;margin:6px 0 4px}
 .secband .bignum{font:800 40px var(--mono,monospace);color:#1f2d52;line-height:1}
@@ -241,7 +269,7 @@ table.evsrc tr.key td:first-child{color:#7fe0a0}
             </g>
             <g>
               <rect x="344" y="30" width="150" height="58" rx="10" fill="#132244" stroke="#2a3c68"/>
-              <text x="419" y="55" text-anchor="middle" fill="#37c7d4" font-size="12" font-weight="700">3 · 10 Attacks</text>
+              <text x="419" y="55" text-anchor="middle" fill="#37c7d4" font-size="12" font-weight="700">3 · Attacks</text>
               <text x="419" y="74" text-anchor="middle" fill="#8ea3c9" font-size="10.5">the full story</text>
             </g>
             <g>
@@ -1671,7 +1699,7 @@ Content-Length: 98
     <div class="page-head">
       <div class="secband">
         <span class="bignum">3</span>
-        <div class="t"><h2>The 10 Most Common Real-World Web Attacks</h2>
+        <div class="t"><h2>The Most Common Real-World Web Attacks</h2>
           <p>Each one told as a complete story — normal behaviour → attack → evidence → investigation</p></div>
       </div>
     </div>
@@ -1712,7 +1740,9 @@ Content-Length: 98
           three patterns in Section 1. <strong>You can already triage this incident.</strong></p>
       </div>
 
-      <h3>The ten, and where each lives in the journey</h3>
+      <h3>The fifteen, and where each lives in the journey</h3>
+      <p>Ten form the core kill-chain; five more (11–15) round out the most important PortSwigger classes,
+        each with a distinct detection lesson. Every one is told the same way.</p>
       <div class="atkgrid">
         <div class="a"><span class="n">01 · stage 6</span><span class="t">Content Discovery</span><span class="s">Fuzzing for hidden paths — the opening move</span></div>
         <div class="a"><span class="n">02 · stage 7</span><span class="t">Brute Force</span><span class="s">Guessing credentials until one works</span></div>
@@ -1724,6 +1754,11 @@ Content-Length: 98
         <div class="a"><span class="n">08 · stage 7</span><span class="t">IDOR</span><span class="s">Changing an ID to read someone else's data</span></div>
         <div class="a"><span class="n">09 · stage 7</span><span class="t">SSRF</span><span class="s">Making the server fetch what you cannot</span></div>
         <div class="a"><span class="n">10 · stage 5–6</span><span class="t">DoS / DDoS</span><span class="s">Removing availability entirely</span></div>
+        <div class="a"><span class="n">11 · stage 6·9</span><span class="t">Information Disclosure</span><span class="s">The app volunteers its own secrets</span></div>
+        <div class="a"><span class="n">12 · stage 10</span><span class="t">CSRF</span><span class="s">The victim's browser acts for the attacker</span></div>
+        <div class="a"><span class="n">13 · stage 7–8</span><span class="t">XXE Injection</span><span class="s">XML that reads files or reaches inside</span></div>
+        <div class="a"><span class="n">14 · stage 7</span><span class="t">Deserialization</span><span class="s">A tampered object becomes admin — or code</span></div>
+        <div class="a"><span class="n">15 · stage 7</span><span class="t">Business Logic Abuse</span><span class="s">Legal actions, illegal outcome</span></div>
       </div>
 
       <div class="box soc">
@@ -2657,11 +2692,351 @@ Content-Length: 98
     </div>
   </section>
 
+  <!-- ============================================================= ATTACK 11 -->
+  <section class="page" data-title="Attack 11 · Information Disclosure">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.11</span><span class="tag">Recon · OWASP A01/A05</span><span class="time">Journey stages 6 &amp; 9</span></div>
+      <h2>Attack 11 — Information Disclosure</h2>
+      <p class="lede">The application volunteers things it should keep to itself — a stack trace naming its
+        framework, a <span class="mono">.git</span> folder, a forgotten <span class="mono">backup.zip</span>.
+        Individually harmless-looking; together, the map an attacker uses for everything else.</p>
+    </div>
+    <div class="content">
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="infodis">
+        <div class="sim-head">
+          <div class="sim-title">Information Disclosure <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> anything the app reveals for free — versions, internal paths, source code,
+        secrets, other users' data in errors. Usually reconnaissance <em>for</em> another attack, not the end
+        in itself.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Send malformed input to trigger an unhandled error and read the <b>stack trace</b> — framework, version, file paths, sometimes a fragment of a query.</li>
+        <li>Request common sensitive paths: <span class="mono">/.git/</span>, <span class="mono">/.env</span>, <span class="mono">/backup.zip</span>, <span class="mono">/phpinfo.php</span>, <span class="mono">/admin</span>, directory listings.</li>
+        <li>Read the <span class="mono">Server</span> and framework headers, HTML comments, and JS source maps for internal detail.</li>
+        <li><b>Use it:</b> the version picks a CVE (→ A06), the <span class="mono">.env</span> is a credential breach, the source reveals every other flaw.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>Debug settings left on in production, deployment artefacts left in the web root, and default error
+        pages that echo internal detail. None is an "exploit" — the server was simply configured to be honest
+        with strangers (OWASP A05), and honesty here is a leak.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="key"><td>Web server logs</td><td><strong>Very visible.</strong> Requests to <span class="mono">/.git/</span>, <span class="mono">/.env</span>, <span class="mono">/backup*</span>, <span class="mono">/wp-config*</span> — legitimate users never ask for these. A <strong>200</strong> on any of them is both the attacker's win and your alert.</td></tr>
+          <tr class="key"><td>Status codes</td><td>A <strong>spike of 500s</strong> from one IP as they probe for verbose errors. Same shape as SQLi probing — the difference is what they do with the leak.</td></tr>
+          <tr><td>Response bodies</td><td>If inspected: stack traces, version strings, internal hostnames and paths flowing back out. WAF response-inspection or DLP can flag secret-looking patterns leaving the app.</td></tr>
+          <tr><td>WAF logs</td><td>Rules for sensitive-path access and for known error-signature patterns in responses.</td></tr>
+          <tr><td>SIEM alerts</td><td>Alert on any 200 to a sensitive-path allow-list; alert on 500-rate per client IP. Both are cheap, low-false-positive rules.</td></tr>
+          <tr class="none"><td>Auth logs</td><td>Nothing directly — but a leaked credential leads to <em>later</em> legitimate-looking logins.</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Nothing unless a leaked secret is later used to execute code elsewhere.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Identify exactly what leaked</b> — filter the source IP to 200s on sensitive paths, and pull the error responses served.</li>
+        <li><b>If a secret was disclosed, rotate it immediately</b> — treat a leaked <span class="mono">.env</span> or source-embedded key as compromised.</li>
+        <li><b>Remove the exposure:</b> delete deployment artefacts from the web root, disable debug/verbose errors, add generic error pages, block sensitive paths at the WAF.</li>
+        <li><b>Assume the recon was used.</b> Check for follow-up activity from the same source consistent with the disclosed version or credentials.</li>
+        <li><b>Eradicate at build time:</b> ensure deployments never ship <span class="mono">.git</span>, <span class="mono">.env</span> or backups; suppress the <span class="mono">Server</span> version header; make "no debug in prod" a pipeline check.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 12 -->
+  <section class="page" data-title="Attack 12 · CSRF">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.12</span><span class="tag">Client-side · OWASP A01</span><span class="time">Journey stage 10</span></div>
+      <h2>Attack 12 — Cross-Site Request Forgery (CSRF)</h2>
+      <p class="lede">The attacker never talks to your server. They get <em>the victim's browser</em> to do it —
+        with the victim's own session — from a page on a completely different site.</p>
+    </div>
+    <div class="content">
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="csrf">
+        <div class="sim-head">
+          <div class="sim-title">CSRF <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> any state-changing action a logged-in user can take — change email, change
+        password, transfer funds, add an admin — that relies on the session cookie alone.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Find a state-changing request that needs only the session cookie (no unpredictable token).</li>
+        <li>Build a page on an attacker-controlled site with a hidden, auto-submitting form targeting that endpoint.</li>
+        <li>Lure the logged-in victim to the page (a link, an ad, an embedded image).</li>
+        <li>The victim's browser submits the form and <b>automatically attaches their session cookie</b> — the server sees an authenticated, valid request.</li>
+        <li>The action executes as the victim: email changed to the attacker's, enabling account takeover via password reset.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The browser attaches cookies to <em>every</em> request to a site, including ones triggered by other
+        sites — the direct consequence of Section 1's statelessness lesson. Without an anti-CSRF token or a
+        <span class="mono">SameSite</span> cookie policy, the server cannot tell a deliberate user action from a
+        forged one.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="none"><td>Web server logs</td><td><strong>Looks legitimate.</strong> Correct session cookie, valid user, normal <strong>200</strong>/<strong>302</strong>. The action itself is indistinguishable from the real user doing it.</td></tr>
+          <tr class="key"><td>Referer / Origin headers</td><td><strong>The tell.</strong> A state-changing request whose <span class="mono">Origin</span> or <span class="mono">Referer</span> points at an <em>external</em> site is the signature of CSRF. Log and alert on cross-origin state changes.</td></tr>
+          <tr class="key"><td>Behavioural</td><td>A sensitive change (email/password) with <strong>no preceding navigation</strong> to the settings page — the user never visited the form they supposedly submitted.</td></tr>
+          <tr><td>SIEM alerts</td><td>Rule: state-changing endpoint + off-site Referer. Also correlate an email/recovery change with the absence of the usual page-view trail before it.</td></tr>
+          <tr><td>Auth logs</td><td>Account-recovery or email-change events, then a login from a new device using the changed credentials — the takeover completing.</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Nothing on the server side; the forging happened in the victim's browser on another site.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Spot the pattern:</b> a cluster of state changes with off-site Referers, or one account whose email/password changed with no settings-page visit beforehand.</li>
+        <li><b>Contain the affected accounts:</b> revert the change, invalidate sessions, force re-verification of email/password.</li>
+        <li><b>Scope:</b> how many users were lured? Web logs give you the set of accounts that made the forged request.</li>
+        <li><b>Eradicate:</b> add anti-CSRF tokens to every state-changing endpoint and set <span class="mono">SameSite=Lax/Strict</span> on session cookies — the two controls that make forgery impossible.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 13 -->
+  <section class="page" data-title="Attack 13 · XXE Injection">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.13</span><span class="tag">Injection · OWASP A05</span><span class="time">Journey stages 7–8</span></div>
+      <h2>Attack 13 — XXE (XML External Entity) Injection</h2>
+      <p class="lede">An XML feature is told to fetch an "entity" — and obligingly reads a local file, or reaches
+        an internal URL, on the attacker's behalf. Injection's quieter cousin, and a direct route into SSRF.</p>
+    </div>
+    <div class="content">
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="xxe">
+        <div class="sim-head">
+          <div class="sim-title">XXE <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> any endpoint that parses XML — SOAP APIs, SAML, document uploads (DOCX/SVG
+        are XML), stock-check and import features. The prize is local files, or an SSRF pivot into the network.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Confirm the endpoint parses XML and expands entities (the <span class="mono">PROBE</span> test).</li>
+        <li>Define an external entity pointing at a local file: <span class="mono">SYSTEM "file:///etc/passwd"</span>, and reference it in a value that is reflected back.</li>
+        <li>Escalate to sensitive files — <span class="mono">.env</span>, private keys, application config.</li>
+        <li>If nothing is reflected, go <b>out-of-band</b>: point the entity at an attacker URL (<span class="mono">http://evil.io</span>) and read the exfiltrated data from the callback — this is also <b>XXE→SSRF</b>, reaching internal services and cloud metadata.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The XML parser is configured to resolve external entities, and it is fed untrusted XML. The
+        application never validates what the entity points at — so a document-parsing feature becomes a
+        file-reading and network-requesting one.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="none"><td>Web server logs</td><td>Weak — the payload is an XML <strong>POST body</strong>, so the access log shows only <span class="mono">POST /stock 200</span>.</td></tr>
+          <tr class="key"><td>WAF logs</td><td><strong>Your main inbound signal.</strong> Rules match <span class="mono">&lt;!DOCTYPE</span>, <span class="mono">&lt;!ENTITY</span>, and <span class="mono">SYSTEM</span> in request bodies — the WAF can inspect the body the access log can't.</td></tr>
+          <tr class="key"><td>Egress / DNS logs</td><td><strong>The detection for out-of-band XXE.</strong> The server making an outbound request to an unfamiliar host, or resolving an attacker domain, after parsing an upload. Same "server started talking outbound" rule as SSRF and blind command injection.</td></tr>
+          <tr><td>Application logs</td><td>XML parser errors and entity-resolution failures during probing.</td></tr>
+          <tr><td>File access</td><td><span class="mono">auditd</span> file-read rules catch the web app reading <span class="mono">/etc/passwd</span> or key material it never normally touches.</td></tr>
+          <tr class="none"><td>Auth logs</td><td>Nothing directly; disclosed credentials show up as later legitimate logins.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Confirm and scope:</b> which files or internal hosts were reached? Pull WAF body captures and egress logs for the parsing endpoint.</li>
+        <li><b>If files were read, rotate any secrets disclosed;</b> if internal services or cloud metadata were reached, treat it as SSRF and revoke instance credentials.</li>
+        <li><b>Contain:</b> WAF rule blocking DOCTYPE/ENTITY on the endpoint, egress filtering.</li>
+        <li><b>Eradicate:</b> disable external-entity resolution in the XML parser (the definitive fix), and prefer a hardened, entity-free parser configuration everywhere XML is accepted.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 14 -->
+  <section class="page" data-title="Attack 14 · Deserialization">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.14</span><span class="tag">Integrity · OWASP A08</span><span class="time">Journey stage 7</span></div>
+      <h2>Attack 14 — Insecure Deserialization</h2>
+      <p class="lede">The application saved an object into your cookie and trusts you to hand it back unchanged.
+        Edit it and you can become an admin — or, with a crafted object, run code as the server rebuilds it.</p>
+    </div>
+    <div class="content">
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="deser">
+        <div class="sim-head">
+          <div class="sim-title">Insecure Deserialization <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> any serialized object accepted from the client — session cookies, hidden
+        fields, cached objects, API tokens. The prize ranges from privilege escalation to full remote code
+        execution.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Spot a serialized blob — base64 that decodes to a structured object, or PHP/Java/.NET serialization markers.</li>
+        <li>Decode it and look for an editable field: <span class="mono">admin</span>, <span class="mono">role</span>, <span class="mono">user_id</span>, a file path.</li>
+        <li>Modify, re-encode, replay. If the server rebuilds the object without verifying integrity, the change takes effect — instant privilege escalation.</li>
+        <li><b>For RCE:</b> craft a "gadget chain" — an object whose reconstruction triggers a sequence of method calls already present in the app's libraries, ending in code execution.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The app deserializes untrusted input and trusts the result because "it came from us originally." There
+        is no signature or integrity check, so a tampered object is rebuilt as if genuine — and native
+        deserializers can be steered into executing code during reconstruction.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <table class="evsrc">
+        <tbody>
+          <tr class="none"><td>Web server logs</td><td><strong>Hard.</strong> The tampering is inside a cookie or POST body — the access log shows a normal authenticated request.</td></tr>
+          <tr class="key"><td>Application logs</td><td><strong>Your best signal.</strong> <span class="mono">Deserialization</span> / <span class="mono">InvalidClassException</span> / type errors — failed gadget attempts are noisy <em>before</em> a working one. Alert on deserialization exceptions.</td></tr>
+          <tr class="key"><td>Behavioural</td><td>A session whose <strong>privilege level changed with no authorisation event</strong> — a user acting as admin with no admin-grant in the logs.</td></tr>
+          <tr><td>Endpoint telemetry</td><td>For RCE gadget chains: the app process spawning a shell or child process — the same parent/child signal as command injection.</td></tr>
+          <tr><td>WAF logs</td><td>Limited: can match known serialization markers (<span class="mono">rO0AB</span> for Java, <span class="mono">O:</span> for PHP) in parameters, but easily obfuscated.</td></tr>
+          <tr class="none"><td>Auth logs</td><td>Nothing — no login occurs; the forged object <em>is</em> the authentication.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Confirm via application logs</b> — deserialization exceptions clustered from one session/IP, or a privilege change with no grant event.</li>
+        <li><b>If RCE is suspected</b> (process spawn), treat as server compromise: isolate the host, preserve evidence, hunt persistence.</li>
+        <li><b>Contain:</b> invalidate affected sessions, block the source, revoke any tokens that were serialized objects.</li>
+        <li><b>Eradicate:</b> stop deserializing untrusted input; if unavoidable, use a data-only format (JSON) with strict schemas, and <strong>sign/encrypt</strong> any serialized state so tampering is detectable.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= ATTACK 15 -->
+  <section class="page" data-title="Attack 15 · Business Logic">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">3.15</span><span class="tag">Design · OWASP A04</span><span class="time">Journey stage 7</span></div>
+      <h2>Attack 15 — Business Logic Abuse</h2>
+      <p class="lede">No injection, no payload, no malformed request. The attacker follows the rules — just not
+        in the order, quantity, or values anyone designed for. Every request returns <span class="mono">200 OK</span>,
+        and the business quietly loses.</p>
+    </div>
+    <div class="content">
+      <h3>Walk it through — normal, then the weakness, then the attack</h3>
+      <div class="sim" data-atk="logic">
+        <div class="sim-head">
+          <div class="sim-title">Business Logic <span>— step through each state</span></div>
+          <div class="sim-ctrls">
+            <button type="button" class="sim-btn on" data-st="normal">1 · Normal</button>
+            <button type="button" class="sim-btn warnb" data-st="probe">2 · Find the weakness</button>
+            <button type="button" class="sim-btn bad" data-st="attack">3 · Attack</button>
+          </div>
+        </div>
+        <div class="sim-viz" data-slot="viz"></div>
+        <div class="sim-stage">
+          <div class="sim-col req"><span class="lb">Request</span><pre data-slot="req"></pre></div>
+          <div class="sim-col res"><span class="lb">Response</span><pre data-slot="res"></pre></div>
+        </div>
+        <div class="sim-verdict"><span class="dot"></span><b data-slot="v"></b><i data-slot="vi"></i></div>
+        <div class="sim-cap" data-slot="cap"></div>
+      </div>
+      <p><strong>Target:</strong> the workflow itself — checkout, coupons, refunds, transfers, loyalty points.
+        The attacker wants free goods, unlimited retries, or money that shouldn't move, through actions that are
+        each individually legal.</p>
+
+      <h3 class="st"><span class="n">04</span> Attack flow</h3>
+      <ol class="aflow">
+        <li>Read the workflow and ask the questions the designer didn't: <em>what if I do this twice? out of order? with a negative number? and never finish?</em></li>
+        <li>Tamper with a client-supplied value the server trusts — a price, a quantity, a discount, a user tier.</li>
+        <li>Chain legitimate steps into an illegitimate outcome — stack coupons, replay a one-time action, buy at a price you set.</li>
+        <li>Automate the winning sequence. Nothing is ever malformed, so nothing ever errors.</li>
+      </ol>
+
+      <h3 class="st"><span class="n">05</span> Why it succeeds</h3>
+      <p>The threat was never modelled at design time (OWASP A04), so no control exists to enforce the rule.
+        The server trusts a value only the client was supposed to set, or assumes steps happen in a fixed order.
+        You cannot patch a missing requirement.</p>
+
+      <h3 class="st"><span class="n">06</span> SOC perspective</h3>
+      <div class="box warn">
+        <span class="box-t">The other attack signatures cannot catch</span>
+        <p>Like IDOR, this is invisible to signatures: every request is well-formed and returns
+          <strong>200</strong>. There is no payload, no error, no anomalous status code. Detection is not about
+          requests at all — it is about <strong>outcomes</strong>.</p>
+      </div>
+      <table class="evsrc">
+        <tbody>
+          <tr class="none"><td>Web logs / WAF</td><td><strong>Nothing.</strong> No malicious pattern exists to match.</td></tr>
+          <tr class="key"><td>Business-outcome monitoring</td><td><strong>The only detection.</strong> Alert on results that shouldn't be possible: an order total below cost, a discount exceeding 100%, more coupon redemptions than a rule allows, refunds exceeding purchases, negative quantities.</td></tr>
+          <tr class="key"><td>Application / transaction logs</td><td>The step sequence per session — replays of one-time actions, skipped steps, impossible value combinations. Requires the app to log business events, not just HTTP requests.</td></tr>
+          <tr><td>UEBA / analytics</td><td>One account producing economically abnormal patterns versus its own and peers' history.</td></tr>
+          <tr class="none"><td>Endpoint telemetry</td><td>Nothing — no code executes; it is pure logic abuse.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="st"><span class="n">07</span> Incident response</h3>
+      <ol class="aflow">
+        <li><b>Quantify the loss</b> — the anomalous outcomes are your evidence (orders below cost, over-redeemed coupons). Scope how many transactions and how much value.</li>
+        <li><b>Identify the accounts</b> and whether it is one abuser or a shared technique spreading.</li>
+        <li><b>Contain:</b> disable the abused workflow or add an emergency server-side limit; reverse fraudulent transactions where possible.</li>
+        <li><b>Eradicate:</b> enforce the missing rule <strong>server-side</strong> (never trust client values), add quantity/rate/order-of-operations checks, and add threat-model/abuse-case review so the next feature ships with the control built in.</li>
+        <li><b>Detect next time:</b> build the business-outcome alert you just wished you had — it is the only thing that would have caught this.</li>
+      </ol>
+    </div>
+  </section>
+
   <!-- ============================================================= SECTION 3 RECAP -->
   <section class="page" data-title="3 · Attack recap &amp; detection matrix">
     <div class="page-head">
       <div class="kicker"><span class="snum">3.11</span><span class="tag soc">Section 3 recap</span></div>
-      <h2>Ten attacks, one detection matrix</h2>
+      <h2>Every attack, one detection matrix</h2>
       <p class="lede">The single page to keep. Where each attack leaves evidence, and which source proves it.</p>
     </div>
     <div class="content">
@@ -2678,6 +3053,11 @@ Content-Length: 98
           <tr><td><strong>08</strong> IDOR</td><td>Behavioural analytics</td><td>One session, many distinct object IDs</td></tr>
           <tr><td><strong>09</strong> SSRF</td><td>Egress + DNS logs</td><td>Server connects to metadata IP / internal ranges</td></tr>
           <tr><td><strong>10</strong> DoS / DDoS</td><td>Web logs + infra metrics</td><td>503 wall; request-rate spike on an expensive endpoint</td></tr>
+          <tr><td><strong>11</strong> Information disclosure</td><td>Web logs</td><td>200 on <span class="mono">/.git</span>·<span class="mono">/.env</span>·<span class="mono">/backup</span>; 500 stack traces</td></tr>
+          <tr><td><strong>12</strong> CSRF</td><td>Referer/Origin + behavioural</td><td>State change with an off-site Referer; no settings visit first</td></tr>
+          <tr><td><strong>13</strong> XXE</td><td>WAF body + egress/DNS</td><td><span class="mono">&lt;!ENTITY</span> in a POST body; server dials out</td></tr>
+          <tr><td><strong>14</strong> Deserialization</td><td>App logs + behavioural</td><td>Deserialization exceptions; privilege change with no grant</td></tr>
+          <tr><td><strong>15</strong> Business logic</td><td>Business-outcome monitoring</td><td>An outcome that shouldn't be possible (order below cost)</td></tr>
         </tbody>
       </table>
 
@@ -2703,15 +3083,733 @@ Content-Length: 98
 
       <div class="box soc">
         <span class="box-t">And the honest limitation</span>
-        <p>Two of these ten — <strong>XSS</strong> and <strong>IDOR</strong> — cannot be reliably caught by
-          signatures at all, and IDOR is the number-one risk on the OWASP list. That is not a gap in your
-          tooling knowledge; it is the actual state of the discipline. It is why behavioural analytics,
-          business context, and prevention-by-design carry as much weight as detection rules.</p>
+        <p>Three of these — <strong>XSS</strong>, <strong>IDOR</strong> and <strong>business logic abuse</strong> —
+          cannot be reliably caught by signatures at all, and IDOR is the number-one risk on the OWASP list.
+          That is not a gap in your tooling knowledge; it is the actual state of the discipline. It is why
+          behavioural analytics, business context, and prevention-by-design carry as much weight as detection
+          rules.</p>
       </div>
 
       <p>Next: <strong>Section 5</strong> puts you on the other side of these attacks. You will perform four of
         them yourself in free PortSwigger labs — and then immediately return to the analyst's chair and find
         your own attack in the logs.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================= SECTION 5 BANNER -->
+  <section class="page" data-title="5 · Hands-on labs">
+    <div class="page-head">
+      <div class="secband">
+        <span class="bignum">5</span>
+        <div class="t"><h2>Practical Labs — PortSwigger Web Security Academy</h2>
+          <p>Perform the attack yourself · then turn around and find it in the logs</p></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="box note">
+        <span class="box-t">Where is Section 4?</span>
+        <p>Section 4 (visual diagrams for every attack) is already delivered — it is built <em>into</em>
+          Sections 2 and 3 as the ten OWASP flow diagrams and the ten interactive attack simulators, rather
+          than being separated into a gallery. Every attack you meet has its diagram beside it.</p>
+      </div>
+
+      <h3>Why we do the attack at all</h3>
+      <p>This is a SOC session, so it is fair to ask why students should exploit anything. The answer is
+        simple: <strong>you cannot recognise evidence of an action you have never performed.</strong> After you
+        have injected a quote and watched the query break, a <span class="mono">500</span> spike in a log stops
+        being an abstraction.</p>
+      <div class="oneline">Each lab runs the same two-part loop:
+        <strong>be the attacker → then be the analyst who has to prove it happened.</strong></div>
+
+      <h3>What you need — all free</h3>
+      <table class="toolbox">
+        <tbody>
+          <tr><td>Account</td><td>A free Web Security Academy login</td><td>portswigger.net/web-security</td></tr>
+          <tr><td>Browser</td><td>Enough on its own for several labs</td><td>no install</td></tr>
+          <tr><td>Burp Community</td><td>Free edition — needed for intercepting/repeating requests</td><td>no licence required</td></tr>
+        </tbody>
+      </table>
+      <div class="box tip">
+        <span class="box-t">No paid tooling anywhere in this session</span>
+        <p>Every lab below is <strong>Apprentice level and free</strong>. Burp <em>Professional</em> is never
+          required. Where a lab needs no proxy at all, it is marked <strong>browser-only</strong>.</p>
+      </div>
+
+      <h3>The four core labs we run together</h3>
+      <p>Class time cannot fit sixteen labs, so we run four in depth — chosen because each one has a
+        <strong>matching detection counterpart</strong> you have already studied:</p>
+      <table>
+        <thead><tr><th>#</th><th>Lab</th><th>Attacker view</th><th>Analyst counterpart</th></tr></thead>
+        <tbody>
+          <tr><td><strong>A</strong></td><td>SQL injection — retrieve hidden data</td><td>browser-only</td><td>Attack 03 · payload visible in the GET query string</td></tr>
+          <tr><td><strong>B</strong></td><td>Reflected XSS — nothing encoded</td><td>browser-only</td><td>Attack 04 · the SOC blind spot</td></tr>
+          <tr><td><strong>C</strong></td><td>Web shell upload → RCE</td><td>Burp Community</td><td>Attack 05 · POST-then-GET in the THM log</td></tr>
+          <tr><td><strong>D</strong></td><td>IDOR — user ID in a parameter</td><td>browser-only</td><td>Attack 08 · all 200s, behavioural only</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box key-takeaway">
+        <span class="box-t">The order is deliberate</span>
+        <p>A → B → C → D walks you from <strong>fully visible in logs</strong> (SQLi in a GET) to
+          <strong>completely invisible</strong> (IDOR, all 200s). By the last lab you should be able to explain,
+          unprompted, why your SIEM would have caught the first and missed the last. <strong>That realisation is
+          the point of the section</strong> — not the flags.</p>
+      </div>
+
+      <h3>The full lab menu (homework &amp; self-study)</h3>
+      <p>Everything else maps to a free Apprentice lab too. Use this as your practice ladder:</p>
+      <table class="codemap">
+        <thead><tr><th>Vulnerability</th><th>PortSwigger lab</th><th>Tool</th></tr></thead>
+        <tbody>
+          <tr><td>SQL injection (auth bypass)</td><td>SQLi allowing login bypass</td><td>browser</td></tr>
+          <tr><td>Stored XSS</td><td>Stored XSS into HTML context, nothing encoded</td><td>browser</td></tr>
+          <tr><td>CSRF</td><td>CSRF vulnerability with no defenses</td><td>browser + exploit server</td></tr>
+          <tr><td>Path traversal</td><td>File path traversal, simple case</td><td>Burp Community</td></tr>
+          <tr><td>Command injection</td><td>OS command injection, simple case</td><td>Burp Community</td></tr>
+          <tr><td>SSRF</td><td>Basic SSRF against the local server</td><td>Burp Community</td></tr>
+          <tr><td>Access control</td><td>Unprotected admin functionality</td><td>browser</td></tr>
+          <tr><td>Authentication</td><td>Username enumeration via different responses</td><td>Burp Community</td></tr>
+          <tr><td>Information disclosure</td><td>Information disclosure in error messages</td><td>browser</td></tr>
+          <tr><td>XXE</td><td>Exploiting XXE to retrieve files</td><td>Burp Community</td></tr>
+          <tr><td>Deserialization</td><td>Modifying serialized objects</td><td>Burp Community</td></tr>
+          <tr><td>Business logic</td><td>Excessive trust in client-side controls</td><td>Burp Community</td></tr>
+          <tr><td>Clickjacking</td><td>Basic clickjacking with CSRF token protection</td><td>browser + exploit server</td></tr>
+        </tbody>
+      </table>
+      <p class="src" style="color:var(--text-4);font-size:12px">All labs: PortSwigger Web Security Academy · free tier · linked at source.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================= LAB A -->
+  <section class="page" data-title="Lab A · SQL injection">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">5.A</span><span class="tag">Apprentice · browser-only</span><span class="time">⏱ ~15 min</span></div>
+      <h2>Lab A — SQL Injection: retrieving hidden data</h2>
+      <p class="lede">The anchor lab. You will change the meaning of a database query using a single
+        apostrophe — then look at what that same action wrote into a web log.</p>
+    </div>
+    <div class="content">
+      <div class="box lab">
+        <span class="box-t">Objective</span>
+        <p>A shop filters products by category. Make it return <strong>unreleased products</strong> — records
+          the application deliberately hides.<br>
+          <span class="mono">portswigger.net/web-security/sql-injection/lab-retrieve-hidden-data</span></p>
+      </div>
+
+      <h3>Before you start — understand this one thing</h3>
+      <p>The application builds its query by <strong>gluing your input into a string</strong>:</p>
+      <div class="httpbase">
+        <div class="hb req"><h4>What the app intends</h4>
+<pre>SELECT * FROM products
+WHERE category = '<b>Gifts</b>'
+  AND released = 1</pre></div>
+        <div class="hb res"><h4>Why <span class="mono">--</span> matters</h4>
+<pre>-- starts a SQL comment.
+Everything after it on that
+line is <b>ignored</b> by the
+database engine.</pre></div>
+      </div>
+      <p>The <span class="mono">AND released = 1</span> is the only thing hiding the unreleased products. If you
+        can comment it out, they appear.</p>
+
+      <h3>Steps</h3>
+      <ol class="aflow">
+        <li>Open the lab and click a category — note the URL becomes <span class="mono">?category=Gifts</span>.</li>
+        <li>Edit the URL to <span class="mono">?category=Gifts'--</span> and load it.</li>
+        <li><b>Observe:</b> more products than before — the hidden ones are now listed.</li>
+        <li>Now generalise: <span class="mono">?category=Gifts'+OR+1=1--</span></li>
+        <li><b>Observe:</b> <i>every</i> product in every category returns. Lab solved.</li>
+      </ol>
+
+      <h3>What to notice (more important than solving it)</h3>
+      <ul>
+        <li>The application <strong>never showed an error</strong>. It returned <span class="mono">200 OK</span> and simply obeyed. Silent success is the normal case.</li>
+        <li>You did not "break in" — you <strong>rewrote the question</strong> the app asked its database.</li>
+        <li><span class="mono">1=1</span> is always true, so the <span class="mono">WHERE</span> clause stopped filtering anything at all.</li>
+      </ul>
+
+      <h3>Why it works</h3>
+      <p>Your quote closed the string the developer opened. From that character onward, the database read your
+        text as <strong>instruction rather than data</strong> — the exact root cause from Section 2 (A03) and
+        Section 3 (Attack 03).</p>
+
+      <div class="box attacker-view">
+        <span class="box-t">Attacker view — what you just did</span>
+        <p>Two URL edits, no tooling, no error messages, and full control of a database query. This is why
+          injection has stayed near the top of the OWASP list for two decades.</p>
+      </div>
+      <div class="box detection-view">
+        <span class="box-t">Analyst view — what it left behind</span>
+        <p>Because the payload travelled in a <strong>GET</strong>, your web server logged it verbatim:</p>
+      </div>
+      <div class="logq">
+        <div class="logq-bar bad"><code>index=web uri_path="/filter" | search q="*'*" OR q="*OR*1=1*"</code><span class="logq-apply">RUN</span></div>
+        <div class="logq-body">
+          <div class="logq-line">10.10.10.100 - - [12/Aug/2026:14:02:11] "GET /filter?category=Gifts HTTP/1.1" 200 1861</div>
+          <div class="logq-line alarm">10.10.10.100 - - [12/Aug/2026:14:02:29] "GET /filter?category=Gifts<b>'--</b> HTTP/1.1" 200 <b>4120</b></div>
+          <div class="logq-line alarm">10.10.10.100 - - [12/Aug/2026:14:02:47] "GET /filter?category=Gifts<b>' OR 1=1--</b> HTTP/1.1" 200 <b>9744</b></div>
+        </div>
+        <div class="logq-note"><b>Two signals, not one.</b> The payload is visible in the query string —
+          <i>and</i> the <span class="k">response size jumps 1861 → 4120 → 9744</span>. The payload proves it was
+          <i>attempted</i>; the size jump proves it <b>worked</b>. Always check both.</div>
+      </div>
+
+      <div class="box warn">
+        <span class="box-t">Now change one thing</span>
+        <p>Imagine that same payload submitted through a <strong>POST</strong> form instead. Your log line
+          becomes <span class="mono">"POST /filter HTTP/1.1" 200</span> — and nothing else. Same attack, same
+          impact, <strong>zero evidence</strong>. That is the single most important lesson in this section.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= LAB B -->
+  <section class="page" data-title="Lab B · Reflected XSS">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">5.B</span><span class="tag">Apprentice · browser-only</span><span class="time">⏱ ~10 min</span></div>
+      <h2>Lab B — Reflected XSS with nothing encoded</h2>
+      <p class="lede">The shortest lab here, and the one that best demonstrates the limits of your visibility.</p>
+    </div>
+    <div class="content">
+      <div class="box lab">
+        <span class="box-t">Objective</span>
+        <p>Make an alert box execute in the browser by submitting a payload through the site's search
+          function.<br>
+          <span class="mono">portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded</span></p>
+      </div>
+
+      <h3>Before you start</h3>
+      <p>Whatever you type into the search box is <strong>reflected back into the page</strong>. The question is
+        whether it comes back as <em>text</em> or as <em>markup</em>. Nothing else matters.</p>
+
+      <h3>Steps</h3>
+      <ol class="aflow">
+        <li>Search for an ordinary word. View the page source and find where your word was inserted.</li>
+        <li>Now search for <span class="mono">&lt;b&gt;test&lt;/b&gt;</span>. If it renders <b>bold</b> rather than showing the tags literally, the input is being parsed as HTML.</li>
+        <li>Search for <span class="mono">&lt;script&gt;alert(1)&lt;/script&gt;</span>. The alert fires. Lab solved.</li>
+      </ol>
+
+      <h3>What to notice</h3>
+      <ul>
+        <li>Step 2 is the real skill. <strong>The bold test is how you confirm the vulnerability without writing an exploit</strong> — and it is exactly what a scanner does.</li>
+        <li>Nothing happened on the <em>server</em>. No data was read, nothing was stored. The entire event occurred in <strong>your own browser</strong>.</li>
+        <li>Swap <span class="mono">alert(1)</span> for code that reads <span class="mono">document.cookie</span> and sends it away, and this becomes account takeover.</li>
+      </ul>
+
+      <h3>Why it works</h3>
+      <p>Output is not encoded, so <span class="mono">&lt;</span> reaches the browser as "start of a tag"
+        instead of "less-than sign". The browser has no way to tell attacker markup from developer markup —
+        the same data-becomes-code root cause as Lab A, with a different interpreter.</p>
+
+      <div class="box attacker-view">
+        <span class="box-t">Attacker view</span>
+        <p>The realistic version is not an alert box — it is a crafted link, sent by phishing, that silently
+          exfiltrates the victim's session token the moment they click it.</p>
+      </div>
+      <div class="box detection-view">
+        <span class="box-t">Analyst view — and the honest limitation</span>
+        <p><strong>Reflected XSS (this lab):</strong> the payload is in a GET query string, so you can see it —
+          look for <span class="mono">&lt;script</span>, <span class="mono">%3Cscript</span>,
+          <span class="mono">onerror=</span> in URLs.<br>
+          <strong>Stored XSS:</strong> arrives in a POST body. <strong>You see nothing.</strong><br>
+          <strong>The execution itself:</strong> happens in a browser you do not own and do not log —
+          <strong>invisible in every case.</strong></p>
+      </div>
+
+      <div class="box soc">
+        <span class="box-t">So what do you actually do?</span>
+        <p>Detect the <em>consequence</em>, not the attack: <strong>one session token used from two different
+          IPs or countries</strong>. That is stolen-cookie reuse, and it catches the incident even when you
+          missed the injection entirely. Then push prevention hard — output encoding,
+          <span class="mono">HttpOnly</span>, and CSP with <span class="mono">report-uri</span> so victims'
+          browsers report violations back to you. <strong>For XSS, prevention <em>is</em> the detection
+          strategy.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= LAB C -->
+  <section class="page" data-title="Lab C · Web shell upload">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">5.C</span><span class="tag">Apprentice · Burp Community</span><span class="time">⏱ ~25 min</span></div>
+      <h2>Lab C — Remote code execution via web shell upload</h2>
+      <p class="lede">The most important lab of the four, because it pairs <strong>exactly</strong> with a
+        detection lab you have already studied. You will perform the attack, then open the log of the same
+        attack and find yourself in it.</p>
+    </div>
+    <div class="content">
+      <div class="box lab">
+        <span class="box-t">Objective</span>
+        <p>Upload a PHP web shell through an avatar-image function and use it to read
+          <span class="mono">/home/carlos/secret</span>. Log in with the supplied lab credentials
+          (<span class="mono">wiener:peter</span> — these are PortSwigger's own throwaway lab accounts).<br>
+          <span class="mono">portswigger.net/web-security/file-upload/lab-file-upload-remote-code-execution-via-web-shell-upload</span></p>
+      </div>
+
+      <h3>Before you start</h3>
+      <p>Two conditions must both hold, and the lab lets you observe each one separately:</p>
+      <ul>
+        <li><strong>Will it accept a script?</strong> The upload performs no validation of file type or content.</li>
+        <li><strong>Will the upload directory execute it?</strong> Note the path an ordinary image is served from — that is where the shell will land, and it runs scripts.</li>
+      </ul>
+
+      <h3>Steps</h3>
+      <ol class="aflow">
+        <li>Log in with <span class="mono">wiener:peter</span> and find the avatar upload. Upload a normal image; note it is served from <span class="mono">GET /files/avatars/&lt;image&gt;</span>.</li>
+        <li>Create a file <span class="mono">exploit.php</span> containing:<br><span class="mono">&lt;?php echo file_get_contents('/home/carlos/secret'); ?&gt;</span></li>
+        <li>Upload it through the same avatar function. It is accepted — <span class="mono">200</span>, no validation blocks it.</li>
+        <li>Request <span class="mono">GET /files/avatars/exploit.php</span>. The server <strong>executes</strong> your script instead of serving it, and returns Carlos's secret.</li>
+        <li>Submit the secret. Lab solved.</li>
+      </ol>
+
+      <h3>What to notice</h3>
+      <ul>
+        <li>An "upload a photo" feature became "run my code on your server." The file was <strong>executed</strong>, not displayed.</li>
+        <li>The whole attack is one <strong>POST</strong> (the upload) followed by one <strong>GET</strong> (the interaction). Hold that shape in your head — it is the detection signature.</li>
+      </ul>
+
+      <h3>Why it works</h3>
+      <p>Two independent failures — no upload validation, and a directory that permits execution. Fix
+        <em>either</em> and the attack dies (Section 3, Attack 05).</p>
+
+      <div class="box attacker-view">
+        <span class="box-t">Attacker view</span>
+        <p>You now have arbitrary code execution as the web-server user. From here a real attacker drops a
+          persistent shell, reads config files for database credentials, and pivots to the host.</p>
+      </div>
+      <div class="box detection-view">
+        <span class="box-t">Analyst view — do this side by side with the THM room</span>
+        <p>Map your two requests straight onto the <em>Detecting Web Shells</em> log you studied in Section 3:</p>
+      </div>
+      <div class="logq">
+        <div class="logq-bar bad"><code>index=web uri_path IN(*.php) status=200 | stats count by uri clientip</code><span class="logq-apply">RUN</span></div>
+        <div class="logq-body">
+          <div class="logq-line">10.10.10.100 - - [12/Aug/2026:15:20:04] "POST /files/avatars <b>(upload)</b> HTTP/1.1" 200 135</div>
+          <div class="logq-line alarm">10.10.10.100 - - [12/Aug/2026:15:20:41] "GET /files/avatars/<b>exploit.php</b> HTTP/1.1" 200 88 "curl/7.81.0"</div>
+          <div class="logq-line alarm">10.10.10.100 - - [12/Aug/2026:15:21:09] "GET /files/avatars/<b>exploit.php</b> HTTP/1.1" 200 214 "curl/7.81.0"</div>
+        </div>
+        <div class="logq-note"><b>POST upload → repeated GETs to a script in an upload folder.</b> That is the
+          exact signature from the THM room. Confirm it independently with <span class="k">ausearch -k web_shell</span>,
+          which records the file write to disk. <b>You generated the attacker half; the THM log is the analyst
+          half of the identical event.</b></div>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">Step-up (homework)</span>
+        <p><em>Web shell upload via Content-Type restriction bypass</em> — teaches the evasion behind the
+          <span class="mono">image.jpg.php</span> double-extension trick.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= LAB D · IDOR -->
+  <section class="page" data-title="Lab D · IDOR">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">5.D</span><span class="tag">Apprentice · browser-only</span><span class="time">⏱ ~10 min</span></div>
+      <h2>Lab D — IDOR: user ID controlled by the request</h2>
+      <p class="lede">You already did this in Section 1 without knowing its name. Now do it on purpose — and see
+        why the #1 risk on the OWASP list is the one your tools are worst at catching.</p>
+    </div>
+    <div class="content">
+      <div class="box lab">
+        <span class="box-t">Objective</span>
+        <p>View another user's account, and steal their API key, by changing an <span class="mono">id</span>
+          parameter.<br>
+          <span class="mono">portswigger.net/web-security/access-control/lab-user-id-controlled-by-request-parameter</span></p>
+      </div>
+
+      <h3>Before you start</h3>
+      <p>The application <strong>authenticates</strong> you but never <strong>authorises</strong> the specific
+        record — it trusts whatever <span class="mono">id</span> you send. Broken Access Control, OWASP A01.</p>
+
+      <h3>Steps</h3>
+      <ol class="aflow">
+        <li>Log in as <span class="mono">wiener</span>; note your account URL is <span class="mono">/my-account?id=wiener</span>.</li>
+        <li>Change it to <span class="mono">?id=carlos</span>.</li>
+        <li><b>Observe:</b> Carlos's account page loads. Copy his API key to solve the lab.</li>
+      </ol>
+
+      <h3>What to notice</h3>
+      <ul>
+        <li>No payload. No error. A perfectly ordinary <span class="mono">200 OK</span> — for data that isn't yours.</li>
+        <li>This is the same move as <span class="mono">PUT /user/2</span> in the Section 1 HTTP emulator. It had a name all along.</li>
+        <li>Now imagine scripting a loop over <span class="mono">id=1000…1999</span>. One vulnerability becomes a mass-disclosure breach.</li>
+      </ul>
+
+      <h3>Why it works</h3>
+      <p>The object reference is trusted from the client with no ownership check, and the IDs are guessable
+        (Section 3, Attack 08).</p>
+
+      <div class="box attacker-view">
+        <span class="box-t">Attacker view</span>
+        <p>A single free account plus a <span class="mono">for</span> loop equals every user's records. No
+          exploit, no malware, no error — just enumeration.</p>
+      </div>
+      <div class="box detection-view">
+        <span class="box-t">Analyst view — and why this is the hard one</span>
+        <p>Look at what you generated: authenticated requests, all <span class="mono">200</span>, differing only
+          by a value. <strong>A WAF will never flag this, and there is no status-code tell.</strong> The only
+          signal is behavioural.</p>
+      </div>
+      <div class="logq">
+        <div class="logq-bar"><code>index=web uri_path="/my-account" | stats dc(id) as ids by session_id | where ids &gt; 20</code><span class="logq-apply">RUN</span></div>
+        <div class="logq-body">
+          <div class="logq-line">session=a91f… id=wiener   → 200   (normal: one user, their own record)</div>
+          <div class="logq-line alarm">session=b47c… id=carlos, dwyer, admin, user1, user2 … <b>+995 more</b> → 200 ×1000</div>
+        </div>
+        <div class="logq-note"><b>Count distinct IDs per session, not requests per IP.</b> One session touching
+          an abnormal number of <span class="k">distinct object IDs</span> is the whole detection — and it only
+          works if you know your baseline (how many records a real user opens per hour). This is why Section 3
+          called IDOR one of the two attacks signatures cannot catch.</div>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">Step-up (homework)</span>
+        <p><em>User role controlled by request parameter</em> — escalate from user to admin, converging with
+          privilege-escalation logic.</p>
+      </div>
+
+      <div class="box key-takeaway">
+        <span class="box-t">You have now walked the whole visibility spectrum</span>
+        <p>Lab A (SQLi in a GET — <strong>fully logged</strong>) → Lab C (web shell — <strong>POST hides the
+          upload, pivot to the host</strong>) → Lab B (XSS — <strong>executes off your infrastructure</strong>)
+          → Lab D (IDOR — <strong>all 200s, behaviour only</strong>). From fully visible to invisible, learned
+          by doing. Carry that spectrum into the project and the final challenge.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= SECTION 6 BANNER -->
+  <section class="page" data-title="6 · The Project">
+    <div class="page-head">
+      <div class="secband">
+        <span class="bignum">6</span>
+        <div class="t"><h2>The Project — Operation Glass House</h2>
+          <p>One dataset, two threat actors, one investigation that ties the whole session together</p></div>
+      </div>
+    </div>
+    <div class="content">
+      <p>Everything so far has been building to this. The labs taught you single attacks in isolation; the
+        project drops you into a <strong>real incident</strong> where several of them happen together, across
+        eleven days, hidden inside ordinary traffic — and asks you to reconstruct what happened from the
+        evidence alone.</p>
+
+      <div class="box note">
+        <span class="box-t">Where the project sits in the journey</span>
+        <p>It is not a bolt-on exercise at the end — it is the <em>synthesis</em>. It reuses every skill in
+          order: read the web (Section 1) → recognise the attacks (Sections 2–3) → having performed them
+          (Section 5) → now <strong>analyse the evidence, detect, and investigate</strong>. Introduce it right
+          after the labs and let it run as the session's spine.</p>
+      </div>
+
+      <h3>The scenario</h3>
+      <p class="analogy"><strong>ITGate Retail</strong> runs a customer portal on <span class="mono">LNX-VICTIM01</span>.
+        Over eleven days, two things happen — and at first nobody connects them. An <strong>external
+        attacker</strong> finds the portal, maps it, and works through it methodically. Meanwhile a
+        <strong>contractor in Finance</strong>, whose access was never reduced after her project ended, starts
+        reading customer records she has no business reason to read. <strong>The link between them is a single
+        line in an old error log.</strong></p>
+
+      <div class="box key-takeaway">
+        <span class="box-t">Why the two halves connect — the session's thesis in one dataset</span>
+        <p>Months ago the payment gateway failed and the error handler wrote <strong>card data into
+          <span class="mono">error.log</span></strong> — the Sensitive Data Exposure story from Section 2, made
+          real. The <strong>external attacker</strong> reaches that file by <em>path traversal</em>. The
+          <strong>insider</strong> reaches it because she simply has access. <strong>One vulnerability, two
+          completely different threat actors, two completely different response paths.</strong> That is the whole
+          point of the session, and you prove it from logs.</p>
+      </div>
+
+      <h3>Why a self-built project and not another public lab</h3>
+      <p>Four of the attacks you learned — <strong>XSS, path traversal, IDOR and deserialization</strong> — have
+        no single free lab that shows them <em>as SOC evidence</em> inside realistic traffic. The Glass House
+        dataset is authored specifically to carry them, plus the insider case that no web lab covers at all. It
+        is ingestible into <strong>Splunk or Wazuh</strong>, so you investigate it with the same tools as the
+        rest of the session.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================= 6.2 EVIDENCE -->
+  <section class="page" data-title="6 · Evidence &amp; timeline">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">6.2</span><span class="tag">Project · the evidence</span></div>
+      <h2>The evidence you are given</h2>
+      <p class="lede">Eight correlated sources. No single one tells the whole story — and two of them are the
+        only places the most important events can be seen at all.</p>
+    </div>
+    <div class="content">
+      <div class="dsgrid">
+        <div class="ds"><div class="f">glasshouse_access.ndjson</div><div class="m">Apache access · ~40,000</div><div class="c">Baseline browsing + the full external attack chain</div></div>
+        <div class="ds"><div class="f">glasshouse_error.ndjson</div><div class="m">Apache error · ~800</div><div class="c">Stack traces, failed opens, <b>and the historic card-data leak</b></div></div>
+        <div class="ds"><div class="f">glasshouse_waf.ndjson</div><div class="m">ModSecurity · ~600</div><div class="c">Rules matched — <b>detect-only for the first 6 days</b></div></div>
+        <div class="ds"><div class="f">glasshouse_db.ndjson</div><div class="m">MariaDB · ~2,000</div><div class="c">SQLi syntax-error burst; the successful <span class="mono">UNION SELECT</span></div></div>
+        <div class="ds"><div class="f">glasshouse_auth.ndjson</div><div class="m">Linux auth.log · ~1,500</div><div class="c">SSH, sudo, su; the contractor's off-hours logins</div></div>
+        <div class="ds key"><div class="f">glasshouse_app.ndjson</div><div class="m">App audit · ~9,000 · ⭐ key</div><div class="c"><b>user_id + record_id per request</b> — the only proof of IDOR and over-reading</div></div>
+        <div class="ds"><div class="f">glasshouse_proxy.ndjson</div><div class="m">Egress proxy · ~5,000</div><div class="c">Outbound bytes per user; the exfiltration</div></div>
+        <div class="ds key"><div class="f">glasshouse_hr.csv</div><div class="m">HR extract · 40 rows · ⭐ key</div><div class="c">Role, contract end date, <b>badge in/out</b> times</div></div>
+      </div>
+      <div class="box soc">
+        <span class="box-t">The two ⭐ sources are the lesson</span>
+        <p><span class="mono">app.ndjson</span> is the <em>only</em> source that pairs a user with the record they
+          read — without it, IDOR and the insider's over-reading are invisible (they are all 200s). And
+          <span class="mono">hr.csv</span> is the only source that proves intent — contract ended, badge says she
+          wasn't in the building. <strong>Correlation across sources is the entire skill this project teaches.</strong></p>
+      </div>
+
+      <h3>The eleven-day timeline</h3>
+      <table>
+        <thead><tr><th>Day</th><th>Actor</th><th>Action</th><th>MITRE</th><th>Seen in</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>External</td><td>Directory fuzzing, ~2,400 req, UA <span class="mono">feroxbuster</span></td><td>T1595.003</td><td>access</td></tr>
+          <tr><td>2</td><td>External</td><td>Reflected <strong>XSS</strong> probes, 6 encodings</td><td>T1059.007</td><td>access + waf</td></tr>
+          <tr><td>2</td><td>External</td><td><strong>Path traversal</strong> → reads <span class="mono">error.log</span> (200, 1.2 MB)</td><td>T1083</td><td>access + error</td></tr>
+          <tr><td>3</td><td>External</td><td><strong>SQLi</strong> — 380 syntax errors, then one <span class="mono">UNION SELECT</span></td><td>T1190</td><td>access + db</td></tr>
+          <tr><td>4</td><td>External</td><td><strong>IDOR</strong> — 1,100 sequential invoice reads, all 200</td><td>T1548</td><td><strong>app only</strong></td></tr>
+          <tr><td>5</td><td>External</td><td><strong>Deserialization</strong> — crafted cookie → 500s then 200</td><td>T1190</td><td>access + error</td></tr>
+          <tr><td>6</td><td>External</td><td>Malicious upload → <strong>web shell</strong>, then C2 to <span class="mono">198.51.100.4:4444</span></td><td>T1505.003</td><td>access + proxy</td></tr>
+          <tr class="key"><td>7</td><td>—</td><td><strong>WAF switched to blocking. External traffic stops.</strong> <em>The incident is not over.</em></td><td>—</td><td>waf</td></tr>
+          <tr><td>7</td><td><strong>Insider</strong></td><td>Contractor reads <span class="mono">error.log</span> via the file share — finds the card data</td><td>T1078</td><td>auth + app</td></tr>
+          <tr><td>8</td><td>Insider</td><td>Off-hours logins 01:40–03:10; <strong>badge shows she was not on site</strong></td><td>T1078</td><td>auth + hr</td></tr>
+          <tr><td>9</td><td>Insider</td><td>Reads 8,400 records in 90 min; her 30-day average is 120/day</td><td>T1078</td><td><strong>app only</strong></td></tr>
+          <tr><td>10</td><td>Insider</td><td>2.1 GB out to personal cloud — first ever from that account</td><td>T1567.002</td><td>proxy</td></tr>
+          <tr><td>11</td><td>Insider</td><td>Deletes 40 minutes of her own application-log entries</td><td><strong>T1070</strong></td><td><strong>app gap</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>The five traps built in on purpose</h3>
+      <div class="phase trap"><div class="ph">1 · The WAF was in detect-only for six days</div><p>Anyone who assumes "WAF logged it = WAF blocked it" gets every Phase-2 answer wrong. Read the <em>verdict</em> field, not the rule name.</p></div>
+      <div class="phase trap"><div class="ph">2 · Day-4 IDOR is invisible in the access log</div><p>All 200s, well-formed URLs. Only <span class="mono">app.ndjson</span> carries <span class="mono">user_id</span> + <span class="mono">record_id</span>. Forces correlation and normalisation.</p></div>
+      <div class="phase trap"><div class="ph">3 · Two plausible wrong insiders</div><p>A DBA legitimately reads 40,000 records nightly (stable baseline); a sales rep spikes the day a deal closes (corroborated in HR). The right answer compares each account to <em>its own</em> history — the definition of UEBA.</p></div>
+      <div class="phase trap"><div class="ph">4 · The Day-7 "fix" looks like the end</div><p>External traffic stops when the WAF flips to blocking. Half the class will close the case. The insider activity starts the <em>same day</em> — the DoS-as-distraction lesson from Attack 10, at scale.</p></div>
+      <div class="phase trap"><div class="ph">5 · A timestamp skew</div><p><span class="mono">access</span> carries <span class="mono">+0000</span>, <span class="mono">auth</span> carries <span class="mono">+0300</span>. A 3-hour gap breaks the timeline unless you normalise to UTC first — Section 1's clock lesson, made painful once.</p></div>
+    </div>
+  </section>
+
+  <!-- ============================================================= 6.3 MISSION -->
+  <section class="page" data-title="6 · Your mission">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">6.3</span><span class="tag soc">Project · the mission</span></div>
+      <h2>Your mission — 24 questions, 5 phases</h2>
+      <p class="lede">Sequential and evidence-only: each answer comes from the logs, not from Google. You cannot
+        answer Phase 4 without having understood Phase 2. Work in order.</p>
+    </div>
+    <div class="content">
+      <div class="phase"><div class="ph">Phase 1 · Shape (Q1–4)</div><p>The busiest client IP · its request count and window · the tool from its User-Agent · which endpoints returned 200 during the fuzz. <em>Establish the baseline and find the pivot.</em></p></div>
+      <div class="phase"><div class="ph">Phase 2 · The external chain (Q5–12)</div><p>The decoded XSS payload and which encoding evaded the WAF · the file read by traversal and the response size proving it · the DB syntax-error count and the exact successful <span class="mono">UNION SELECT</span> · the deserialization cookie prefix · the uploaded filename and the timestamp of its first GET · the C2 destination.</p></div>
+      <div class="phase"><div class="ph">Phase 3 · The silent one (Q13–15)</div><p>How many distinct <span class="mono">record_id</span> values one session read on Day 4 · which source proves it and why the access log cannot · what the status code was for all of them. <em>(The answer is 200 — that is the point of the question.)</em></p></div>
+      <div class="phase"><div class="ph">Phase 4 · The insider (Q16–21)</div><p>The account · how it was identified (volume vs its <em>own</em> baseline, not the company average) · the two off-hours timestamps and the contradicting badge record · records read on Day 9 vs her 30-day mean · the destination and volume of the exfiltration · the earliest evidence linking her to the same <span class="mono">error.log</span> the external attacker read.</p></div>
+      <div class="phase"><div class="ph">Phase 5 · The cover-up &amp; the report (Q22–24)</div><p>The length and time range of the application-log gap · which source proves the gap is deliberate, not an outage · then <strong>write the incident report</strong> using INE's five deliverables.</p></div>
+
+      <div class="box lab">
+        <span class="box-t">Deliverable — the incident report (INE's five parts)</span>
+        <ol style="margin:6px 0 0">
+          <li><strong>Incident Timeline</strong> — every event, normalised to UTC, both actors on one line.</li>
+          <li><strong>Scope Matrix</strong> — what each actor accessed, and what data was exposed.</li>
+          <li><strong>IOC Package</strong> — IPs, the C2 host, the uploaded filename, the exfil domain, the account.</li>
+          <li><strong>Root-Cause Report</strong> — the one <span class="mono">error.log</span> leak and the access that was never revoked.</li>
+          <li><strong>Detection Gap Analysis</strong> — where you were blind (IDOR, the log gap) and the rules that would fix it.</li>
+        </ol>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">For instructors</span>
+        <p>The generator (<span class="mono">gen_glasshouse.py</span>), the eight data files, the Splunk ingest
+          + Wazuh decoders, and the full answer key live in <span class="mono">Instructor_Only/</span> — never in
+          the student bundle. A deterministic seed gives every cohort an identical dataset.</p>
+      </div>
+
+      <div class="box key-takeaway">
+        <span class="box-t">What Glass House proves</span>
+        <p>That the visibility spectrum from the labs is <em>real</em>: the external chain is loud (you catch it
+          in access/WAF/DB logs), the IDOR is silent (only <span class="mono">app.ndjson</span> sees it), and the
+          insider is invisible to every web control — caught only by correlating behaviour against a baseline and
+          intent against HR. <strong>One incident, the whole session.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= SECTION 7 -->
+  <section class="page" data-title="7 · Final Challenge">
+    <div class="page-head">
+      <div class="secband">
+        <span class="bignum">7</span>
+        <div class="t"><h2>Final Challenge — WebStrike</h2>
+          <p>A free, real PCAP: web compromise → web shell → C2 → exfiltration, start to finish</p></div>
+      </div>
+    </div>
+    <div class="content">
+      <p>The project was our authored evidence. The final challenge is <strong>real, external, and free</strong> —
+        a single packet capture you investigate end to end, proving you can do this outside a course we built.</p>
+
+      <table class="toolbox">
+        <tbody>
+          <tr><td>Challenge</td><td><strong>WebStrike</strong> — CyberDefenders Blue Team CTF</td><td>free (sign-up)</td></tr>
+          <tr><td>Category</td><td>Network Forensics · difficulty <strong>easy</strong></td><td>matches this level</td></tr>
+          <tr><td>Tool</td><td><strong>Wireshark</strong> — the same one from Section 3</td><td>free</td></tr>
+          <tr><td>Covers</td><td>Initial Access · Execution · Persistence · C2 · Exfiltration</td><td>MITRE-mapped</td></tr>
+        </tbody>
+      </table>
+      <p class="src" style="color:var(--text-4);font-size:12px">cyberdefenders.org/blueteam-ctf-challenges/webstrike — free tier · linked at source.</p>
+
+      <h3>The incident (your ticket)</h3>
+      <p class="analogy"><strong>GlassHost Ltd.</strong> runs an image-sharing web app on a single public Linux
+        server. At 02:14 the overnight analyst gets a low-priority alert: the web server made an
+        <strong>outbound</strong> connection to an unfamiliar IP on a high port — unusual for a server that
+        should only ever <em>receive</em>. By morning, a sensitive internal file is on a paste site. Host logging
+        was misconfigured, so <strong>the PCAP is the only complete record.</strong> Reconstruct what happened,
+        in order.</p>
+      <div class="box note">
+        <span class="box-t">Why this scenario, for this session</span>
+        <p>It is Attack 05 (web shell) → Attack 06/SSRF-style outbound (C2) → exfiltration, in real traffic — and
+          it is the "network resolves what logs could not" lesson from Attack 03, turned into a whole exercise.
+          Same Wireshark skills you already used on the Section 3 screenshots; only the evidence is new.</p>
+      </div>
+
+      <h3>Investigation methodology — the expected path</h3>
+      <ol class="aflow">
+        <li><b>Establish normal, then find the pivot.</b> Skim the protocol hierarchy; note what ordinary traffic looks like before hunting the anomaly.</li>
+        <li><b>Filter to the web tier.</b> <span class="mono">http.request.method == "POST"</span> to find the upload; <span class="mono">Follow HTTP Stream</span> on the suspicious POST to see the payload.</li>
+        <li><b>Confirm the shell.</b> <span class="mono">http.request.uri contains ".php"</span> → read the commands and their output in the streams.</li>
+        <li><b>Catch the callback.</b> Filter the web server as <em>source</em>; find the high-port destination that shouldn't exist — the reverse shell / C2.</li>
+        <li><b>Prove exfiltration.</b> Follow the stream carrying the stolen data out; identify the file and where it went.</li>
+        <li><b>Build the timeline.</b> Order every step by packet time and map each to a MITRE tactic.</li>
+      </ol>
+
+      <h3>Questions you must answer from the evidence</h3>
+      <ol class="aflow">
+        <li>The attacker's source IP address.</li>
+        <li>The upload endpoint abused for initial access.</li>
+        <li>The filename of the uploaded web shell.</li>
+        <li>The method + status-code pattern that confirms the upload succeeded and was then used.</li>
+        <li>The first command run through the shell.</li>
+        <li>The IP and port of the reverse-shell / C2 listener.</li>
+        <li>The sensitive file exfiltrated, and its destination.</li>
+        <li>The full timeline, initial access → exfiltration, mapped to MITRE.</li>
+        <li><b>IR question (ours):</b> given no host logs existed, name the one logging or architecture control that would have detected this earlier — and justify it.</li>
+      </ol>
+      <div class="box soc">
+        <span class="box-t">Lessons this challenge drives home</span>
+        <p>The network sees what a misconfigured host does not — Attack 03's lesson at full scale. Every stage
+          maps to a control the session already taught (upload validation, execution-blocked directories, a WAF,
+          <span class="mono">auditd</span>, egress filtering). And a web server making an <strong>outbound</strong>
+          connection is the loudest quiet signal there is. Finish by mapping your timeline onto the ten-stage
+          journey from Section 1 — bookending the session.</p>
+      </div>
+      <div class="box tip">
+        <span class="box-t">Optional extension — the malware dimension</span>
+        <p>WebStrike is strong on web + network + IR but light on a malware binary. Students who want that
+          dimension can take any free <strong>Malware-Traffic-Analysis.net</strong> exercise whose scenario is a
+          web-delivered infection — same Wireshark method, plus "extract the payload and identify the family".
+          Optional, so Section 7 stays web-focused.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= SECTION 8 -->
+  <section class="page" data-title="8 · Homework">
+    <div class="page-head">
+      <div class="secband">
+        <span class="bignum">8</span>
+        <div class="t"><h2>Homework — a free-lab ladder</h2>
+          <p>Fundamentals → single attacks → detection → full investigation. All free.</p></div>
+      </div>
+    </div>
+    <div class="content">
+      <p>Every item is free and hands-on. Work top to bottom — the ladder climbs from consolidating the basics
+        to running a full investigation with a written report. Nothing needs payment or Burp Pro.</p>
+
+      <div class="tiername" style="color:#7fe0a0">Tier 1 · Fundamentals — consolidate Section 1</div>
+      <div class="ladder">
+        <div class="rung t1"><span class="hn">HTTP in Detail</span><span class="plat">TryHackMe · free</span>
+          <div class="meta"><b>Skill:</b> reading requests/responses, methods, status codes. <b>Focus:</b> the request emulator (Task 7). <b>Outcome:</b> read a raw HTTP exchange and name every part.</div></div>
+        <div class="rung t1"><span class="hn">DNS in Detail</span><span class="plat">TryHackMe · free</span>
+          <div class="meta"><b>Skill:</b> resolution + record types. <b>Focus:</b> the query builder, then repeat with <span class="mono">dig</span>. <b>Outcome:</b> explain the 5-step path and read A/CNAME/MX/TXT.</div></div>
+      </div>
+
+      <div class="tiername" style="color:#f0c860">Tier 2 · Single attacks — consolidate Sections 2–3 &amp; 5</div>
+      <div class="ladder">
+        <div class="rung t2"><span class="hn">SQL injection — retrieve hidden data</span><span class="plat">PortSwigger · free</span>
+          <div class="meta"><b>Skill:</b> SQLi via query string. <b>Focus:</b> why <span class="mono">'--</span> rewrites the query. <b>Outcome:</b> articulate the concatenation flaw and the parameterised-query fix.</div></div>
+        <div class="rung t2"><span class="hn">Reflected XSS, nothing encoded</span><span class="plat">PortSwigger · free</span>
+          <div class="meta"><b>Skill:</b> reflected XSS. <b>Focus:</b> output encoding; why the SOC can't see it. <b>Outcome:</b> understand client-side blind spots.</div></div>
+        <div class="rung t2"><span class="hn">File upload → web shell (RCE)</span><span class="plat">PortSwigger · free</span>
+          <div class="meta"><b>Skill:</b> unrestricted upload. <b>Focus:</b> the upload→interact request pair. <b>Outcome:</b> connect the attacker's actions to the THM detection log.</div></div>
+        <div class="rung t2"><span class="hn">IDOR — user ID in a parameter</span><span class="plat">PortSwigger · free</span>
+          <div class="meta"><b>Skill:</b> broken access control. <b>Focus:</b> authentication ≠ authorisation. <b>Outcome:</b> explain why every object needs an ownership check.</div></div>
+      </div>
+
+      <div class="tiername" style="color:#37c7d4">Tier 3 · Detection &amp; log analysis — the SOC lens</div>
+      <div class="ladder">
+        <div class="rung t3"><span class="hn">Web Security Essentials</span><span class="plat">TryHackMe · free</span>
+          <div class="meta"><b>Skill:</b> WAF types, access-log anatomy. <b>Focus:</b> the Secure-A-Site hardening exercise. <b>Outcome:</b> choose the right control per layer <em>before</em> seeing the attack.</div></div>
+        <div class="rung t3"><span class="hn">Log Analysis with SIEM</span><span class="plat">TryHackMe · free</span>
+          <div class="meta"><b>Skill:</b> Splunk threshold queries. <b>Focus:</b> the <span class="mono">filter → bin → stats → where</span> skeleton across brute-force, web-shell, DDoS. <b>Outcome:</b> write a detection query from a described attack.</div></div>
+        <div class="rung t3"><span class="hn">Intro to Log Analysis</span><span class="plat">TryHackMe · free</span>
+          <div class="meta"><b>Skill:</b> raw log triage with CLI tools. <b>Focus:</b> <span class="mono">grep/cut/sort/uniq</span> on access logs. <b>Outcome:</b> find the needle before reaching for a SIEM.</div></div>
+      </div>
+
+      <div class="tiername" style="color:#b79cff">Tier 4 · Full investigation — put it together</div>
+      <div class="ladder">
+        <div class="rung t4"><span class="hn">WebStrike</span><span class="plat">CyberDefenders · free</span>
+          <div class="meta"><b>Skill:</b> end-to-end network-forensic IR. <b>Focus:</b> the full upload→shell→C2→exfil timeline in one PCAP. <b>Outcome:</b> reconstruct and MITRE-map a complete web intrusion (redo the final challenge solo and write the report).</div></div>
+        <div class="rung t4"><span class="hn">A Malware-Traffic-Analysis exercise</span><span class="plat">MTA · free · no sign-up</span>
+          <div class="meta"><b>Skill:</b> malware traffic + payload extraction. <b>Focus:</b> pull the payload, characterise C2. <b>Outcome:</b> add the malware dimension; bridge toward Session 6.</div></div>
+      </div>
+
+      <div class="box tip">
+        <span class="box-t">One deliverable turns every lab into SOC work</span>
+        <p>For each lab, write three lines: the request that solved it, where that request would appear in real
+          telemetry, and the detection rule you'd write. That habit is exactly what the project and final
+          challenge asked for at scale — carry it into the job.</p>
+      </div>
+
+      <h3>Track your own tasks</h3>
+      <p>Add any of the labs above — or your own — to a personal list with a deadline.</p>
+      <div style="margin:10px 0"><button class="btn-sm" id="btnNewTask">➕ Create task</button></div>
+      <div id="taskList"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================= SESSION CLOSE -->
+  <section class="page" data-title="Session complete">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S09</span><span class="tag analysis">Wrap-up</span></div>
+      <h2>Session complete — what you can now do</h2>
+      <p class="lede">You started at a URL bar and finished at a written incident report. Here is the journey you
+        just made, and the handful of ideas worth carrying out of it.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">Understand the web → understand how it normally works → understand the vulnerability
+        → see the attack → do the lab → analyse the evidence → detect it → investigate → respond.</div>
+
+      <h3>The five ideas that outlast the details</h3>
+      <ul>
+        <li><strong>Benign first.</strong> You cannot call anything abnormal until you have seen normal. Every attack page here opened with the normal request for exactly this reason.</li>
+        <li><strong>The status-code story.</strong> 404s→200 (found it), 401s→302 (got in), a 500 spike (probing injection), a 503 wall (availability gone). Most intrusions announce themselves in one of these.</li>
+        <li><strong>GET is logged; POST bodies are not.</strong> The same attack is loud or silent depending only on delivery. For POST-heavy apps, the WAF and packet capture are the only place the attack exists.</li>
+        <li><strong>The server started talking outbound.</strong> One behavioural rule catches SSRF, blind command injection, reverse shells, and exploited components calling home.</li>
+        <li><strong>Some attacks have no signature.</strong> IDOR, XSS and business-logic abuse are caught by behaviour, business context and prevention-by-design — not pattern matching. "No alerts" never means "no attacks".</li>
+      </ul>
+
+      <h3>Where each source took you</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>TryHackMe</strong></td><td>The labs and the defender's framing — real logs, real queries, the benign baseline</td></tr>
+          <tr><td><strong>PortSwigger</strong></td><td>The attack mechanics — you performed them, then detected them</td></tr>
+          <tr><td><strong>INE eCIR</strong></td><td>The method, the evidence, the roles, the five report deliverables</td></tr>
+          <tr><td><strong>MaharaTech</strong></td><td>The IR framework and the OWASP / indicator / insider taxonomies</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box key-takeaway">
+        <span class="box-t">The one sentence for the whole session</span>
+        <p>A web application is the one door your organisation deliberately leaves open to the entire internet.
+          Your job is not to close it — it is to <strong>know what normal looks like, recognise the moment it
+          stops, prove what happened, and put it right.</strong></p>
+      </div>
+
+      <p>Next session moves from the application to the adversary's tooling. Bring the habits you built here —
+        they do not stop being true when the evidence changes shape.</p>
     </div>
   </section>
 
@@ -3000,6 +4098,121 @@ Content-Length: 98
         v: 'Availability gone', vi: 'the 503s are your users',
         cap: '<b>Three beats: normal → flood → 503 wall.</b> No software flaw needed, only missing rate limits and capacity. <b>And always ask why:</b> a loud outage is sometimes cover — check authentication, data access and egress logs from the same window.'
       }
+    },
+
+    /* ---------------- 11 Information disclosure ---------------- */
+    infodis: {
+      title: 'Information Disclosure',
+      normal: {
+        req: 'GET /product?id=42 HTTP/1.1',
+        res: '200 OK\nServer: nginx\n\n(clean product page)',
+        v: 'Normal', vi: 'the app shows only what it should',
+        cap: '<b>A well-behaved app is boring.</b> Errors are generic, versions are hidden, and no internal path or secret ever appears in a response.'
+      },
+      probe: {
+        req: 'GET /product?id=NaN HTTP/1.1\nGET /.git/config\nGET /backup.zip',
+        res: '500 — java.sql.SQLException at\ncom.shop.Catalog:88 (Spring 5.3.2)\n200 OK  /.git/config',
+        v: 'Discovery', vi: 'the app tells on itself',
+        cap: '<b>Break it, or ask for what should not exist.</b> A malformed value triggers a <span class="k">500</span> whose stack trace leaks the framework and version; a guess at <span class="k">/.git/</span> or <span class="k">/backup.zip</span> that returns <span class="k">200</span> hands over source or data. Both are just the app being too honest.'
+      },
+      attack: {
+        req: 'GET /.git/  →  reconstruct repo\ngrep for DB_PASSWORD, API keys',
+        res: '200 OK — full source + secrets\nSpring 5.3.2 → pick a matching CVE',
+        v: 'Recon complete', vi: 'the map for the next attack',
+        cap: '<b>Rarely the goal — usually the setup.</b> The leaked version selects a working exploit (A06); the leaked secret is a credential breach; the leaked source reveals every other flaw. <b>Highly detectable:</b> 500-spikes with stack traces, and requests to <span class="k">/.git</span>, <span class="k">/.env</span>, <span class="k">/backup</span>.'
+      }
+    },
+
+    /* ---------------- 12 CSRF ---------------- */
+    csrf: {
+      title: 'Cross-Site Request Forgery',
+      normal: {
+        req: 'POST /change-email HTTP/1.1\nOrigin: https://bank.local\nCookie: session=<i>valid</i>\ntoken=Xk9…  email=me@new.com',
+        res: '302 — email updated by the real user',
+        v: 'Normal', vi: 'user did it, from the real site',
+        cap: '<b>A genuine state change.</b> The request comes from the bank’s own page, carries the user’s session, and includes an anti-CSRF token proving the user meant to do it.'
+      },
+      probe: {
+        req: 'attacker inspects the form:\nPOST /change-email  — no token? no SameSite?',
+        res: 'form accepts the request with\njust the session cookie',
+        v: 'Discovery', vi: 'no token, no SameSite',
+        cap: '<b>Is the request forgeable?</b> If the state-changing endpoint needs only the session cookie — which the browser attaches automatically to <i>any</i> request to that site — then a page the attacker controls can trigger it. The missing anti-CSRF token is the whole flaw.'
+      },
+      attack: {
+        req: 'victim visits evil.io — hidden auto-form:\nPOST bank.local/change-email\nemail=attacker@evil.io  (+ victim cookie)',
+        res: '302 — email changed to attacker’s\naccount recovery now belongs to them',
+        v: 'Account hijacked', vi: 'the victim’s browser did it',
+        cap: '<b>The browser attaches the cookie for them.</b> This is Section 1’s statelessness lesson weaponised: the request is authenticated because the browser makes it authenticated. In the log it looks legitimate — the only tell is the <span class="k">Origin/Referer</span> pointing off-site.'
+      }
+    },
+
+    /* ---------------- 13 XXE ---------------- */
+    xxe: {
+      title: 'XXE Injection',
+      normal: {
+        req: 'POST /stock  (Content-Type: text/xml)\n\n&lt;stockCheck&gt;&lt;id&gt;42&lt;/id&gt;&lt;/stockCheck&gt;',
+        res: '200 OK\n\nIn stock: 12',
+        v: 'Normal', vi: 'the parser reads the values',
+        cap: '<b>An XML API doing its job.</b> The server parses the document and uses the <span class="k">id</span> value. Nothing unusual — many APIs, SOAP services and file formats are XML under the hood.'
+      },
+      probe: {
+        req: '&lt;!DOCTYPE x [ &lt;!ENTITY t "PROBE"&gt; ]&gt;\n&lt;stockCheck&gt;&lt;id&gt;&amp;t;&lt;/id&gt;&lt;/stockCheck&gt;',
+        res: '200 OK\n\nInvalid product: PROBE',
+        v: 'Discovery', vi: 'the entity was expanded',
+        cap: '<b>Did the parser expand my entity?</b> Defining <span class="k">&amp;t;</span> and seeing <span class="k">PROBE</span> reflected back proves the parser resolves entities — which means it will resolve an <i>external</i> one too.'
+      },
+      attack: {
+        req: '&lt;!DOCTYPE x [ &lt;!ENTITY xxe SYSTEM\n  "file:///etc/passwd"&gt; ]&gt;\n&lt;id&gt;&amp;xxe;&lt;/id&gt;',
+        res: '200 OK\n\nInvalid product: root:x:0:0:...',
+        v: 'File disclosed', vi: 'or point it at an internal URL',
+        cap: '<b>The external entity pulls in a local file — or an internal URL (XXE→SSRF).</b> Detection is hard from access logs (the payload is in a POST body): watch WAF for <span class="k">&lt;!DOCTYPE</span>/<span class="k">&lt;!ENTITY</span>, and egress for out-of-band XXE calling home.'
+      }
+    },
+
+    /* ---------------- 14 Insecure deserialization ---------------- */
+    deser: {
+      title: 'Insecure Deserialization',
+      normal: {
+        req: 'GET /account\nCookie: session=<i>base64(serialized object)</i>',
+        res: '200 OK — your account\n{user:"wiener", admin:false}',
+        v: 'Normal', vi: 'the server rebuilds your session object',
+        cap: '<b>The cookie is a saved object.</b> The server decodes it and reconstructs the session — convenient, and completely trusted.'
+      },
+      probe: {
+        req: 'decode cookie → readable object\n{user:"wiener", admin:false}',
+        res: 'attacker flips a field:\n{user:"wiener", admin:true}',
+        v: 'Discovery', vi: 'the object is client-controlled & unsigned',
+        cap: '<b>Is it signed?</b> If the cookie decodes to something editable and the server accepts the edit, there is no integrity check. Change <span class="k">admin:false</span> to <span class="k">true</span>, re-encode, replay.'
+      },
+      attack: {
+        req: 're-encoded cookie → {admin:true}\n(or a crafted gadget-chain object)',
+        res: '200 OK — admin panel\n(or code execution on the server)',
+        v: 'Privilege / RCE', vi: 'no exploit, no payload string',
+        cap: '<b>The token is the identity, at its most literal.</b> Best case for the attacker: instant admin. Worst case for you: a gadget chain that runs code as the app rebuilds the object. Detection lives in <span class="k">deserialization exceptions</span> and privilege changes with no auth event.'
+      }
+    },
+
+    /* ---------------- 15 Business logic ---------------- */
+    logic: {
+      title: 'Business Logic Abuse',
+      normal: {
+        req: 'POST /checkout\n\nitem=laptop  qty=1  price=1200',
+        res: '302 — order placed, £1200 charged',
+        v: 'Normal', vi: 'the workflow as designed',
+        cap: '<b>Every step is legitimate.</b> Add item, apply one coupon, pay the real price. The app enforces exactly what the designer imagined.'
+      },
+      probe: {
+        req: 'what if I send qty=-1?\nwhat if I apply the coupon 50×?\nwhat if I skip a step?',
+        res: '200 OK to each — the app never\nsaid these were disallowed',
+        v: 'Discovery', vi: 'the rules were never written',
+        cap: '<b>No tool, just adversarial questions.</b> The attacker reads the workflow and tries it out of order, in impossible quantities, or with values the designer never modelled. Each individual request is valid.'
+      },
+      attack: {
+        req: 'POST /checkout\n\nitem=laptop  qty=1  price=1',
+        res: '302 — order placed, £1 charged',
+        v: 'Business harmed', vi: 'every request returned 200',
+        cap: '<b>No payload, no error, no anomalous status — a WAF sees nothing.</b> The app trusted a value only the client set. Detection is <i>business-outcome</i> anomaly: an order below cost, discount stacking, refunds exceeding purchases. This is why the SOC must know the business.'
+      }
     }
   };
 
@@ -3024,7 +4237,17 @@ Content-Length: 98
     ssrf:  { nodes:['Attacker','Web server','URL fetcher','Internal network'], vuln:2,
              vlabel:'any destination accepted', win:'Cloud credentials' },
     dos:   { nodes:['Botnet','Edge / WAF','Web server','Capacity'], vuln:1,
-             vlabel:'no rate limiting', win:'Service down' }
+             vlabel:'no rate limiting', win:'Service down' },
+    infodis:{ nodes:['Attacker','Web server','Application','Error / hidden files'], vuln:2,
+             vlabel:'verbose errors · exposed files', win:'Secrets + version' },
+    csrf:  { nodes:['Victim browser','evil.io page','Web server','Account state'], vuln:2,
+             vlabel:'no anti-CSRF token · no SameSite', win:'Account hijacked' },
+    xxe:   { nodes:['Attacker','Web server','XML parser','Filesystem / internal'], vuln:2,
+             vlabel:'external entities enabled', win:'Files / internal access' },
+    deser: { nodes:['Attacker','Web server','Deserializer','Object / gadget'], vuln:2,
+             vlabel:'object rebuilt without a signature', win:'Admin or RCE' },
+    logic: { nodes:['Attacker','Web server','Business logic','Order / balance'], vuln:2,
+             vlabel:'a value only the client set is trusted', win:'Free goods / fraud' }
   };
 
   var C = {
