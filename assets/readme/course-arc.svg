@@ -1,119 +1,120 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="eCIR course arc — 10 sessions in four blocks">
 <title>eCIR course arc — 10 sessions in four blocks</title>
 <defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B1220"/><stop offset="1" stop-color="#111C33"/></linearGradient>
-<linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#3B82F6"/></linearGradient>
-<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#1E2A45" stroke-width="1"/></pattern>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1226"/><stop offset="1" stop-color="#0e1730"/></linearGradient>
+<linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#37c7d4"/><stop offset="1" stop-color="#d4af37"/></linearGradient>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#1f2d52" stroke-width="1"/></pattern>
 <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-<marker id="arrow-64748B" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#64748B"/></marker>
+<marker id="arrow-7e91b8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7e91b8"/></marker>
 </defs>
 <rect width="1200" height="360" rx="16" fill="url(#bg)"/>
+<rect x="0.75" y="0.75" width="1198.5" height="358.5" rx="16" fill="none" stroke="#1f2d52" stroke-width="1.5"/>
 <rect width="1200" height="360" rx="16" fill="url(#grid)" opacity="0.55"/>
 <rect x="0" y="0" width="6" height="360" rx="3" fill="url(#accent)"/>
-<text x="34" y="38" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#E2E8F0">Course arc</text>
-<text x="34" y="60" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#94A3B8">Ten four-hour sessions · one lab that grows every session</text>
-<rect x="34" y="78" width="110" height="28" rx="14" fill="#64748B" fill-opacity="0.06" stroke="#64748B" stroke-opacity="0.7"/>
-<text x="89.0" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="500" fill="#64748B" text-anchor="middle">SOC Analyst</text>
-<path d="M148,92 L158,92" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-64748B)"/>
-<rect x="168" y="78" width="50" height="28" rx="14" fill="#64748B" fill-opacity="0.06" stroke="#64748B" stroke-opacity="0.7"/>
-<text x="193.0" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="500" fill="#64748B" text-anchor="middle">CEH</text>
-<path d="M222,92 L232,92" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-64748B)"/>
-<rect x="242" y="78" width="58" height="28" rx="14" fill="#22D3EE" fill-opacity="0.18" stroke="#22D3EE" stroke-opacity="0.7"/>
-<text x="271.0" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#22D3EE" text-anchor="middle">eCIR</text>
-<rect x="242" y="78" width="58" height="28" rx="14" fill="none" stroke="#22D3EE" stroke-width="2"><animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/></rect>
-<path d="M304,92 L314,92" stroke="#64748B" stroke-width="2" marker-end="url(#arrow-64748B)"/>
-<rect x="324" y="78" width="65" height="28" rx="14" fill="#64748B" fill-opacity="0.06" stroke="#64748B" stroke-opacity="0.7"/>
-<text x="356.5" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="500" fill="#64748B" text-anchor="middle">eCDFP</text>
-<text x="405" y="97" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#64748B">ITGate Academy path</text>
+<text x="34" y="38" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#e8edf7">Course arc</text>
+<text x="34" y="60" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#a8b8d6">Ten four-hour sessions · one lab that grows every session</text>
+<rect x="34" y="78" width="110" height="28" rx="14" fill="#7e91b8" fill-opacity="0.06" stroke="#7e91b8" stroke-opacity="0.7"/>
+<text x="89.0" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="500" fill="#7e91b8" text-anchor="middle">SOC Analyst</text>
+<path d="M148,92 L158,92" stroke="#7e91b8" stroke-width="2" marker-end="url(#arrow-7e91b8)"/>
+<rect x="168" y="78" width="50" height="28" rx="14" fill="#7e91b8" fill-opacity="0.06" stroke="#7e91b8" stroke-opacity="0.7"/>
+<text x="193.0" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="500" fill="#7e91b8" text-anchor="middle">CEH</text>
+<path d="M222,92 L232,92" stroke="#7e91b8" stroke-width="2" marker-end="url(#arrow-7e91b8)"/>
+<rect x="242" y="78" width="58" height="28" rx="14" fill="#37c7d4" fill-opacity="0.18" stroke="#37c7d4" stroke-opacity="0.7"/>
+<text x="271.0" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#37c7d4" text-anchor="middle">eCIR</text>
+<rect x="242" y="78" width="58" height="28" rx="14" fill="none" stroke="#37c7d4" stroke-width="2"><animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/></rect>
+<path d="M304,92 L314,92" stroke="#7e91b8" stroke-width="2" marker-end="url(#arrow-7e91b8)"/>
+<rect x="324" y="78" width="65" height="28" rx="14" fill="#7e91b8" fill-opacity="0.06" stroke="#7e91b8" stroke-opacity="0.7"/>
+<text x="356.5" y="97" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="500" fill="#7e91b8" text-anchor="middle">eCDFP</text>
+<text x="405" y="97" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#7e91b8">ITGate Academy path</text>
 <rect x="70" y="207" width="1060" height="6" rx="3" fill="url(#accent)"/>
-<circle r="6" fill="#E2E8F0" filter="url(#glow)"><animateMotion dur="12.0s" repeatCount="indefinite" path="M70,210 L1130,210"/></circle>
+<circle r="6" fill="#e8edf7" filter="url(#glow)"><animateMotion dur="12.0s" repeatCount="indefinite" path="M70,210 L1130,210"/></circle>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.0s" dur="0.5s" fill="freeze"/>
-<circle cx="70.0" cy="210" r="17" fill="#0F172A" stroke="#3B82F6" stroke-width="2.5"/>
-<text x="70.0" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#3B82F6" text-anchor="middle">1</text>
-<rect x="34" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="34" y="244" width="103.8" height="4" rx="2" fill="#3B82F6"/>
-<text x="46" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">IR lifecycle</text>
-<text x="46" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">NIST · roles</text>
+<circle cx="70.0" cy="210" r="17" fill="#132244" stroke="#d4af37" stroke-width="2.5"/>
+<text x="70.0" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#d4af37" text-anchor="middle">1</text>
+<rect x="34" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="34" y="244" width="103.8" height="4" rx="2" fill="#d4af37"/>
+<text x="46" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">IR lifecycle</text>
+<text x="46" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">NIST · roles</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.2s" dur="0.5s" fill="freeze"/>
-<circle cx="187.8" cy="210" r="17" fill="#0F172A" stroke="#3B82F6" stroke-width="2.5"/>
-<text x="187.8" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#3B82F6" text-anchor="middle">2</text>
-<rect x="135.9" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="135.9" y="244" width="103.8" height="4" rx="2" fill="#3B82F6"/>
-<text x="147.9" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Lab build</text>
-<text x="147.9" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">VMs · Splunk</text>
+<circle cx="187.8" cy="210" r="17" fill="#132244" stroke="#d4af37" stroke-width="2.5"/>
+<text x="187.8" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#d4af37" text-anchor="middle">2</text>
+<rect x="135.9" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="135.9" y="244" width="103.8" height="4" rx="2" fill="#d4af37"/>
+<text x="147.9" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Lab build</text>
+<text x="147.9" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">VMs · Splunk</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.4s" dur="0.5s" fill="freeze"/>
-<circle cx="305.6" cy="210" r="17" fill="#0F172A" stroke="#22D3EE" stroke-width="2.5"/>
-<text x="305.6" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#22D3EE" text-anchor="middle">3</text>
-<rect x="253.7" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="253.7" y="244" width="103.8" height="4" rx="2" fill="#22D3EE"/>
-<text x="265.7" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">SIEM analysis</text>
-<text x="265.7" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">Sysmon logs</text>
+<circle cx="305.6" cy="210" r="17" fill="#132244" stroke="#37c7d4" stroke-width="2.5"/>
+<text x="305.6" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#37c7d4" text-anchor="middle">3</text>
+<rect x="253.7" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="253.7" y="244" width="103.8" height="4" rx="2" fill="#37c7d4"/>
+<text x="265.7" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">SIEM analysis</text>
+<text x="265.7" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">Sysmon logs</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.6s" dur="0.5s" fill="freeze"/>
-<circle cx="423.3" cy="210" r="17" fill="#0F172A" stroke="#22D3EE" stroke-width="2.5"/>
-<text x="423.3" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#22D3EE" text-anchor="middle">4</text>
-<rect x="371.4" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="371.4" y="244" width="103.8" height="4" rx="2" fill="#22D3EE"/>
-<text x="383.4" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Telemetry</text>
-<text x="383.4" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">Win · Linux</text>
+<circle cx="423.3" cy="210" r="17" fill="#132244" stroke="#37c7d4" stroke-width="2.5"/>
+<text x="423.3" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#37c7d4" text-anchor="middle">4</text>
+<rect x="371.4" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="371.4" y="244" width="103.8" height="4" rx="2" fill="#37c7d4"/>
+<text x="383.4" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Telemetry</text>
+<text x="383.4" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">Win · Linux</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.8s" dur="0.5s" fill="freeze"/>
-<circle cx="541.1" cy="210" r="17" fill="#0F172A" stroke="#22D3EE" stroke-width="2.5"/>
-<text x="541.1" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#22D3EE" text-anchor="middle">5</text>
-<rect x="489.2" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="489.2" y="244" width="103.8" height="4" rx="2" fill="#22D3EE"/>
-<text x="501.2" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Network + TI</text>
-<text x="501.2" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">traffic · TI</text>
+<circle cx="541.1" cy="210" r="17" fill="#132244" stroke="#37c7d4" stroke-width="2.5"/>
+<text x="541.1" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#37c7d4" text-anchor="middle">5</text>
+<rect x="489.2" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="489.2" y="244" width="103.8" height="4" rx="2" fill="#37c7d4"/>
+<text x="501.2" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Network + TI</text>
+<text x="501.2" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">traffic · TI</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="1.0s" dur="0.5s" fill="freeze"/>
-<circle cx="658.9" cy="210" r="17" fill="#0F172A" stroke="#A78BFA" stroke-width="2.5"/>
-<text x="658.9" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#A78BFA" text-anchor="middle">6</text>
-<rect x="607.0" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="607.0" y="244" width="103.8" height="4" rx="2" fill="#A78BFA"/>
-<text x="619.0" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Triage</text>
-<text x="619.0" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">TheHive</text>
+<circle cx="658.9" cy="210" r="17" fill="#132244" stroke="#8b7ce8" stroke-width="2.5"/>
+<text x="658.9" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#8b7ce8" text-anchor="middle">6</text>
+<rect x="607.0" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="607.0" y="244" width="103.8" height="4" rx="2" fill="#8b7ce8"/>
+<text x="619.0" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Triage</text>
+<text x="619.0" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">TheHive</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="1.2s" dur="0.5s" fill="freeze"/>
-<circle cx="776.7" cy="210" r="17" fill="#0F172A" stroke="#A78BFA" stroke-width="2.5"/>
-<text x="776.7" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#A78BFA" text-anchor="middle">7</text>
-<rect x="724.8" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="724.8" y="244" width="103.8" height="4" rx="2" fill="#A78BFA"/>
-<text x="736.8" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Malware</text>
-<text x="736.8" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">behaviour</text>
+<circle cx="776.7" cy="210" r="17" fill="#132244" stroke="#8b7ce8" stroke-width="2.5"/>
+<text x="776.7" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#8b7ce8" text-anchor="middle">7</text>
+<rect x="724.8" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="724.8" y="244" width="103.8" height="4" rx="2" fill="#8b7ce8"/>
+<text x="736.8" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Malware</text>
+<text x="736.8" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">behaviour</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="1.4s" dur="0.5s" fill="freeze"/>
-<circle cx="894.4" cy="210" r="17" fill="#0F172A" stroke="#A78BFA" stroke-width="2.5"/>
-<text x="894.4" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#A78BFA" text-anchor="middle">8</text>
-<rect x="842.6" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="842.6" y="244" width="103.8" height="4" rx="2" fill="#A78BFA"/>
-<text x="854.6" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Lateral</text>
-<text x="854.6" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">persistence</text>
+<circle cx="894.4" cy="210" r="17" fill="#132244" stroke="#8b7ce8" stroke-width="2.5"/>
+<text x="894.4" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#8b7ce8" text-anchor="middle">8</text>
+<rect x="842.6" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="842.6" y="244" width="103.8" height="4" rx="2" fill="#8b7ce8"/>
+<text x="854.6" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Lateral</text>
+<text x="854.6" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">persistence</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.5s" fill="freeze"/>
-<circle cx="1012.2" cy="210" r="17" fill="#0F172A" stroke="#4ADE80" stroke-width="2.5"/>
-<text x="1012.2" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#4ADE80" text-anchor="middle">9</text>
-<rect x="960.3" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="960.3" y="244" width="103.8" height="4" rx="2" fill="#4ADE80"/>
-<text x="972.3" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Containment</text>
-<text x="972.3" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">recover</text>
+<circle cx="1012.2" cy="210" r="17" fill="#132244" stroke="#3fa87a" stroke-width="2.5"/>
+<text x="1012.2" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#3fa87a" text-anchor="middle">9</text>
+<rect x="960.3" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="960.3" y="244" width="103.8" height="4" rx="2" fill="#3fa87a"/>
+<text x="972.3" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Containment</text>
+<text x="972.3" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">recover</text>
 </g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="1.8s" dur="0.5s" fill="freeze"/>
-<circle cx="1130.0" cy="210" r="17" fill="#0F172A" stroke="#4ADE80" stroke-width="2.5"/>
-<text x="1130.0" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#4ADE80" text-anchor="middle">10</text>
-<rect x="1062.2" y="244" width="103.8" height="76" rx="10" fill="#0F172A" stroke="#1E3A5F" stroke-width="1.5"/>
-<rect x="1062.2" y="244" width="103.8" height="4" rx="2" fill="#4ADE80"/>
-<text x="1074.2" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#E2E8F0">Capstone</text>
-<text x="1074.2" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#94A3B8">full case</text>
+<circle cx="1130.0" cy="210" r="17" fill="#132244" stroke="#3fa87a" stroke-width="2.5"/>
+<text x="1130.0" y="215" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="800" fill="#3fa87a" text-anchor="middle">10</text>
+<rect x="1062.2" y="244" width="103.8" height="76" rx="10" fill="#132244" stroke="#2b3f70" stroke-width="1.5"/>
+<rect x="1062.2" y="244" width="103.8" height="4" rx="2" fill="#3fa87a"/>
+<text x="1074.2" y="268" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#e8edf7">Capstone</text>
+<text x="1074.2" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#a8b8d6">full case</text>
 </g>
-<rect x="50.0" y="150" width="157.8" height="30" rx="8" fill="#3B82F6" fill-opacity="0.1" stroke="#3B82F6" stroke-opacity="0.6"/>
-<text x="128.9" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#3B82F6" text-anchor="middle">Foundations</text>
-<rect x="285.6" y="150" width="275.6" height="30" rx="8" fill="#22D3EE" fill-opacity="0.1" stroke="#22D3EE" stroke-opacity="0.6"/>
-<text x="423.3" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#22D3EE" text-anchor="middle">Detection</text>
-<rect x="638.9" y="150" width="275.6" height="30" rx="8" fill="#A78BFA" fill-opacity="0.1" stroke="#A78BFA" stroke-opacity="0.6"/>
-<text x="776.7" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#A78BFA" text-anchor="middle">Investigation</text>
-<rect x="992.2" y="150" width="157.8" height="30" rx="8" fill="#4ADE80" fill-opacity="0.1" stroke="#4ADE80" stroke-opacity="0.6"/>
-<text x="1071.1" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#4ADE80" text-anchor="middle">Response</text>
-<text x="34" y="346" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#64748B">ecir-diploma · assets/readme/course-arc.svg</text>
+<rect x="50.0" y="150" width="157.8" height="30" rx="8" fill="#d4af37" fill-opacity="0.1" stroke="#d4af37" stroke-opacity="0.6"/>
+<text x="128.9" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#d4af37" text-anchor="middle">Foundations</text>
+<rect x="285.6" y="150" width="275.6" height="30" rx="8" fill="#37c7d4" fill-opacity="0.1" stroke="#37c7d4" stroke-opacity="0.6"/>
+<text x="423.3" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#37c7d4" text-anchor="middle">Detection</text>
+<rect x="638.9" y="150" width="275.6" height="30" rx="8" fill="#8b7ce8" fill-opacity="0.1" stroke="#8b7ce8" stroke-opacity="0.6"/>
+<text x="776.7" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#8b7ce8" text-anchor="middle">Investigation</text>
+<rect x="992.2" y="150" width="157.8" height="30" rx="8" fill="#3fa87a" fill-opacity="0.1" stroke="#3fa87a" stroke-opacity="0.6"/>
+<text x="1071.1" y="170" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#3fa87a" text-anchor="middle">Response</text>
+<text x="34" y="346" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#7e91b8">ecir-diploma · assets/readme/course-arc.svg</text>
 </svg>
