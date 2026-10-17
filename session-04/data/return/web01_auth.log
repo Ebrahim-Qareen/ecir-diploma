@@ -1,0 +1,7 @@
+Oct 14 00:52:14 web01 sshd[7021]: Accepted publickey for deploy from 10.10.1.50 port 50122 ssh2: ED25519 SHA256:Kq3v9GmXcY0Rr2Wq0d7cHnV4Q1mP8sT6uJb5fLxZ2aE
+Oct 14 00:52:14 web01 sshd[7021]: pam_unix(sshd:session): session opened for user deploy(uid=1001) by (uid=0)
+Oct 14 00:58:40 web01 sshd[7021]: pam_unix(sshd:session): session closed for user deploy
+Oct 14 03:25:30 web01 sudo: www-data : unable to resolve host web01: Name or service not known
+Oct 14 03:25:30 web01 sudo: www-data : command not allowed ; TTY=unknown ; PWD=/var/www/html/uploads ; USER=root ; COMMAND=list
+Oct 14 03:25:50 web01 sudo: www-data : user NOT in sudoers ; TTY=unknown ; PWD=/var/www/html/uploads ; USER=root ; COMMAND=/bin/bash
+Oct 14 03:25:58 web01 sudo: www-data : user NOT in sudoers ; TTY=unknown ; PWD=/var/www/html/uploads ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow

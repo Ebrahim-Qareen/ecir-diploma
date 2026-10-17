@@ -1,0 +1,162 @@
+/* ==========================================================================
+   win-ui.css — the recreated-interface library  (D95 · D96)
+   Windows chrome rebuilt in DOM so a SIMSCREEN is sharp at any size, styleable,
+   bilingual and free of third-party images. NEVER used to fake tool OUTPUT —
+   a finding must be real (D94). This draws the interface, not the evidence.
+   Metrics are Windows 10/11 dialog metrics, not approximations.
+   ========================================================================== */
+:root{
+  --wu-font:'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif;
+  --wu-mono:'Consolas','Cascadia Mono','Courier New',monospace;
+  --wu-face:#f0f0f0;    --wu-face2:#f3f3f3;  --wu-white:#fff;
+  --wu-ink:#1b1b1b;     --wu-ink2:#5c5c5c;   --wu-dis:#8a8a8a;
+  --wu-line:#d8d8d8;    --wu-line2:#a0a0a0;  --wu-btn:#e1e1e1;
+  --wu-btnline:#adadad; --wu-accent:#0078d4; --wu-sel:#cce4f7;  --wu-sel2:#e5f1fb;
+  --wu-ok:#0a7b16;      --wu-warn:#c42b1c;
+}
+
+/* -- 1 · window shell ----------------------------------------------------- */
+.wu{ font-family:var(--wu-font); color:var(--wu-ink); background:var(--wu-face);
+     border-radius:6px; overflow:hidden; position:relative;
+     box-shadow:0 30px 78px -20px #000, 0 0 0 1px #303a48, 0 1px 0 rgba(255,255,255,.5) inset;
+     -webkit-font-smoothing:antialiased; font-size:12px; line-height:1.55; }
+.wu-tb{ display:flex; align-items:center; height:31px; padding-left:12px;
+        background:var(--wu-white); border-bottom:1px solid #e2e2e2; }
+.wu-tb .t{ font-size:12px; font-weight:600; letter-spacing:.005em; }
+.wu-tb .sp{ margin-left:auto; display:flex; }
+.wu-tb .b{ width:45px; height:31px; display:grid; place-items:center; font-size:11px; color:#4a4a4a; }
+.wu-tb .b.x:hover{ background:var(--wu-warn); color:#fff; }
+.wu-body{ padding:14px 16px 16px; }
+
+/* -- 2 · menu bar and dropdown -------------------------------------------- */
+.wu-mb{ display:flex; background:var(--wu-face); border-bottom:1px solid #dcdcdc; }
+.wu-mb span{ padding:5px 11px; }
+.wu-mb span.open{ background:var(--wu-sel); border:1px solid #99d1ff;
+                  border-bottom-color:var(--wu-sel); margin-bottom:-1px; }
+.wu-menu{ position:absolute; width:238px; background:#f2f2f2; border:1px solid #b6b6b6;
+          box-shadow:0 8px 22px rgba(0,0,0,.28); padding:2px 0; z-index:3; }
+.wu-menu div{ padding:5px 12px 5px 26px; }
+.wu-menu div.hl{ background:var(--wu-sel); }
+.wu-menu div.dis{ color:var(--wu-dis); }
+.wu-menu div.sep{ padding:0; margin:3px 0; border-top:1px solid #dcdcdc; }
+
+/* -- 3 · group box -------------------------------------------------------- */
+.wu fieldset{ border:1px solid var(--wu-line); border-radius:3px; margin:0 0 12px; padding:11px 13px 13px; }
+.wu legend{ padding:0 5px; font-size:12px; }
+
+/* -- 4 · radio and checkbox ----------------------------------------------- */
+.wu-rd,.wu-cb{ display:flex; align-items:flex-start; gap:8px; margin:0 0 9px; }
+.wu-rd i,.wu-cb i{ flex:0 0 auto; width:13px; height:13px; border:1px solid #666;
+                   background:#fff; margin-top:2px; position:relative; }
+.wu-rd i{ border-radius:50%; }
+.wu-rd.on i::after{ content:''; position:absolute; inset:3px; border-radius:50%; background:var(--wu-ink); }
+.wu-cb.on i::after{ content:''; position:absolute; left:3px; top:0; width:5px; height:9px;
+                    border:solid var(--wu-ink); border-width:0 1.6px 1.6px 0; transform:rotate(42deg); }
+.wu-rd.dis,.wu-cb.dis{ color:var(--wu-dis); } .wu-rd.dis i,.wu-cb.dis i{ border-color:#cdcdcd; background:#f5f5f5; }
+.wu-hint{ color:#8a5a00; font-size:11.5px; margin:-5px 0 9px 21px; }
+
+/* -- 5 · fields, lists, combo --------------------------------------------- */
+.wu-tx{ border:1px solid var(--wu-line2); background:#fff; padding:4px 7px; min-height:24px;
+        display:flex; align-items:center; }
+.wu-tx.dis{ background:var(--wu-face); color:var(--wu-dis); border-color:#cdcdcd; }
+.wu-lb{ margin:0 0 4px; }
+.wu-lst{ border:1px solid var(--wu-line2); background:#fff; height:86px; padding:5px 7px; overflow:hidden; }
+.wu-lst .row.sel{ background:var(--wu-accent); color:#fff; margin:0 -7px; padding:1px 7px; }
+.wu-combo{ border:1px solid var(--wu-line2); background:#fff; height:24px; display:flex;
+           align-items:center; padding:0 8px; justify-content:space-between; gap:8px; }
+.wu-combo .caret{ color:#555; font-size:9px; }
+
+/* -- 6 · buttons ---------------------------------------------------------- */
+.wu-btns{ display:flex; gap:7px; justify-content:center; margin-top:14px; }
+.wu-btns.left{ justify-content:flex-start; }
+.wu-bt{ min-width:76px; height:25px; border:1px solid var(--wu-btnline); background:var(--wu-btn);
+        border-radius:2px; display:grid; place-items:center; padding:0 10px; }
+.wu-bt.def{ border-color:var(--wu-accent); }
+.wu-bt.dis{ color:var(--wu-dis); border-color:#cdcdcd; background:var(--wu-face); }
+.wu-bt.sm{ min-width:62px; } .wu-bt.wide{ min-width:150px; }
+
+/* -- 7 · progress and status ---------------------------------------------- */
+.wu-pb{ height:17px; border:1px solid #bcbcbc; background:#e6e6e6; overflow:hidden; }
+.wu-pb i{ display:block; height:100%; background:#06b025; }
+.wu-sb{ height:22px; border-top:1px solid #dcdcdc; background:var(--wu-face);
+        font-size:11px; color:var(--wu-ink2); display:flex; align-items:center; padding:0 10px; gap:14px; }
+
+/* -- 8 · Start menu ------------------------------------------------------- */
+.wu-sm{ width:520px; background:var(--wu-face2); }
+.wu-sm .s{ margin:14px 16px 10px; height:32px; border:1px solid #c9c9c9; background:#fff;
+           border-radius:16px; display:flex; align-items:center; gap:9px; padding:0 13px; font-size:12.5px; }
+.wu-sm .s .mag{ width:13px; height:13px; border:1.6px solid #666; border-radius:50%;
+                position:relative; flex:0 0 auto; }
+.wu-sm .s .mag::after{ content:''; position:absolute; right:-4px; bottom:-3px; width:6px; height:1.6px;
+                       background:#666; transform:rotate(45deg); }
+.wu-sm h6{ font-size:11px; color:var(--wu-ink2); margin:2px 16px 5px; font-weight:600; }
+.wu-sm .i{ display:flex; align-items:center; gap:11px; margin:0 8px; padding:7px 9px;
+           border-radius:5px; font-size:12.5px; }
+.wu-sm .i.hl{ background:var(--wu-sel2); }
+.wu-sm .i .ic{ width:26px; height:26px; border-radius:4px; display:grid; place-items:center;
+               color:#fff; font-size:9px; font-weight:700; flex:0 0 auto;
+               background:linear-gradient(160deg,#3a6ea5,#1f4e79); }
+.wu-sm .i .sub{ color:#6a6a6a; font-size:11px; }
+.wu-sm .i > div{ line-height:1.35; }
+
+/* -- 9 · Explorer / two-pane --------------------------------------------- */
+.wu-pane{ display:flex; font-size:11.5px; }
+.wu-pane .l{ width:212px; border-right:1px solid #dcdcdc; background:#fff; padding:7px; }
+.wu-pane .r{ flex:1; background:#fff; padding:7px; }
+.wu-pane .l .n{ padding:2px 0 2px 14px; position:relative; }
+.wu-pane .l .n.dir::before{ content:'▸'; position:absolute; left:2px; color:#777; font-size:9px; }
+.wu-pane .l .n.open::before{ content:'▾'; }
+.wu-path{ display:flex; align-items:center; gap:6px; height:26px; padding:0 9px; background:#fff;
+          border:1px solid var(--wu-line2); margin:0 0 8px; font-size:11.5px; }
+.wu-cols{ display:grid; grid-template-columns:1fr 96px 90px 74px; gap:0; font-size:11.5px; }
+.wu-cols .h{ border-bottom:1px solid #dcdcdc; color:var(--wu-ink2); padding:3px 6px; font-weight:600; }
+.wu-cols .c{ padding:2px 6px; border-bottom:1px solid #f4f4f4; }
+.wu-cols .c.sel{ background:var(--wu-sel); }
+
+/* -- 10 · terminal and hex ------------------------------------------------ */
+.wu-term{ background:#070b11; color:#c3ccd8; font-family:var(--wu-mono); font-size:11.5px; line-height:1.62;
+          padding:12px 14px; white-space:pre; overflow-x:auto; }
+/* the site's palette, not the Windows console's — the page must read as one thing */
+.wu-term .p{ color:#00ff9d; }   /* prompt  = accent-green  */
+.wu-term .k{ color:#00d9ff; }   /* command = accent-cyan   */
+.wu-term .w{ color:#ffb454; }   /* value   = accent-amber  */
+.wu-term .e{ color:#ff4d5e; }   /* error   = accent-red    */
+.wu-term .d{ color:#8b98a9; }   /* comment = text-secondary*/
+.wu-hex{ background:#fff; font-family:var(--wu-mono); font-size:11.5px; line-height:1.62;
+         padding:10px 12px; white-space:pre; overflow-x:auto; color:#222; }
+.wu-hex .off{ color:#8a8a8a; } .wu-hex .hi{ background:#ffe9a8; }
+.wu-hex .as { color:#0a6b8a; }
+
+/* -- 11 · print / reduced motion friendliness ----------------------------- */
+@media print{ .wu{ box-shadow:none; border:1px solid #999; } }
+
+/* -- 12 · snapshot lineage (VMware Snapshot Manager) ---------------------- */
+/* Reusable: snapshot state comes up in T01, T06, T09 and every case reset.  */
+.wu-snaptree{ display:flex; align-items:flex-start; gap:0; padding:16px 14px; background:#fff;
+              min-height:132px; }
+.wu-snapnode{ display:flex; flex-direction:column; align-items:center; gap:6px; width:104px;
+              flex:0 0 auto; text-align:center; }
+.wu-snapnode .thumb{ width:74px; height:46px; border:1px solid #b6b6b6; border-radius:2px;
+                     background:linear-gradient(160deg,#2b4a6b,#16283c); position:relative; }
+.wu-snapnode .thumb::after{ content:''; position:absolute; left:8px; right:8px; bottom:7px; height:3px;
+                            background:rgba(255,255,255,.28); border-radius:2px; }
+.wu-snapnode .nm{ font-size:11.5px; font-weight:600; line-height:1.25; }
+.wu-snapnode.sel .thumb{ outline:2px solid var(--wu-accent); outline-offset:1px; }
+.wu-snapnode.here .nm{ color:var(--wu-accent); }
+.wu-snapnode .you{ font-size:10.5px; color:var(--wu-accent); font-weight:600; }
+.wu-snaparm{ flex:0 0 auto; width:34px; height:46px; display:grid; place-items:center; margin-top:0;
+             color:#9a9a9a; font-size:13px; }
+.wu-snapempty{ color:var(--wu-dis); font-size:11.5px; align-self:center; }
+
+/* -- 12 · inline <code> inside a recreated window (2026-09-10) --------------
+   The page-level `code` rule paints a dark card background; inside a light
+   Windows window that inherits the dark ink, so a registry path rendered as a
+   black bar (P02, StorageDevicePolicies). Light chrome gets light code. */
+.wu code{ background:#fff; border:1px solid var(--wu-line2); color:var(--wu-ink);
+          font-family:var(--wu-mono); font-size:11.5px; padding:1px 5px; border-radius:3px; }
+.wu-term code{ background:transparent; border:0; color:inherit; padding:0; font-size:inherit; }
+
+/* -- 13 · property-sheet tabs (Explorer > Properties) ----------------------- */
+.wu-tabs{ display:flex; gap:2px; margin:0 0 8px; border-bottom:1px solid var(--wu-line2); }
+.wu-tabs span{ padding:4px 10px; border:1px solid var(--wu-line); border-bottom:0; background:var(--wu-face); font-size:11.5px; }
+.wu-tabs span.on{ background:#fff; position:relative; top:1px; }

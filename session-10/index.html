@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S10 · Memory, Malicious Files &amp; Registry Forensics | eCIR · ITGate Academy</title>
+<meta name="description" content="eCIR Session 10: Memory, Malicious Files &amp; Registry Forensics">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="../assets/css/ecir.css">
+<link rel="stylesheet" href="../assets/css/win-ui.css">
+<link rel="stylesheet" href="../assets/css/hub.css">
+<link rel="icon" href="../assets/img/itgate-logo.jpg">
+<style>
+/* ---- scene for page 3 (nothing on disk). Scene styles live with the page that uses them. ---- */
+.sc{position:absolute;inset:0;display:grid;grid-template-columns:1.05fr 1fr 1.1fr;gap:16px;padding:18px 18px 56px}
+.sc-col{position:relative;border-radius:10px;border:1px solid rgba(120,160,220,.18);background:rgba(4,8,14,.55);padding:12px;overflow:hidden}
+.sc-h{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8ea3c2;margin-bottom:8px;display:flex;gap:8px;align-items:center}
+.sc-h i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.sc-atk .sc-h i{background:var(--red)} .sc-host .sc-h i{background:var(--amber)} .sc-soc .sc-h i{background:var(--green)}
+.sc-term{font-family:var(--mono);font-size:11.5px;line-height:1.7;color:#c9d1d9;white-space:pre}
+.sc-term .p{color:var(--red)} .sc-term .g{color:var(--green)}
+.sc-ev{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:7px;padding:7px 9px;margin-bottom:7px;background:#0b1119;color:#c9d1d9}
+.sc-ev b{color:var(--amber)}
+.sc-ev.bad{border-color:rgba(var(--red-rgb),.5)} .sc-ev.bad b{color:var(--red)}
+.sc-count{font-size:15px;font-weight:800}
+.sc-srv{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-family:var(--mono);font-size:12px;color:#dbe6f5}
+.sc-srv svg{width:30px;height:30px}
+.sc-alert{border:1px solid rgba(var(--red-rgb),.55);background:rgba(var(--red-rgb),.10);border-radius:8px;padding:9px 10px;margin-bottom:8px}
+.sc-alert .t{font-size:12.5px;color:#fff;font-weight:700;margin:4px 0 2px}
+.sc-alert .m{font-family:var(--mono);font-size:10.5px;color:#c7d0dc}
+.sc-ok{border:1px solid rgba(var(--green-rgb),.55);background:rgba(var(--green-rgb),.10);border-radius:8px;padding:9px 10px;font-size:12.5px;color:#d9ffe9}
+.sc-ok b{color:var(--green)}
+.sc-idle{font-family:var(--mono);font-size:11px;color:#6b7c93;position:absolute;left:12px;top:36px}
+@media(max-width:760px){.sc{grid-template-columns:1fr;overflow:auto}.sc-col{min-height:120px}}
+/* ---- pestudio (page 16) and Registry Explorer (page 22): recreated interfaces ---- */
+.ps-body{display:grid;grid-template-columns:190px 1fr;min-height:300px;background:#fff;border-top:1px solid #dcdcdc}
+.ps-tree{border-right:1px solid #dcdcdc;padding:6px 0;line-height:1.62;white-space:nowrap;overflow:hidden;background:#fafafa}
+.ps-n{padding:0 10px 0 22px;position:relative}
+.ps-n:first-child{padding-left:10px;font-weight:600}
+.ps-n.sel{background:#cce4f7}
+.ps-main{display:flex;flex-direction:column;min-width:0}
+.ps-r{display:grid;grid-template-columns:150px 1fr;border-bottom:1px solid #f0f0f0}
+.ps-r span{padding:3px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ps-r.h span{background:#f3f3f3;font-weight:600;color:#3c3c3c;border-bottom:1px solid #cfcfcf}
+.rx-body{display:grid;grid-template-columns:250px 1fr;min-height:240px;background:#fff;border-top:1px solid #dcdcdc}
+.rx-tree{border-right:1px solid #dcdcdc;line-height:1.7;white-space:nowrap;overflow:hidden}
+.rx-tree>div{padding:0 8px}
+.rx-tree .i1{padding-left:20px}.rx-tree .i2{padding-left:32px}.rx-tree .i3{padding-left:44px}.rx-tree .i4{padding-left:56px}
+.rx-tree .sel{background:#cce4f7}
+.rx-h{padding:4px 8px !important;background:#e8eef5;color:#3c4b5d;border-bottom:1px solid #c9d3df;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rx-vals{display:flex;flex-direction:column;min-width:0}
+.rx-r{display:grid;grid-template-columns:190px 96px 1fr;border-bottom:1px solid #f0f0f0}
+.rx-r span{padding:2px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid #f3f3f3}
+.rx-r.h span{background:#f3f3f3;font-weight:600;color:#3c3c3c;border-bottom:1px solid #cfcfcf}
+.rx-r.sel{background:#cce4f7}
+.ftk-dlg{padding:12px 14px;background:#f0f0f0}
+</style>
+</head>
+<body data-session="s10">
+<header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="../index.html"><img src="../assets/img/itgate-logo.jpg" alt="ITGate Academy"><span class="brand-text"><span class="brand-name">ITGate Academy</span><span class="brand-sub">eCIR · Session 10</span></span></a><nav class="topnav"><a href="../index.html" class="active">Sessions</a><a href="../labs/index.html">Labs</a><a href="../bonus/index.html">Bonus</a></nav></div></header><div class="progress-wrap"><div class="wrap progress-inner" id="progressHost"></div></div>
+<div class="wrap section"><div class="page-layout"><aside class="sidebar"><h5>S10 · Pages</h5><ol id="sessionNav"></ol><div class="side-cta"><h5>Labs</h5><a href="../labs/index.html">🧪 All course labs</a></div></aside>
+<article>
+  <!-- P01 COVER -->
+  <section class="page" data-title="Cover">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P01</span><span class="tag">Cover</span><span class="time">⏱ 2 min</span></div>
+      <h1>Session 10 — Memory, Malicious Files &amp; Registry Forensics</h1>
+      <p class="lede">Last session you collected the evidence. Today you open it: the RAM dump, the suspicious documents and executables, and the registry hives — and you make each one talk.</p>
+    </div>
+    <div class="content">
+      <div class="oneline">Memory shows what was running. Files show what arrived. The registry shows what stayed. Together they tell you what happened.</div>
+      <h2><span class="h-t">What you will be able to do</span></h2>
+      <ul class="clist">
+        <li><span class="mono">1</span>Explain what lives in RAM and why memory is often the only witness.</li>
+        <li><span class="mono">2</span>Use Volatility 3 (and read Volatility 2) to list processes, connections, command lines and suspicious memory.</li>
+        <li><span class="mono">3</span>Triage a PDF with pdfid and pdf-parser, and an Office file with olevba — without opening them.</li>
+        <li><span class="mono">4</span>Read a PE file's headers, sections and imports, and write a short triage report.</li>
+        <li><span class="mono">5</span>Name the registry hives, where they live, and the keys that profile a system and a user.</li>
+        <li><span class="mono">6</span>Profile a Windows host from its hives with Registry Explorer and RegRipper.</li>
+      </ul>
+      <h2><span class="h-t">Today's plan</span></h2>
+      <div class="tbl-scroll"><table><colgroup><col style="width:60%"><col style="width:20%"><col style="width:20%"></colgroup>
+        <thead><tr><th>Block</th><th>Pages</th><th>Min</th></tr></thead><tbody>
+        <tr><td>Open — the story</td><td>1–3</td><td>10</td></tr>
+        <tr><td>Part 1 — Memory forensics (INE Lab 12 + your lab) + check</td><td>4–9</td><td>70</td></tr>
+        <tr><td>Break</td><td>10</td><td>10</td></tr>
+        <tr><td>Part 2 — Suspicious files: PDF, Office, PE (INE Labs 14, 15 + your labs)</td><td>11–16</td><td>75</td></tr>
+        <tr><td>Break</td><td>17</td><td>10</td></tr>
+        <tr><td>Part 3 — Registry (INE Lab 16 + your lab)</td><td>18–22</td><td>50</td></tr>
+        <tr><td>Close — check, cheat sheet, homework</td><td>23–26</td><td>15</td></tr>
+      </tbody></table></div>
+      <div class="irtrack"><span class="done">Preparation</span><span class="now">Detection &amp; Analysis</span><span>Containment</span><span>Eradication</span><span>Recovery</span><span>Lessons learned</span></div>
+      <div class="box lab-box"><span class="box-t">Your evidence today is your own</span><p>Every practical uses what <b>you</b> collected in Session 9 or what is on your lab host: your <b>RAM dump</b> in Volatility, the <b>PDF and DOCX</b> from the six-file lab, a <b>signed Windows executable</b>, and the <b>registry hives</b> from your custom AD1 image. The INE labs run as live demos first.</p></div>
+    </div>
+  </section>
+
+  <!-- P02 HOW -->
+  <section class="page" data-title="How this session works">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P02</span><span class="tag theory">Method</span><span class="time">⏱ 3 min</span></div>
+      <h1>How this session works</h1>
+      <p class="lede">Stages 4 and 5 of the forensic process: examination and analysis — always on verified copies.</p>
+    </div>
+    <div class="content">
+      <div class="box recall"><span class="box-t">↺ From Session 9</span><p>You captured <code>memdump.mem</code>, built a custom AD1 with SYSTEM, SOFTWARE, SAM and NTUSER.DAT, hashed everything and signed the custody form. Before you open any of it today: <b>re-hash and compare</b>. Same hash → same evidence → analyse a copy.</p></div>
+      <figure class="fig" data-stepped data-mode="loop" data-interval="3200">
+        <div class="fig-head"><span class="fig-id">FIG S10-F1 · three evidence types, three questions</span><span class="fig-tag">4 steps</span></div>
+        <div class="fig-body">
+          <svg viewBox="0 0 980 230" role="img" aria-label="Memory answers what was running, files answer what arrived, the registry answers what stayed; together they form the story">
+            <defs><marker id="fta" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#4d8dff"/></marker></defs>
+            <g data-step="1"><rect class="nd bad" x="20" y="20" width="290" height="110" rx="12"/><text class="lbl" x="165" y="52" text-anchor="middle">Memory</text><text class="xs mut" x="165" y="78" text-anchor="middle">Volatility</text><text class="sm" x="165" y="106" text-anchor="middle">What was running?</text></g>
+            <g data-step="2"><rect class="nd ev" x="345" y="20" width="290" height="110" rx="12"/><text class="lbl" x="490" y="52" text-anchor="middle">Suspicious files</text><text class="xs mut" x="490" y="78" text-anchor="middle">pdfid · olevba · pestudio</text><text class="sm" x="490" y="106" text-anchor="middle">What arrived?</text></g>
+            <g data-step="3"><rect class="nd cp" x="670" y="20" width="290" height="110" rx="12"/><text class="lbl" x="815" y="52" text-anchor="middle">Registry</text><text class="xs mut" x="815" y="78" text-anchor="middle">Registry Explorer · RegRipper</text><text class="sm" x="815" y="106" text-anchor="middle">What stayed?</text></g>
+            <g data-step="4"><path class="arw brand" d="M165 132 L400 168" marker-end="url(#fta)"/><path class="arw brand" d="M490 132 L490 164" marker-end="url(#fta)"/><path class="arw brand" d="M815 132 L580 168" marker-end="url(#fta)"/>
+              <rect class="nd ok" x="300" y="170" width="380" height="50" rx="10"/><text class="sm" x="490" y="200" text-anchor="middle">one timeline · IOCs · root cause</text></g>
+          </svg>
+        </div>
+        <ol class="fig-steps" hidden>
+          <li><b>Memory</b> — the live state at capture: processes, connections, commands, injected code.</li>
+          <li><b>Files</b> — the delivery: a PDF with a script, a document with a macro, an executable.</li>
+          <li><b>Registry</b> — the configuration and the footprints: persistence, users, devices, programs run.</li>
+          <li data-key><b>Together</b> — one timeline, one IOC list, one root cause.</li>
+        </ol>
+        <div class="fig-cap"><p></p></div>
+      </figure>
+      <div class="box warn"><span class="box-t">Safety rule for Part 2</span><p>A suspicious file is <b>never opened by double-click</b>. You read it with static tools — pdfid, pdf-parser, olevba, pestudio — inside an isolated analysis VM. Today's own samples are harmless; the habit is what matters.</p></div>
+      <div class="box exam"><span class="box-t">Exam link</span><p>This session follows the second half of INE's <b>Incident Response: Digital Forensics</b> course — memory forensics and Volatility, malicious PDFs, olevba, PE headers and Windows registry analysis — with <b>Labs 12, 14, 15 and 16</b>.</p></div>
+    </div>
+  </section>
+
+  <!-- P03 STORY -->
+  <section class="page" data-title="Nothing on disk">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P03</span><span class="tag case">Story</span><span class="time">⏱ 5 min</span></div>
+      <h1>Nothing on disk — memory is the only witness</h1>
+      <p class="lede">INE's example: the SOC sees outbound traffic to a known-bad IP. Antivirus and EDR find nothing on the disk. Is there an attack at all?</p>
+    </div>
+    <div class="content">
+      <div class="sim-h">See it work — four plugins, one story</div>
+      <div class="simx">
+        <div class="sx-bar"><span class="sx-dot r"></span><span class="sx-dot y"></span><span class="sx-dot g"></span><span class="sx-t">FIN-LT-11 · finance laptop</span><span class="sx-tool">scenario · memory forensics</span></div>
+        <div class="sx-screen">
+          <div class="sc">
+            <div class="sc-col sc-atk"><div class="sc-h"><i></i>Disk</div>
+              <div class="sc-term"><span class="sc-idle sx-o0">scanning…</span><span class="sx-f1"><span class="g">✓</span> AV scan: clean</span>
+<span class="sx-f1"><span class="g">✓</span> EDR: no file found</span>
+<span class="sx-f2">? but traffic continues</span></div></div>
+            <div class="sc-col sc-host"><div class="sc-h"><i></i>Volatility · memdump.mem</div>
+              <div class="sc-idle sx-o0 sx-o1">waiting for the dump…</div>
+              <div class="sc-ev sx-f2"><b>pslist</b> · powershell under explorer</div>
+              <div class="sc-ev bad sx-f3"><b>malfind</b> · injected code</div>
+              <div class="sc-ev bad sx-f4"><b>consoles</b> · download-and-run command</div>
+              <div class="sc-ev bad sx-f5"><b>netscan</b> · powershell → bad IP</div></div>
+            <div class="sc-col sc-soc"><div class="sc-h"><i></i>Findings</div>
+              <div class="sc-idle sx-o0 sx-o1 sx-o2 sx-o3">…</div>
+              <div class="sc-alert sx-f4"><div class="t">Fileless malware</div><div class="m">script pulled straight into memory</div></div>
+              <div class="sc-ok sx-f6"><b>IOCs</b> → SIEM and firewall: the IP, the command, the memory signature.</div></div>
+          </div>
+          <div class="sx-ticker"><span class="sx-badge norm">norm</span><span class="sx-cap"></span></div>
+        </div>
+        <ul class="sx-phases">
+          <li data-badge="norm" data-label="alert">Suspicious outbound traffic to a known-bad IP from a finance laptop.</li>
+          <li data-badge="alert" data-label="disk">Antivirus and EDR: nothing malicious on disk. The SOC suspects fileless malware.</li>
+          <li data-badge="respond" data-label="RAM">The host is isolated and a full memory capture is taken <b>before</b> any reboot (Session 9).</li>
+          <li data-badge="attack" data-label="malfind">PowerShell is running under explorer.exe — and contains injected code.</li>
+          <li data-badge="attack" data-label="consoles">The command history shows a one-liner that downloaded a script straight into memory.</li>
+          <li data-badge="attack" data-label="netscan">PowerShell holds an open connection to the suspicious IP. LSASS was targeted for credentials.</li>
+          <li data-badge="respond" data-label="outcome">Memory gave the only evidence. The IOCs go back into the SIEM and the firewall.</li>
+        </ul>
+        <div class="sx-cta"><button class="sx-rep" type="button">↻ Replay</button><span class="sx-nn">autoplay · loops</span><span class="sx-dots"></span></div>
+      </div>
+      <div class="sx-iocs">
+        <div class="sx-ioc" data-p="3"><div class="k">Defense evasion</div><div class="v">T1055 Process Injection</div></div>
+        <div class="sx-ioc" data-p="4"><div class="k">Execution</div><div class="v">T1059.001 PowerShell</div></div>
+        <div class="sx-ioc" data-p="5"><div class="k">Credential access</div><div class="v">T1003.001 LSASS Memory</div></div>
+      </div>
+      <div class="ask"><span class="ask-t">Ask the room</span><p class="ask-q">What would have happened to this evidence if the helpdesk had rebooted the laptop "to fix it"?</p>
+        <details><summary>Show the answer</summary><p>It would be gone. The malware never touched the disk; the injected code, the command history and the open connection existed only in RAM. That is why Session 9 taught you to capture memory <b>first</b>.</p></details></div>
+    </div>
+  </section>
+
+  <!-- P04 DIVIDER -->
+  <section class="page divider" data-title="Part 1 — Memory forensics">
+    <div class="divider-inner">
+      <div class="divider-kicker">Part 1</div>
+      <h2>Memory forensics</h2>
+      <p class="lede">What lives in RAM, how Volatility reads it, INE's memory hunt — and your own RAM dump from Session 9.</p>
+      <div class="divider-rule"></div>
+      <div class="divider-meta"><span class="tag lab">Theory + INE Lab 12</span><span class="time">⏱ 5 pages · 70 min</span></div>
+    </div>
+  </section>
+
+  <!-- P05 WHAT LIVES IN RAM -->
+  <section class="page" data-title="What lives in RAM">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P05</span><span class="tag theory">Theory</span><span class="time">⏱ 10 min</span></div>
+      <h1>What lives in RAM</h1>
+      <p class="lede">Modern attackers use fileless techniques and in-memory payloads that leave little or no trace on disk. Memory shows the system at the very moment of compromise.</p>
+    </div>
+    <div class="content">
+      <div class="term">
+        <div class="term-h"><b>Memory forensics</b><span>term</span></div>
+        <div class="term-rows">
+          <div>Definition</div><div>Capturing, analysing and interpreting the contents of volatile system memory (RAM) for investigation or incident response.</div>
+          <div>Why it exists</div><div>RAM holds data that may never touch the disk — lost at shutdown or reboot.</div>
+          <div>Where used</div><div>Fileless malware, injected code, credential theft, live C2 — anything a disk scan misses.</div>
+          <div>Example</div><div>A PowerShell process with injected code and an open connection to a C2 server.</div>
+          <div>SOC example</div><div class="soc">"EDR says clean" is not the end of the case when the network still sees beaconing.</div>
+        </div>
+      </div>
+      <figure class="fig" data-stepped data-mode="loop" data-interval="3000">
+        <div class="fig-head"><span class="fig-id">FIG S10-F2 · a map of what RAM holds</span><span class="fig-tag">8 steps</span></div>
+        <div class="fig-body">
+          <svg viewBox="0 0 980 280" role="img" aria-label="Eight kinds of evidence in Windows memory">
+            <rect class="nd" x="390" y="110" width="200" height="60" rx="12"/><text class="lbl" x="490" y="146" text-anchor="middle">RAM</text>
+            <g data-step="1"><rect class="nd bad" x="20" y="14" width="220" height="56" rx="8"/><text class="sm" x="130" y="38" text-anchor="middle">Processes &amp; threads</text><text class="xs mut" x="130" y="58" text-anchor="middle">hidden · injected · parents</text></g>
+            <g data-step="2"><rect class="nd lab" x="260" y="14" width="220" height="56" rx="8"/><text class="sm" x="370" y="38" text-anchor="middle">Network connections</text><text class="xs mut" x="370" y="58" text-anchor="middle">sockets · C2 · backdoors</text></g>
+            <g data-step="3"><rect class="nd ev" x="500" y="14" width="220" height="56" rx="8"/><text class="sm" x="610" y="38" text-anchor="middle">Command history</text><text class="xs mut" x="610" y="58" text-anchor="middle">cmd · PowerShell</text></g>
+            <g data-step="4"><rect class="nd bad" x="740" y="14" width="220" height="56" rx="8"/><text class="sm" x="850" y="38" text-anchor="middle">Passwords &amp; keys</text><text class="xs mut" x="850" y="58" text-anchor="middle">hashes · tickets · tokens</text></g>
+            <g data-step="5"><rect class="nd cp" x="20" y="210" width="220" height="56" rx="8"/><text class="sm" x="130" y="234" text-anchor="middle">Drivers &amp; modules</text><text class="xs mut" x="130" y="254" text-anchor="middle">rootkits · odd DLLs</text></g>
+            <g data-step="6"><rect class="nd ev" x="260" y="210" width="220" height="56" rx="8"/><text class="sm" x="370" y="234" text-anchor="middle">Clipboard &amp; user data</text><text class="xs mut" x="370" y="254" text-anchor="middle">copied text</text></g>
+            <g data-step="7"><rect class="nd bad" x="500" y="210" width="220" height="56" rx="8"/><text class="sm" x="610" y="234" text-anchor="middle">Unpacked malware</text><text class="xs mut" x="610" y="254" text-anchor="middle">decrypted payloads</text></g>
+            <g data-step="8"><rect class="nd cp" x="740" y="210" width="220" height="56" rx="8"/><text class="sm" x="850" y="234" text-anchor="middle">Registry hives</text><text class="xs mut" x="850" y="254" text-anchor="middle">live Run keys · config</text></g>
+            <path class="arw" d="M390 120 L240 70 M440 110 L370 72 M540 110 L610 72 M590 120 L740 70 M390 160 L240 210 M440 170 L370 208 M540 170 L610 208 M590 160 L740 210"/>
+          </svg>
+        </div>
+        <ol class="fig-steps" hidden>
+          <li><b>Processes and threads</b> — including hidden, terminated and injected ones; attackers inject into explorer.exe or svchost.exe.</li>
+          <li><b>Network connections</b> — active sockets, listening ports, remote IPs: C2, backdoors, lateral movement.</li>
+          <li><b>Command history</b> — cmd and PowerShell input and output.</li>
+          <li data-key><b>Credentials and keys</b> — cached hashes, Kerberos tickets, tokens. Attackers dump LSASS for these.</li>
+          <li><b>Drivers and modules</b> — kernel components, unsigned or unusual DLLs: rootkits.</li>
+          <li><b>Clipboard and user data</b> — text the attacker copied.</li>
+          <li><b>Unpacked malware</b> — packed or encrypted on disk, decrypted and readable in memory.</li>
+          <li><b>Registry hives in memory</b> — live persistence keys and configuration.</li>
+        </ol>
+        <div class="fig-cap"><p></p></div>
+      </figure>
+      <div class="split">
+        <div class="box concept"><span class="box-t">What memory forensics entails</span><ol class="steps">
+          <li><b>Acquisition</b> — FTK Imager, DumpIt, Belkasoft RAM Capturer, WinPmem.</li>
+          <li><b>Preservation &amp; verification</b> — SHA-256, chain of custody.</li>
+          <li><b>Analysis</b> — processes, drivers, connections, handles, injected code, credentials.</li>
+          <li><b>Interpretation &amp; reporting</b> — timeline, narrative, IOCs into detection.</li></ol></div>
+        <div class="box defend"><span class="box-t">Tools</span><p><b>Volatility / Volatility 3</b> — the most widely adopted framework · <b>Rekall</b> — a fork · <b>Redline</b> — GUI with IOC scanning · <b>Belkasoft RAM Capturer</b>, <b>DumpIt</b> — acquisition · <b>LiME</b> — Linux acquisition.</p></div>
+      </div>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">Processes · connections · commands · credentials · drivers · clipboard · unpacked code · hives.</strong> If it ran, memory saw it.</p></div>
+    </div>
+  </section>
+
+  <!-- P06 VOLATILITY -->
+  <section class="page" data-title="Volatility">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P06</span><span class="tag theory">Tool</span><span class="time">⏱ 14 min</span></div>
+      <h1>Volatility — plugins that read memory</h1>
+      <p class="lede">An open-source Python framework. Each plugin extracts one kind of evidence from a memory image.</p>
+    </div>
+    <div class="content">
+      <div class="term">
+        <div class="term-h"><b>Volatility</b><span>tool</span></div>
+        <div class="term-rows">
+          <div>Definition</div><div>An open-source memory-forensics framework for Windows, Linux and macOS images, built around plugins.</div>
+          <div>Why it exists</div><div>A memory image is raw bytes; Volatility maps them back to processes, sockets, registry keys and more.</div>
+          <div>Where used</div><div>IR and forensic teams worldwide; widely cited in court cases.</div>
+          <div>Example</div><div><code>vol -f memdump.mem windows.pstree</code></div>
+          <div>SOC example</div><div class="soc">From one dump: the parent of the bad process, its command line, its connection, its injected code.</div>
+        </div>
+      </div>
+      <div class="tbl-scroll"><table class="dtable"><thead><tr><th></th><th>Volatility 2</th><th>Volatility 3</th></tr></thead><tbody>
+        <tr><td><b>Language</b></td><td>Python 2.7 (legacy)</td><td>Python 3, rewritten</td></tr>
+        <tr><td><b>OS mapping</b></td><td><b>Profiles</b> chosen by hand (<code>imageinfo</code> → <code>--profile=Win10x64_…</code>)</td><td><b>Symbol tables</b>, found automatically</td></tr>
+        <tr><td><b>Syntax</b></td><td><code>vol.py -f img --profile=P pslist</code></td><td><code>vol -f img windows.pslist</code></td></tr>
+        <tr><td><b>Plugins</b></td><td>more community plugins</td><td>fewer, but modular and easier to extend</td></tr>
+        <tr><td><b>Speed</b></td><td>slower on large dumps</td><td>faster, more efficient</td></tr>
+        <tr><td><b>Use it for</b></td><td>old systems (XP, 2003), INE's Lab 12</td><td>new cases — the actively developed version</td></tr>
+      </tbody></table></div>
+      <div class="box concept"><span class="box-t">Why profiles matter (Volatility 2)</span><p>Each OS, version and architecture stores processes, DLLs and kernel objects differently. Without the right profile, Volatility cannot map raw offsets to meaningful structures. Volatility 3 solves this with symbol tables — on first use it may download them, so an offline lab needs them pre-loaded.</p></div>
+      <h2><span class="h-t">The plugins you will use</span></h2>
+      <div class="tbl-scroll"><table class="dtable"><colgroup><col style="width:32%"><col style="width:30%"><col></colgroup><thead><tr><th>Volatility 3 (Volatility 2)</th><th>Purpose</th><th>Use case</th></tr></thead><tbody>
+        <tr><td><code>windows.info</code> (imageinfo)</td><td>OS, build, symbols</td><td>Know the system before you analyse</td></tr>
+        <tr><td><code>windows.pslist · pstree · psscan</code> (+ psxview)</td><td>Running and hidden processes</td><td>Odd parents, hidden or terminated processes</td></tr>
+        <tr><td><code>windows.cmdline</code> (cmdline · cmdscan · consoles)</td><td>Command lines, console history</td><td>What the attacker typed</td></tr>
+        <tr><td><code>windows.netscan</code> (netscan)</td><td>Connections and sockets</td><td>C2, lateral movement</td></tr>
+        <tr><td><code>windows.dlllist</code> (dlllist · ldrmodules)</td><td>Loaded DLLs</td><td>Injected or unusual libraries</td></tr>
+        <tr><td><code>windows.malfind</code> (malfind)</td><td>Suspicious memory regions</td><td>Code hidden in legitimate processes</td></tr>
+        <tr><td><code>windows.svcscan</code> (svcscan)</td><td>Services</td><td>Malicious services</td></tr>
+        <tr><td><code>windows.registry.hivelist · printkey</code></td><td>Hives and keys in memory</td><td>Run keys, persistence</td></tr>
+        <tr><td><code>windows.hashdump</code> · <code>lsadump</code></td><td>Credential material</td><td>Proving credential theft</td></tr>
+        <tr><td><code>yarascan</code> · <code>timeliner</code> · <code>filescan</code> · <code>dumpfiles</code></td><td>Signatures, timeline, files</td><td>Known malware, chronology, extraction</td></tr>
+      </tbody></table></div>
+      <div class="box concept"><span class="box-t">▶ Which plugin answers the question?</span><p>Pick a question.</p></div>
+      <div class="pg">
+        <div class="pg-chips">
+          <button class="pg-chip" type="button" data-pg="a">Which process started this one?</button>
+          <button class="pg-chip" type="button" data-pg="b">Is anything hiding?</button>
+          <button class="pg-chip bad" type="button" data-pg="c">Who talks to the bad IP?</button>
+          <button class="pg-chip bad" type="button" data-pg="d">Is code injected?</button>
+          <button class="pg-chip" type="button" data-pg="e">What did they type?</button>
+          <button class="pg-chip" type="button" data-pg="f">How does it survive reboot?</button>
+        </div>
+        <div class="pg-out">
+          <div data-pg="a"><div class="box evidence"><span class="box-t">windows.pstree</span><p>Parent → child tree with PIDs and start times. Look for Office or browsers starting shells, and shells starting network tools.</p></div></div>
+          <div data-pg="b"><div class="box evidence"><span class="box-t">windows.psscan (V2: psxview)</span><p>Scans memory for process structures, so it finds processes unlinked from the normal list. A process in psscan but not in pslist deserves a look.</p></div></div>
+          <div data-pg="c"><div class="box evidence"><span class="box-t">windows.netscan</span><p>Local and remote address, state, PID and owner. Filter for the IP from your alert, then pivot to that PID.</p></div></div>
+          <div data-pg="d"><div class="box evidence"><span class="box-t">windows.malfind</span><p>Memory that is executable and writable and not backed by a file. Expect some noise from security software and JIT engines (INE's lab: MsMpEng, SearchUI) — judge each hit by its process.</p></div></div>
+          <div data-pg="e"><div class="box evidence"><span class="box-t">windows.cmdline (V2: cmdscan, consoles)</span><p>The full command line of every process; V2's consoles also recovers console input and output.</p></div></div>
+          <div data-pg="f"><div class="box evidence"><span class="box-t">windows.registry.printkey · svcscan</span><p>Read Run keys and services straight from memory — the same persistence you hunt in Part 3.</p></div></div>
+        </div>
+        <div class="pg-cap"><p data-pg="a">Parentage.</p><p data-pg="b">Hidden processes.</p><p data-pg="c">Network.</p><p data-pg="d">Injection.</p><p data-pg="e">Commands.</p><p data-pg="f">Persistence.</p></div>
+      </div>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">info → pstree/psscan → cmdline → netscan → malfind → registry.</strong> Each answer is the next pivot.</p></div>
+    </div>
+  </section>
+
+  <!-- P07 LIVE DEMO LAB 12 -->
+  <section class="page" data-title="Live demo — Hunting in Memory">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P07</span><span class="tag lab">Live demo</span><span class="time">⏱ 12 min</span></div>
+      <h1>Live demo — hunting in memory</h1>
+      <p class="lede">The instructor runs INE's memory lab on the projector with Volatility 2: hidden processes, bad connections and injected code in a Windows 10 image.</p>
+    </div>
+    <div class="content">
+      <div class="box source"><span class="box-t">The INE lab</span><p>A memory image from a compromised Windows 10 host. Identify the image, find hidden processes, find suspicious connections, find injected code — and confirm what the attacker loaded.</p></div>
+      <div class="box lab-box"><span class="box-t">Watch sheet — answer while you watch</span>
+        <ol class="steps">
+          <li>Which plugin identifies the image, and which profile is chosen?</li>
+          <li>Which plugin compares several process lists to find hidden ones?</li>
+          <li>Which process holds the suspicious connection, and how does the instructor filter for it?</li>
+          <li>malfind shows several hits. Which ones are noise, and why?</li>
+          <li>How does the instructor confirm what was loaded into memory?</li>
+          <li>Write two IOCs you would hand to the SOC.</li>
+        </ol></div>
+      <details class="case-ans"><summary>Check your sheet after the demo</summary><div>
+        <p><b>1</b> <code>imageinfo</code> → a Windows 10 x64 profile (<code>--profile=Win10x64_10586</code>) · <b>2</b> <code>psxview</code> · <b>3</b> PowerShell — <code>netscan | grep powershell</code> shows its connections to the same remote IP on port 80 · <b>4</b> hits in <code>MsMpEng.exe</code> (Defender) and <code>SearchUI.exe</code> are normal for those processes; the PowerShell hits are not · <b>5</b> <code>strings</code> on the image, filtered for PowerShell function names, reveals a known credential-theft tool · <b>6</b> the remote IP and port, and the in-memory tool name/strings (plus the injected PowerShell process as a behaviour).</p></div></details>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">Identify → hidden? → network → injected? → confirm with strings.</strong> Noise is judged by the process, not by the plugin.</p></div>
+    </div>
+  </section>
+
+  <!-- P08 YOUR LAB A -->
+  <section class="page" data-title="Your lab — your own RAM dump">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P08</span><span class="tag lab">Your lab</span><span class="time">⏱ 25 min</span></div>
+      <h1>Your lab — read your own RAM dump</h1>
+      <p class="lede">The <code>memdump.mem</code> you captured in Session 9. You know what was running — so you can check whether Volatility tells the truth.</p>
+    </div>
+    <div class="content">
+      <div class="labslot">
+        <div class="ls-t"><span class="ls-dot"></span>Your environment<span class="ls-badge">analysis VM · alone or in pairs</span></div>
+        <ol>
+          <li><span class="ls-k log">Evidence</span> a <b>copy</b> of your Session 9 <code>memdump.mem</code> — re-hash it first and compare with your custody form</li>
+          <li><span class="ls-k det">Tool</span> Volatility 3 (<code>vol</code>), symbol tables pre-loaded by your instructor</li>
+          <li><span class="ls-k res">No dump?</span> your instructor gives you a lab dump with its hash</li>
+        </ol>
+      </div>
+      <div class="box concept"><span class="box-t">▶ Run each step, then compare with the example</span><p>Example output — your PIDs, names and addresses differ.</p></div>
+      <div class="pg">
+        <div class="pg-chips">
+          <button class="pg-chip good" type="button" data-pg="a">0 · verify</button>
+          <button class="pg-chip" type="button" data-pg="b">1 · info</button>
+          <button class="pg-chip" type="button" data-pg="c">2 · pstree</button>
+          <button class="pg-chip" type="button" data-pg="d">3 · cmdline</button>
+          <button class="pg-chip" type="button" data-pg="e">4 · netscan</button>
+          <button class="pg-chip bad" type="button" data-pg="f">5 · malfind</button>
+          <button class="pg-chip" type="button" data-pg="g">6 · registry</button>
+        </div>
+        <div class="pg-out">
+          <div data-pg="a"><div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">bash</span></div><pre><span class="f">$ sha256sum memdump.mem</span>
+<span class="hit">(64 hex)</span>  memdump.mem</pre><ul class="logview-notes"><li>Must equal the value on your Session 9 custody form. Write "re-verified, match" and the time on the form.</li></ul></div></div>
+          <div data-pg="b"><div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">example</span></div><pre><span class="f">$ vol -f memdump.mem windows.info</span>
+Variable        Value
+Kernel Base     0xf8027ae00000
+Is64Bit         True
+NtBuildLab      <span class="hit">19041.1.amd64fre.vb_release.191206-1406</span>
+SystemTime      <span class="hit">2026-10-07 08:51:12</span>
+NtSystemRoot    C:\Windows</pre><ul class="logview-notes"><li>Build and <b>SystemTime</b> — the capture time. It should match the time on your custody form.</li></ul></div></div>
+          <div data-pg="c"><div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">example, shortened</span></div><pre><span class="f">$ vol -f memdump.mem windows.pstree</span>
+PID    PPID   ImageFileName
+4      0      System
+…
+3440   3412   explorer.exe
+* 5124 3440   cmd.exe
+** 6208 5124  conhost.exe
+* <span class="hit">6380   3440   FTK Imager.exe</span></pre><ul class="logview-notes"><li>Find <b>FTK Imager.exe</b> — the tool that took this very dump — and the <code>cmd.exe</code> you used for LiveIR. Your own Locard traces.</li></ul></div></div>
+          <div data-pg="d"><div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">example, shortened</span></div><pre><span class="f">$ vol -f memdump.mem windows.cmdline --pid 5124 6380</span>
+PID    Process          Args
+5124   cmd.exe          "C:\Windows\system32\cmd.exe"
+6380   FTK Imager.exe   "<span class="hit">E:\Tools\FTK Imager\FTK Imager.exe</span>"</pre><ul class="logview-notes"><li>FTK ran from <code>E:</code> — your IR media, as Session 9 required. A command line proves <b>where</b> a program ran from.</li></ul></div></div>
+          <div data-pg="e"><div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">example, shortened</span></div><pre><span class="f">$ vol -f memdump.mem windows.netscan</span>
+Proto  LocalAddr        LocalPort  ForeignAddr     ForeignPort  State        PID   Owner
+TCPv4  10.10.20.37      49712      10.10.20.10     9997         ESTABLISHED  2876  splunkd.exe
+TCPv4  0.0.0.0          445        0.0.0.0         0            LISTENING    4     System</pre><ul class="logview-notes"><li>Your Splunk forwarder talking to the server on 9997 (Session 4) — a known-good baseline line.</li></ul></div></div>
+          <div data-pg="f"><div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">example, shortened</span></div><pre><span class="f">$ vol -f memdump.mem windows.malfind</span>
+PID    Process        Start VPN       Protection
+<span class="hit">2210   MsMpEng.exe</span>    0x1f2b0000      PAGE_EXECUTE_READWRITE
+…</pre><ul class="logview-notes"><li>On a clean host you will still see hits — security products and JIT engines create executable memory. For each hit ask: <b>is this normal for this process?</b></li></ul></div></div>
+          <div data-pg="g"><div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">example, shortened</span></div><pre><span class="f">$ vol -f memdump.mem windows.registry.printkey --key "Software\Microsoft\Windows\CurrentVersion\Run"</span>
+Last Write Time      Hive Offset  Type    Key                                          Name            Data
+2026-09-20 07:14:02  0x…          REG_SZ  …\Software\Microsoft\Windows\CurrentVersion\Run  <span class="hit">SecurityHealth</span>  %windir%\system32\SecurityHealthSystray.exe</pre><ul class="logview-notes"><li>The Run key read from memory. In Part 3 you will read the same key from the hive on disk — they should agree.</li></ul></div></div>
+        </div>
+        <div class="pg-cap"><p data-pg="a">Integrity first.</p><p data-pg="b">Know the system.</p><p data-pg="c">Find your own traces.</p><p data-pg="d">Where it ran from.</p><p data-pg="e">Baseline connections.</p><p data-pg="f">Judge, don't panic.</p><p data-pg="g">Persistence from RAM.</p></div>
+      </div>
+      <h2><span class="h-t">Fill your findings table</span></h2>
+      <div class="tbl-scroll"><table class="dtable"><thead><tr><th>Question</th><th>Plugin</th><th>Your answer</th></tr></thead><tbody>
+        <tr><td>OS build and capture time</td><td><code>windows.info</code></td><td>…</td></tr>
+        <tr><td>PID and parent of FTK Imager</td><td><code>windows.pstree</code></td><td>…</td></tr>
+        <tr><td>Where FTK Imager ran from</td><td><code>windows.cmdline</code></td><td>…</td></tr>
+        <tr><td>One ESTABLISHED connection and its owner</td><td><code>windows.netscan</code></td><td>…</td></tr>
+        <tr><td>One malfind hit and why it is (not) suspicious</td><td><code>windows.malfind</code></td><td>…</td></tr>
+        <tr><td>Values in the HKLM Run key</td><td><code>windows.registry.printkey</code></td><td>…</td></tr>
+      </tbody></table></div>
+      <div class="verify"><h4>Verify — tick when you have it</h4><ul>
+        <li>The dump's hash matches your custody form — re-verification written on the form.</li>
+        <li>You found FTK Imager.exe and your cmd.exe in pstree, with PIDs.</li>
+        <li>Your netscan connection matches what you expect from that host (for example the forwarder).</li>
+        <li>You explained one malfind hit by its process.</li>
+        <li>All six rows of the findings table are filled.</li></ul></div>
+    </div>
+  </section>
+
+  <!-- P09 CHECK 1 -->
+  <section class="page" data-title="Knowledge check 1">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P09</span><span class="tag exam">Check</span><span class="time">⏱ 8 min</span></div>
+      <h1>Knowledge check 1 — memory forensics</h1>
+      <p class="lede">Answer first, then read why.</p>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-correct="c" data-why="Fileless malware runs only in memory; disk scans miss it and a reboot destroys it.">
+        <p><span class="qn">Q1</span>Why can memory be the only witness?</p>
+        <ul class="opts"><li data-opt="a">RAM is larger than disk</li><li data-opt="b">Logs are always encrypted</li><li data-opt="c">Fileless malware may never write to disk</li><li data-opt="d">Volatility deletes disk artefacts</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="a" data-why="Volatility 2 needs a manually selected profile; Volatility 3 uses symbol tables found automatically.">
+        <p><span class="qn">Q2</span>The main difference between Volatility 2 and 3 when you start?</p>
+        <ul class="opts"><li data-opt="a">V2 needs a profile; V3 uses symbol tables</li><li data-opt="b">V3 only reads Linux images</li><li data-opt="c">V2 needs internet access</li><li data-opt="d">V3 cannot list processes</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="d" data-why="netscan lists connections and sockets with the owning PID — use it to find who talks to a suspicious IP.">
+        <p><span class="qn">Q3</span>Which plugin shows which process talks to a suspicious IP?</p>
+        <ul class="opts"><li data-opt="a">malfind</li><li data-opt="b">svcscan</li><li data-opt="c">dlllist</li><li data-opt="d">netscan</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="b" data-why="malfind finds executable, writable memory not backed by a file — a sign of injected code.">
+        <p><span class="qn">Q4</span>Which plugin helps detect code injected into a legitimate process?</p>
+        <ul class="opts"><li data-opt="a">pslist</li><li data-opt="b">malfind</li><li data-opt="c">info</li><li data-opt="d">hivelist</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="c" data-why="psscan (V2: psxview) finds process structures even when they are unlinked from the normal list.">
+        <p><span class="qn">Q5</span>A process appears in psscan but not in pslist. This suggests…</p>
+        <ul class="opts"><li data-opt="a">a normal service</li><li data-opt="b">a corrupt dump</li><li data-opt="c">a hidden or terminated process worth checking</li><li data-opt="d">a Volatility bug</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="a" data-why="Security products such as Defender (MsMpEng.exe) create executable memory; judge malfind hits by the process.">
+        <p><span class="qn">Q6</span>malfind flags <code>MsMpEng.exe</code> on a clean host. Best reading?</p>
+        <ul class="opts"><li data-opt="a">Probably normal for a security product — check, but do not panic</li><li data-opt="b">Certain malware</li><li data-opt="c">The dump is invalid</li><li data-opt="d">Delete the process</li></ul><div class="mcq-fb"></div></div>
+    </div>
+  </section>
+
+  <!-- P10 BREAK -->
+  <section class="page" data-title="Break">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P10</span><span class="tag">Break</span><span class="time">⏱ 10 min</span></div>
+      <h1>Break</h1>
+    </div>
+    <div class="content">
+      <div class="timer-card" data-timer="10">
+        <div class="timer-ring"><svg viewBox="0 0 120 120"><circle class="timer-ring-bg" cx="60" cy="60" r="54"/><circle class="timer-ring-fill" cx="60" cy="60" r="54"/></svg><div class="timer-display">10:00</div></div>
+        <h3>10-minute break</h3><p class="timer-note">Press start when the break begins.</p>
+        <div class="timer-btns"><button class="btn primary" data-act="start" type="button">▶ Start break</button><button class="btn" data-act="reset" type="button">↺ Reset</button></div>
+      </div>
+      <div class="box recall"><span class="box-t">↺ When you come back</span><p>The files that deliver the attack — PDFs, Office documents, executables — read without ever opening them.</p></div>
+    </div>
+  </section>
+
+  <!-- P11 DIVIDER -->
+  <section class="page divider" data-title="Part 2 — Suspicious files">
+    <div class="divider-inner">
+      <div class="divider-kicker">Part 2</div>
+      <h2>Suspicious files: PDF, Office, PE</h2>
+      <p class="lede">The three file types that deliver most attacks — read with static tools, never by double-click.</p>
+      <div class="divider-rule"></div>
+      <div class="divider-meta"><span class="tag lab">Theory + INE Labs 14, 15</span><span class="time">⏱ 5 pages · 75 min</span></div>
+    </div>
+  </section>
+
+  <!-- P12 PDF -->
+  <section class="page" data-title="Malicious PDFs">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P12</span><span class="tag theory">Theory</span><span class="time">⏱ 12 min</span></div>
+      <h1>How a PDF can carry a script</h1>
+      <p class="lede">PDFs are everywhere — in business, government and personal mail. That makes them a favourite phishing attachment.</p>
+    </div>
+    <div class="content">
+      <div class="term">
+        <div class="term-h"><b>PDF object</b><span>term</span></div>
+        <div class="term-rows">
+          <div>Definition</div><div>A PDF is a collection of numbered <b>objects</b> — catalog, pages, fonts, content streams, actions — linked together and indexed by a cross-reference table.</div>
+          <div>Why it exists</div><div>Objects let a reader find and render any part of a document quickly.</div>
+          <div>Where used</div><div>Every PDF. Some objects define <b>behaviour</b>: actions on open, forms, scripts.</div>
+          <div>Example</div><div><code>/OpenAction</code> in the catalog points to an object that holds <code>/JavaScript</code>.</div>
+          <div>SOC example</div><div class="soc">A CV with <code>/OpenAction</code> + <code>/JS</code> has no business reason to exist — escalate it.</div>
+        </div>
+      </div>
+      <figure class="fig" data-stepped data-mode="loop" data-interval="3400">
+        <div class="fig-head"><span class="fig-id">FIG S10-F3 · inside a PDF</span><span class="fig-tag">4 steps</span></div>
+        <div class="fig-body">
+          <svg viewBox="0 0 980 300" role="img" aria-label="A PDF has a header, a body of objects, a cross-reference table and a trailer; an OpenAction can point to a JavaScript object">
+            <defs><marker id="ftb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker></defs>
+            <g data-step="1"><rect class="nd ev" x="20" y="20" width="230" height="50" rx="8"/><text class="sm m" x="135" y="50" text-anchor="middle">%PDF-1.7  header</text>
+              <rect class="nd" x="20" y="80" width="230" height="140" rx="8"/><text class="sm" x="135" y="106" text-anchor="middle">body — objects</text><text class="xs mut m" x="135" y="130" text-anchor="middle">1 0 obj … endobj</text><text class="xs mut m" x="135" y="150" text-anchor="middle">2 0 obj … endobj</text><text class="xs mut m" x="135" y="170" text-anchor="middle">stream … endstream</text>
+              <rect class="nd lab" x="20" y="230" width="110" height="50" rx="8"/><text class="xs m" x="75" y="260" text-anchor="middle">xref</text><rect class="nd lab" x="140" y="230" width="110" height="50" rx="8"/><text class="xs m" x="195" y="252" text-anchor="middle">trailer</text><text class="xs m" x="195" y="268" text-anchor="middle">%%EOF</text></g>
+            <g data-step="2"><rect class="nd brand" x="330" y="40" width="240" height="70" rx="10"/><text class="lbl" x="450" y="68" text-anchor="middle">1 0 obj /Catalog</text><text class="xs mut" x="450" y="92" text-anchor="middle">/Pages 2 0 R</text>
+              <rect class="nd brand" x="330" y="190" width="240" height="70" rx="10"/><text class="lbl" x="450" y="218" text-anchor="middle">2 0 obj /Pages → /Page</text><text class="xs mut" x="450" y="242" text-anchor="middle">what you see</text><path class="arw brand" d="M450 112 L450 186"/></g>
+            <g data-step="3"><path class="arw bad" d="M572 75 L656 75" marker-end="url(#ftb)"/><text class="xs" x="614" y="64" text-anchor="middle">/OpenAction</text>
+              <rect class="nd bad" x="660" y="40" width="300" height="70" rx="10"/><text class="lbl" x="810" y="68" text-anchor="middle">7 0 obj /S /JavaScript</text><text class="xs mut" x="810" y="92" text-anchor="middle">/JS → script runs when the file opens</text></g>
+            <g data-step="4"><rect class="nd warn" x="660" y="150" width="300" height="130" rx="10"/><text class="sm" x="810" y="176" text-anchor="middle">Typical misuse (INE)</text><text class="xs mut" x="810" y="202" text-anchor="middle">exploit a vulnerable reader</text><text class="xs mut" x="810" y="222" text-anchor="middle">drop or download malware</text><text class="xs mut" x="810" y="242" text-anchor="middle">phishing: redirects, fake forms</text><text class="xs mut" x="810" y="262" text-anchor="middle">trigger: open · click · form</text></g>
+          </svg>
+        </div>
+        <ol class="fig-steps" hidden>
+          <li><b>Structure</b> — header, body of objects, cross-reference table, trailer. You met <code>%PDF</code> and <code>%%EOF</code> in Session 9.</li>
+          <li><b>Normal objects</b> — the catalog points to the pages; this is what the reader shows.</li>
+          <li data-key><b>Behaviour</b> — <code>/OpenAction</code> (or <code>/AA</code>) can point to a <code>/JavaScript</code> object; the tags <code>/JavaScript</code> and <code>/JS</code> mark embedded script.</li>
+          <li><b>Misuse</b> — scripts can exploit a vulnerable reader, drop or download malware, or redirect to phishing — triggered by opening, clicking or form interaction.</li>
+        </ol>
+        <div class="fig-cap"><p></p></div>
+      </figure>
+      <div class="split">
+        <div class="box defend"><span class="box-t">pdfid — quick triage</span><p>Counts suspicious keywords without fully parsing the file: <code>/JavaScript</code>, <code>/JS</code>, <code>/OpenAction</code>, <code>/AA</code>, <code>/Launch</code>, <code>/EmbeddedFile</code>, <code>/AcroForm</code>, <code>/ObjStm</code>.</p><pre><code>pdfid.py suspicious.pdf</code></pre></div>
+        <div class="box defend"><span class="box-t">pdf-parser — deep look</span><p>Finds and extracts objects, dumps scripts for review, decodes compressed streams.</p><pre><code>pdf-parser.py --stats suspicious.pdf
+pdf-parser.py -s /JavaScript suspicious.pdf
+pdf-parser.py -o 7 -f -w suspicious.pdf</code></pre></div>
+      </div>
+      <div class="tbl-scroll"><table class="dtable"><thead><tr><th>pdfid keyword</th><th>Means</th><th>Normal in a CV?</th></tr></thead><tbody>
+        <tr><td><code>/JS</code> · <code>/JavaScript</code></td><td>Embedded script</td><td><b>No</b></td></tr>
+        <tr><td><code>/OpenAction</code> · <code>/AA</code></td><td>Something happens automatically</td><td>Rarely</td></tr>
+        <tr><td><code>/Launch</code></td><td>Starts external content</td><td><b>No</b></td></tr>
+        <tr><td><code>/EmbeddedFile</code></td><td>A file inside the PDF</td><td>Rarely</td></tr>
+        <tr><td><code>/ObjStm</code></td><td>Objects hidden inside compressed streams</td><td>Sometimes — but it can hide the others</td></tr>
+      </tbody></table></div>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">pdfid to triage → pdf-parser to extract → never open in a normal reader.</strong></p></div>
+    </div>
+  </section>
+
+  <!-- P13 LAB 14 DEMO + YOUR LAB -->
+  <section class="page" data-title="Lab — Basic PDF Analysis">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P13</span><span class="tag lab">Demo + your lab</span><span class="time">⏱ 15 min</span></div>
+      <h1>Live demo + your lab — which resume is it?</h1>
+      <p class="lede">INE's scenario on the projector, then a triage of the PDF from your Session 9 file lab.</p>
+    </div>
+    <div class="content">
+      <div class="box source"><span class="box-t">The INE lab (live demo · 8 min)</span><p>David in HR received <b>two resumes</b> with similar names. Days later the firewall saw a strange connection from his PC. David opened only the resumes — but one showed a "save as" window and then a dialog asking him to click "Open" to view "encrypted content". Which file, and what did it do?</p></div>
+      <div class="box lab-box"><span class="box-t">Watch sheet</span>
+        <ol class="steps">
+          <li>Which tool is run first on both files, and which keyword separates them?</li>
+          <li>Which pdf-parser option gives an overview of the objects?</li>
+          <li>How does the instructor find the object that holds the script?</li>
+          <li>In one line: what does the script do when the file is opened?</li>
+        </ol></div>
+      <details class="case-ans"><summary>Check your sheet after the demo</summary><div>
+        <p><b>1</b> <code>pdfid.py</code> on both — only one shows <code>/JavaScript</code>/<code>/JS</code> (and an automatic action) · <b>2</b> <code>pdf-parser.py --stats</code> · <b>3</b> <code>pdf-parser.py --search JavaScript</code>, then <code>--object=&lt;n&gt; --filter --raw</code> to decode it · <b>4</b> it saves a file and then asks the user to launch <code>cmd.exe</code> — the "save as" and "Open" dialogs David saw. The analysis continues with the payload it carries.</p></div></details>
+      <h2><span class="h-t">Your lab (7 min) — triage before you trust</span></h2>
+      <ol class="steps">
+        <li>Copy <code>salary_scale.jpg</code> from your Session 9 lab and rename the <b>copy</b> to <code>salary_scale.pdf</code>.</li>
+        <li>Run <code>pdfid.py salary_scale.pdf</code>.</li>
+        <li>Decide: clean, suspicious or malicious — and write one line of evidence.</li>
+      </ol>
+      <div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">real output for this file</span></div><pre><span class="f">$ pdfid.py salary_scale.pdf</span>
+PDFiD 0.2.7 salary_scale.pdf
+ PDF Header: %PDF-1.3
+ obj                    8
+ endobj                 8
+ stream                 1
+ endstream              1
+ xref                   1
+ trailer                1
+ startxref              1
+ /Page                  1
+ /Encrypt               0
+ /ObjStm                0
+ <span class="hit">/JS                    0</span>
+ <span class="hit">/JavaScript            0</span>
+ <span class="hit">/AA                    0</span>
+ <span class="hit">/OpenAction            0</span>
+ /AcroForm              0
+ /JBIG2Decode           0
+ /RichMedia             0
+ <span class="hit">/Launch                0</span>
+ /EmbeddedFile          0
+ /XFA                   0
+ /Colors &gt; 2^24         0</pre><ul class="logview-notes"><li>One page, 8 objects, balanced <code>obj</code>/<code>endobj</code>, and <b>zero</b> script, action, launch or embedded-file keywords → no active content. Version numbers of pdfid may differ.</li></ul></div>
+      <div class="verify"><h4>Verify — tick when you have it</h4><ul>
+        <li>Your pdfid output matches the one above.</li>
+        <li>Your verdict names the keywords that are zero and why that matters.</li>
+        <li>You can explain which keyword values would have made you escalate.</li></ul></div>
+    </div>
+  </section>
+
+  <!-- P14 OLEVBA -->
+  <section class="page" data-title="Office macros with olevba">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P14</span><span class="tag theory">Tool · demo</span><span class="time">⏱ 10 min</span></div>
+      <h1>Office macros with olevba</h1>
+      <p class="lede">Macro-enabled documents are still one of the most common initial-access vectors. olevba reads the macros without running them.</p>
+    </div>
+    <div class="content">
+      <div class="term">
+        <div class="term-h"><b>VBA macro</b><span>term</span></div>
+        <div class="term-rows">
+          <div>Definition</div><div>A small program written in Visual Basic for Applications, built into Word, Excel and PowerPoint to automate tasks.</div>
+          <div>Why it exists</div><div>Legitimate automation — reports, templates, calculations.</div>
+          <div>Where used</div><div>Files that can hold macros: <code>.docm</code>, <code>.xlsm</code>, and legacy <code>.doc</code> / <code>.xls</code>.</div>
+          <div>Example</div><div>A macro that runs on <code>Document_Open</code> and starts PowerShell.</div>
+          <div>SOC example</div><div class="soc">Word → PowerShell in Sysmon ID 1 (Session 7) is very often a macro at work.</div>
+        </div>
+      </div>
+      <figure class="fig" data-stepped data-mode="loop" data-interval="3200">
+        <div class="fig-head"><span class="fig-id">FIG S10-F4 · how a malicious macro works — and what olevba sees</span><span class="fig-tag">4 steps</span></div>
+        <div class="fig-body">
+          <svg viewBox="0 0 980 220" role="img" aria-label="A document opens, an auto-execution trigger runs the macro, the macro calls a shell or downloads, olevba flags the trigger, the suspicious keywords and the IOCs">
+            <defs><marker id="ftc" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e0556b"/></marker></defs>
+            <g data-step="1"><rect class="nd ev" x="20" y="30" width="200" height="80" rx="10"/><text class="lbl" x="120" y="62" text-anchor="middle">Invoice.docm</text><text class="xs mut" x="120" y="86" text-anchor="middle">"Enable content"</text></g>
+            <g data-step="2"><path class="arw bad" d="M222 70 L266 70" marker-end="url(#ftc)"/><rect class="nd warn" x="270" y="30" width="210" height="80" rx="10"/><text class="lbl" x="375" y="62" text-anchor="middle">Auto trigger</text><text class="xs mut m" x="375" y="86" text-anchor="middle">AutoOpen · Document_Open</text></g>
+            <g data-step="3"><path class="arw bad" d="M482 70 L526 70" marker-end="url(#ftc)"/><rect class="nd bad" x="530" y="30" width="210" height="80" rx="10"/><text class="lbl" x="635" y="62" text-anchor="middle">Payload action</text><text class="xs mut" x="635" y="86" text-anchor="middle">shell · download · registry</text></g>
+            <g data-step="4"><rect class="nd ok" x="20" y="140" width="940" height="64" rx="10"/><text class="sm" x="490" y="166" text-anchor="middle">olevba: extracts the VBA · flags AutoExec triggers · flags Suspicious keywords (Shell, CreateObject, WScript.Shell)</text><text class="sm" x="490" y="190" text-anchor="middle">lists IOCs (URLs, IPs, paths) · decodes obfuscated strings — without running anything</text></g>
+          </svg>
+        </div>
+        <ol class="fig-steps" hidden>
+          <li><b>The lure</b> — a macro-enabled document asks the user to "enable content".</li>
+          <li><b>The trigger</b> — <code>AutoOpen</code> / <code>Document_Open</code> run the macro the moment the document opens.</li>
+          <li><b>The action</b> — launch executables, run PowerShell, download more malware, change registry keys for persistence.</li>
+          <li data-key><b>olevba</b> — extracts the macros, deobfuscates, flags triggers and suspicious keywords, lists IOCs and classifies the risk.</li>
+        </ol>
+        <div class="fig-cap"><p></p></div>
+      </figure>
+      <div class="split">
+        <div class="box concept"><span class="box-t">oletools</span><p>An open-source Python toolkit (Philippe Lagadec and contributors) for OLE and Office files: metadata, streams, embedded objects, indicators. <b>olevba</b> is its macro analyser.</p><pre><code>pip install oletools
+olevba suspicious.docm</code></pre></div>
+        <div class="box evidence"><span class="box-t">What to read in the output</span><p><b>AutoExec</b> rows — when it runs · <b>Suspicious</b> rows — what it can do · <b>IOC</b> rows — where it reaches · <b>Hex/Base64 strings</b> — what it hides.</p></div>
+      </div>
+      <h2><span class="h-t">Try it on your own file (3 min)</span></h2>
+      <div class="logview"><div class="logview-h"><b>analysis VM</b> · <span class="src">real output — the <code>contract</code> file from Session 9</span></div><pre><span class="f">$ olevba contract</span>
+olevba 0.60.2 on Python 3.13 - http://decalage.info/python/oletools
+===============================================================================
+FILE: contract
+Type: <span class="hit">OpenXML</span>
+<span class="hit">No VBA or XLM macros found.</span></pre><ul class="logview-notes"><li><code>.docx</code> files cannot store macros — Word refuses to save VBA into them. That is why attackers use <code>.docm</code> or old <code>.doc</code>. Your version line may differ.</li></ul></div>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">Trigger · action · IOC.</strong> olevba shows all three without running a single line.</p></div>
+    </div>
+  </section>
+
+  <!-- P15 PE ANATOMY -->
+  <section class="page" data-title="PE anatomy">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P15</span><span class="tag theory">Theory</span><span class="time">⏱ 15 min</span></div>
+      <h1>Anatomy of a Portable Executable</h1>
+      <p class="lede">Most Windows malware arrives as a PE file. Its headers tell you what it is, when it was built, and what it can do — before it ever runs.</p>
+    </div>
+    <div class="content">
+      <div class="term">
+        <div class="term-h"><b>Portable Executable (PE)</b><span>term</span></div>
+        <div class="term-rows">
+          <div>Definition</div><div>The standard Windows format for executables, object code and DLLs: headers and sections that tell Windows how to load and run the program.</div>
+          <div>Why it exists</div><div>One format for every Windows program, so the loader knows where code, data, imports and resources are.</div>
+          <div>Where used</div><div><code>.exe</code>, <code>.dll</code>, <code>.sys</code> drivers — and disguised files with an <code>MZ</code> header (Session 9).</div>
+          <div>Example</div><div>An import of <code>WriteProcessMemory</code> suggests the program can write into other processes.</div>
+          <div>SOC example</div><div class="soc">Static PE triage tells you whether a sample is worth sandbox time — and gives IOCs (hash, compile time, imports).</div>
+        </div>
+      </div>
+      <figure class="fig" data-stepped data-mode="loop" data-interval="3200">
+        <div class="fig-head"><span class="fig-id">FIG S10-F5 · the PE file, layer by layer</span><span class="fig-tag">6 steps</span></div>
+        <div class="fig-body">
+          <svg viewBox="0 0 980 340" role="img" aria-label="DOS header, DOS stub, PE signature, COFF file header, optional header with data directories, section table and sections">
+            <g data-step="1"><rect class="nd ev" x="20" y="14" width="360" height="42" rx="6"/><text class="sm" x="40" y="41">DOS header</text><text class="xs mut m" x="360" y="41" text-anchor="end">4D 5A "MZ"</text><text class="xs" x="400" y="41">confirms PE format — malware sometimes fakes or corrupts it</text></g>
+            <g data-step="2"><rect class="nd" x="20" y="60" width="360" height="34" rx="6"/><text class="xs mut" x="40" y="82">DOS stub — "This program cannot be run in DOS mode"</text>
+              <rect class="nd brand" x="20" y="98" width="360" height="42" rx="6"/><text class="sm" x="40" y="125">PE signature</text><text class="xs mut m" x="360" y="125" text-anchor="end">50 45 00 00 "PE\0\0"</text><text class="xs" x="400" y="125">valid PE — missing or changed = tampering</text></g>
+            <g data-step="3"><rect class="nd lab" x="20" y="144" width="360" height="42" rx="6"/><text class="sm" x="40" y="171">COFF file header</text><text class="xs" x="400" y="164">machine (x86/x64/ARM) · number of sections</text><text class="xs" x="400" y="182">TimeDateStamp = compile time (often forged)</text></g>
+            <g data-step="4"><rect class="nd lab" x="20" y="190" width="360" height="58" rx="6"/><text class="sm" x="40" y="214">Optional header</text><text class="xs mut" x="40" y="236">+ data directories</text><text class="xs" x="400" y="206">magic 0x10B / 0x20B · AddressOfEntryPoint · ImageBase</text><text class="xs" x="400" y="224">subsystem · DLL characteristics (ASLR, DEP, CFG)</text><text class="xs" x="400" y="242">directories: imports · exports · resources · TLS · debug</text></g>
+            <g data-step="5"><rect class="nd cp" x="20" y="252" width="360" height="34" rx="6"/><text class="sm" x="40" y="275">Section table</text><text class="xs" x="400" y="275">name · virtual size vs raw size · flags</text></g>
+            <g data-step="6"><rect class="nd ok" x="20" y="290" width="84" height="40" rx="6"/><text class="xs m" x="62" y="315" text-anchor="middle">.text</text><rect class="nd ok" x="112" y="290" width="84" height="40" rx="6"/><text class="xs m" x="154" y="315" text-anchor="middle">.rdata</text><rect class="nd ok" x="204" y="290" width="84" height="40" rx="6"/><text class="xs m" x="246" y="315" text-anchor="middle">.data</text><rect class="nd ok" x="296" y="290" width="84" height="40" rx="6"/><text class="xs m" x="338" y="315" text-anchor="middle">.rsrc</text><text class="xs" x="400" y="306">code · read-only data · data · resources</text><text class="xs" x="400" y="324">odd names or high entropy = packing or encryption</text></g>
+          </svg>
+        </div>
+        <ol class="fig-steps" hidden>
+          <li><b>DOS header</b> — <code>MZ</code> confirms the PE format.</li>
+          <li><b>DOS stub and PE signature</b> — <code>PE\0\0</code> identifies a valid PE; absence or change suggests tampering.</li>
+          <li><b>COFF file header</b> — machine type, number of sections, <b>compile time</b> (compare with known campaigns — but it is often forged).</li>
+          <li data-key><b>Optional header</b> (not optional for executables) — 32/64-bit, entry point, image base, subsystem, security flags; and the <b>data directories</b>: import, export, resource, TLS-callback and debug tables.</li>
+          <li><b>Section table</b> — virtual size versus raw size: large differences can mean packing or injection.</li>
+          <li><b>Sections</b> — <code>.text</code> code, <code>.rdata</code>, <code>.data</code>, <code>.rsrc</code>. Non-standard names or high entropy suggest packing or encryption.</li>
+        </ol>
+        <div class="fig-cap"><p></p></div>
+      </figure>
+      <div class="tbl-scroll"><table class="dtable"><colgroup><col style="width:32%"><col></colgroup><thead><tr><th>Red flag</th><th>Why it matters</th></tr></thead><tbody>
+        <tr><td>Imports like <code>VirtualAlloc</code>, <code>WriteProcessMemory</code>, <code>CreateRemoteThread</code></td><td>Capability to inject into other processes</td></tr>
+        <tr><td>Very few imports + high-entropy sections</td><td>Packed — the real imports are resolved at run time</td></tr>
+        <tr><td>Virtual size much larger than raw size</td><td>Unpacks itself in memory</td></tr>
+        <tr><td>Non-standard section names</td><td>Packers and custom tooling</td></tr>
+        <tr><td>Entry point outside <code>.text</code>, TLS callbacks</td><td>Code that runs before the main program, or obfuscation</td></tr>
+        <tr><td>ASLR / DEP turned off</td><td>Security features disabled on purpose</td></tr>
+        <tr><td>No or invalid digital signature on a "Microsoft" file</td><td>Masquerading</td></tr>
+        <tr><td>Debug path in the debug directory</td><td>Can leak the author's build environment</td></tr>
+      </tbody></table></div>
+      <div class="split">
+        <div class="box defend"><span class="box-t">pestudio</span><p>Static triage in one window: headers, compile time, entry point, imports and exports, flagged APIs, sections, resources, strings, signature, indicators — nothing is executed.</p></div>
+        <div class="box defend"><span class="box-t">CFF Explorer</span><p>A detailed PE viewer and editor: every header field, import and export directories, section headers, a hex view, signature checks — good for learning the structure.</p></div>
+      </div>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">Headers say what and when · imports say what it can do · sections say whether it hides.</strong></p></div>
+    </div>
+  </section>
+
+  <!-- P16 LAB 15 -->
+  <section class="page" data-title="Lab — PE file structures">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P16</span><span class="tag lab">Demo + your lab</span><span class="time">⏱ 22 min</span></div>
+      <h1>Live demo + your lab — read a PE and write the triage report</h1>
+      <p class="lede">INE's PE lab on the projector, then a known-good Windows binary on your own host — so you learn what normal looks like.</p>
+    </div>
+    <div class="content">
+      <div class="box source"><span class="box-t">The INE lab (live demo · 8 min)</span><p>A zipped sample (do <b>not</b> run it). Answer header, section, import and resource questions with CFF Explorer, pestudio, PEView, Dependency Walker and Resource Hacker — then write a short report for the client.</p></div>
+      <div class="box lab-box"><span class="box-t">Watch sheet</span>
+        <ol class="steps">
+          <li>Which header fields does the instructor read first?</li>
+          <li>Which sections does the sample have?</li>
+          <li>Pick one imported DLL and function — what capability does it suggest?</li>
+          <li>Where does the version information come from?</li>
+        </ol></div>
+      <details class="case-ans"><summary>Check your sheet after the demo</summary><div>
+        <p><b>1</b> DOS, NT (signature), File and Optional headers — machine, sections, compile time, entry point, subsystem · <b>2</b> <code>.text</code>, <code>.rdata</code>, <code>.data</code>, <code>.idata</code>, <code>.gfids</code>, <code>.00cfg</code>, <code>.rsrc</code> · <b>3</b> for example <code>DNSAPI.dll → DnsQueryConfig</code>: the program works with DNS settings — imports map to capabilities · <b>4</b> the version-info resource in <code>.rsrc</code> (Resource Hacker).</p></div></details>
+      <h2><span class="h-t">Your lab (14 min) — a known-good baseline</span></h2>
+      <div class="labslot">
+        <div class="ls-t"><span class="ls-dot"></span>Your environment<span class="ls-badge">lab host · alone</span></div>
+        <ol>
+          <li><span class="ls-k log">Sample</span> a <b>copy</b> of <code>C:\Windows\System32\notepad.exe</code> in <code>C:\IR\pe\</code></li>
+          <li><span class="ls-k det">Tools</span> pestudio · CFF Explorer</li>
+        </ol>
+      </div>
+      <div class="simscreen" data-title="SIMSCREEN S10-W1 · pestudio → where each answer lives (recreated interface)" data-interval="4400">
+        <div class="ss-stage"><div class="ss-holder">
+          <div class="wu ps" id="psA" style="width:720px">
+            <div class="wu-tb"><span class="t">pestudio · c:\ir\pe\notepad.exe</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="ps-body">
+              <div class="ps-tree"><div class="ps-n sel" id="psRoot">c:\ir\pe\notepad.exe</div><div class="ps-n" id="psInd">indicators</div><div class="ps-n">dos-header</div><div class="ps-n">dos-stub</div><div class="ps-n" id="psFile">file-header</div><div class="ps-n" id="psOpt">optional-header</div><div class="ps-n">directories</div><div class="ps-n" id="psSec">sections</div><div class="ps-n" id="psLib">libraries</div><div class="ps-n" id="psImp">imports</div><div class="ps-n">exports</div><div class="ps-n">resources</div><div class="ps-n">strings</div><div class="ps-n" id="psVer">version</div><div class="ps-n" id="psSig">certificate</div></div>
+              <div class="ps-main"><div class="ps-r h"><span>property</span><span>value</span></div><div class="ps-r"><span>sha256</span><span>(hash of your copy)</span></div><div class="ps-r"><span>md5</span><span>(hash of your copy)</span></div><div class="ps-r"><span>file-type</span><span>executable · 64-bit · GUI</span></div><div class="ps-r"><span>size</span><span>(bytes of your copy)</span></div><div class="ps-r"><span>entropy</span><span>(about 6 — normal for code)</span></div><div class="ps-r"><span>signature</span><span>(see certificate)</span></div></div>
+            </div>
+          </div>
+          <div class="wu ps" id="psB" style="width:720px">
+            <div class="wu-tb"><span class="t">pestudio · c:\ir\pe\notepad.exe</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="ps-body">
+              <div class="ps-tree"><div class="ps-n" id="psRoot1">c:\ir\pe\notepad.exe</div><div class="ps-n" id="psInd1">indicators</div><div class="ps-n">dos-header</div><div class="ps-n">dos-stub</div><div class="ps-n sel" id="psFile1">file-header</div><div class="ps-n" id="psOpt1">optional-header</div><div class="ps-n">directories</div><div class="ps-n" id="psSec1">sections</div><div class="ps-n" id="psLib1">libraries</div><div class="ps-n" id="psImp1">imports</div><div class="ps-n">exports</div><div class="ps-n">resources</div><div class="ps-n">strings</div><div class="ps-n" id="psVer1">version</div><div class="ps-n" id="psSig1">certificate</div></div>
+              <div class="ps-main"><div class="ps-r h"><span>property</span><span>value</span></div><div class="ps-r"><span>machine</span><span>AMD64 (0x8664)</span></div><div class="ps-r"><span>sections</span><span>(count yours — 7 on Windows 10)</span></div><div class="ps-r"><span>compiler-stamp</span><span>looks random on Windows system files</span></div><div class="ps-r"><span>characteristics</span><span>executable · large-address-aware</span></div></div>
+            </div>
+          </div>
+          <div class="wu ps" id="psC" style="width:720px">
+            <div class="wu-tb"><span class="t">pestudio · c:\ir\pe\notepad.exe</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="ps-body">
+              <div class="ps-tree"><div class="ps-n" id="psRoot2">c:\ir\pe\notepad.exe</div><div class="ps-n" id="psInd2">indicators</div><div class="ps-n">dos-header</div><div class="ps-n">dos-stub</div><div class="ps-n" id="psFile2">file-header</div><div class="ps-n sel" id="psOpt2">optional-header</div><div class="ps-n">directories</div><div class="ps-n" id="psSec2">sections</div><div class="ps-n" id="psLib2">libraries</div><div class="ps-n" id="psImp2">imports</div><div class="ps-n">exports</div><div class="ps-n">resources</div><div class="ps-n">strings</div><div class="ps-n" id="psVer2">version</div><div class="ps-n" id="psSig2">certificate</div></div>
+              <div class="ps-main"><div class="ps-r h"><span>property</span><span>value</span></div><div class="ps-r"><span>magic</span><span>0x020B → PE32+ (64-bit)</span></div><div class="ps-r"><span>entry-point</span><span>(RVA of your copy)</span></div><div class="ps-r"><span>subsystem</span><span>GUI</span></div><div class="ps-r"><span>ASLR (dynamic-base)</span><span>true</span></div><div class="ps-r"><span>DEP (nx-compatible)</span><span>true</span></div><div class="ps-r"><span>control-flow-guard</span><span>true</span></div></div>
+            </div>
+          </div>
+          <div class="wu ps" id="psD" style="width:720px">
+            <div class="wu-tb"><span class="t">pestudio · c:\ir\pe\notepad.exe</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="ps-body">
+              <div class="ps-tree"><div class="ps-n" id="psRoot3">c:\ir\pe\notepad.exe</div><div class="ps-n" id="psInd3">indicators</div><div class="ps-n">dos-header</div><div class="ps-n">dos-stub</div><div class="ps-n" id="psFile3">file-header</div><div class="ps-n" id="psOpt3">optional-header</div><div class="ps-n">directories</div><div class="ps-n sel" id="psSec3">sections</div><div class="ps-n" id="psLib3">libraries</div><div class="ps-n" id="psImp3">imports</div><div class="ps-n">exports</div><div class="ps-n">resources</div><div class="ps-n">strings</div><div class="ps-n" id="psVer3">version</div><div class="ps-n" id="psSig3">certificate</div></div>
+              <div class="ps-main"><div class="ps-r h" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>name</span><span>raw-size</span><span>virtual-size</span><span>executable</span><span>writable</span></div><div class="ps-r" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>.text</span><span>…</span><span>…</span><span>x</span><span>-</span></div><div class="ps-r" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>.rdata</span><span>…</span><span>…</span><span>-</span><span>-</span></div><div class="ps-r" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>.data</span><span>…</span><span>…</span><span>-</span><span>x</span></div><div class="ps-r" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>.pdata</span><span>…</span><span>…</span><span>-</span><span>-</span></div><div class="ps-r" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>.didat</span><span>…</span><span>…</span><span>-</span><span>x</span></div><div class="ps-r" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>.rsrc</span><span>…</span><span>…</span><span>-</span><span>-</span></div><div class="ps-r" style="grid-template-columns:84px 1fr 1fr 86px 76px"><span>.reloc</span><span>…</span><span>…</span><span>-</span><span>-</span></div></div>
+            </div>
+          </div>
+          <div class="wu ps" id="psE" style="width:720px">
+            <div class="wu-tb"><span class="t">pestudio · c:\ir\pe\notepad.exe</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="ps-body">
+              <div class="ps-tree"><div class="ps-n" id="psRoot4">c:\ir\pe\notepad.exe</div><div class="ps-n" id="psInd4">indicators</div><div class="ps-n">dos-header</div><div class="ps-n">dos-stub</div><div class="ps-n" id="psFile4">file-header</div><div class="ps-n" id="psOpt4">optional-header</div><div class="ps-n">directories</div><div class="ps-n" id="psSec4">sections</div><div class="ps-n sel" id="psLib4">libraries</div><div class="ps-n" id="psImp4">imports</div><div class="ps-n">exports</div><div class="ps-n">resources</div><div class="ps-n">strings</div><div class="ps-n" id="psVer4">version</div><div class="ps-n" id="psSig4">certificate</div></div>
+              <div class="ps-main"><div class="ps-r h"><span>library</span><span>what it gives the program</span></div><div class="ps-r"><span>api-ms-win-core-*.dll</span><span>core OS: files, memory, processes</span></div><div class="ps-r"><span>USER32.dll</span><span>windows, menus, keyboard</span></div><div class="ps-r"><span>GDI32.dll</span><span>drawing text and graphics</span></div><div class="ps-r"><span>COMDLG32.dll</span><span>Open / Save dialogs</span></div><div class="ps-r"><span>SHELL32.dll</span><span>shell functions</span></div><div class="ps-r"><span>(your list)</span><span>compare — a text editor needs nothing more</span></div></div>
+            </div>
+          </div>
+          <div class="wu ps" id="psF" style="width:720px">
+            <div class="wu-tb"><span class="t">pestudio · c:\ir\pe\notepad.exe</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="ps-body">
+              <div class="ps-tree"><div class="ps-n" id="psRoot5">c:\ir\pe\notepad.exe</div><div class="ps-n" id="psInd5">indicators</div><div class="ps-n">dos-header</div><div class="ps-n">dos-stub</div><div class="ps-n" id="psFile5">file-header</div><div class="ps-n" id="psOpt5">optional-header</div><div class="ps-n">directories</div><div class="ps-n" id="psSec5">sections</div><div class="ps-n" id="psLib5">libraries</div><div class="ps-n" id="psImp5">imports</div><div class="ps-n">exports</div><div class="ps-n">resources</div><div class="ps-n">strings</div><div class="ps-n" id="psVer5">version</div><div class="ps-n sel" id="psSig5">certificate</div></div>
+              <div class="ps-main"><div class="ps-r h"><span>property</span><span>value</span></div><div class="ps-r"><span>embedded certificate</span><span>may be empty for Windows files</span></div><div class="ps-r"><span>why</span><span>many system files are signed through a catalog</span></div><div class="ps-r"><span>check</span><span>sigcheck -a · Get-AuthenticodeSignature</span></div><div class="ps-r"><span>expected signer</span><span>Microsoft Windows</span></div><div class="ps-r"><span>status</span><span>(valid / not valid — yours)</span></div></div>
+            </div>
+          </div>
+        </div></div>
+        <ol class="ss-steps" hidden>
+          <li data-screen="psA" data-target="psRoot"><b>1.</b> Drop the copy into pestudio. The root shows hashes, type and size — write the SHA-256 first.</li>
+          <li data-screen="psB" data-target="psFile1"><b>2.</b> <b>file-header</b> — machine and number of sections. On Windows system files the compile stamp is not a real date, so do not trust it.</li>
+          <li data-screen="psC" data-target="psOpt2"><b>3.</b> <b>optional-header</b> — PE32+ means 64-bit; note the subsystem and whether ASLR, DEP and CFG are on.</li>
+          <li data-screen="psD" data-target="psSec3" data-key><b>4.</b> <b>sections</b> — normal names; only .text is executable; raw ≈ virtual size. This is your "normal" picture.</li>
+          <li data-screen="psE" data-target="psLib4"><b>5.</b> <b>libraries</b> — each DLL tells you a capability. Ask: does a text editor need it?</li>
+          <li data-screen="psF" data-target="psSig5" data-key><b>6.</b> <b>certificate</b> — an empty tab is not "unsigned" for Windows files: confirm with <code>sigcheck</code> or PowerShell.</li>
+        </ol>
+      </div>
+      <p class="pr-note">Recreated interface showing where to look; the values come from your own copy. pestudio's layout differs slightly between versions.</p>
+      <div class="tbl-scroll"><table class="dtable"><thead><tr><th>Report line</th><th>Your value</th></tr></thead><tbody>
+        <tr><td>SHA-256</td><td>…</td></tr>
+        <tr><td>Machine · 32/64-bit · subsystem</td><td>…</td></tr>
+        <tr><td>Compile time (and whether you trust it)</td><td>…</td></tr>
+        <tr><td>Sections (name · raw size · virtual size)</td><td>…</td></tr>
+        <tr><td>Three imported DLLs and one function each → capability</td><td>…</td></tr>
+        <tr><td>ASLR / DEP on?</td><td>…</td></tr>
+        <tr><td>Signer and signature status</td><td>…</td></tr>
+        <tr><td>Verdict — and what would change it</td><td>…</td></tr>
+      </tbody></table></div>
+      <div class="verify"><h4>Verify — tick when you have it</h4><ul>
+        <li>Your SHA-256 is recorded first, from your copy.</li>
+        <li>All eight report lines are filled.</li>
+        <li>You can name two red flags from page 15 that notepad.exe does <b>not</b> show.</li></ul></div>
+    </div>
+  </section>
+
+  <!-- P17 BREAK 2 -->
+  <section class="page" data-title="Break 2">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P17</span><span class="tag">Break</span><span class="time">⏱ 10 min</span></div>
+      <h1>Break</h1>
+    </div>
+    <div class="content">
+      <div class="timer-card" data-timer="10">
+        <div class="timer-ring"><svg viewBox="0 0 120 120"><circle class="timer-ring-bg" cx="60" cy="60" r="54"/><circle class="timer-ring-fill" cx="60" cy="60" r="54"/></svg><div class="timer-display">10:00</div></div>
+        <h3>10-minute break</h3><p class="timer-note">Press start when the break begins.</p>
+        <div class="timer-btns"><button class="btn primary" data-act="start" type="button">▶ Start break</button><button class="btn" data-act="reset" type="button">↺ Reset</button></div>
+      </div>
+      <div class="box recall"><span class="box-t">↺ When you come back</span><p>The registry: Windows' memory of who used the machine, what they ran, what they plugged in — and what an attacker left to come back.</p></div>
+    </div>
+  </section>
+
+  <!-- P18 DIVIDER -->
+  <section class="page divider" data-title="Part 3 — Registry">
+    <div class="divider-inner">
+      <div class="divider-kicker">Part 3</div>
+      <h2>Windows registry forensics</h2>
+      <p class="lede">Almost every action on Windows leaves a trace in the registry: installs, logons, network settings, programs run, devices plugged in — and persistence.</p>
+      <div class="divider-rule"></div>
+      <div class="divider-meta"><span class="tag lab">Theory + INE Lab 16</span><span class="time">⏱ 4 pages · 50 min</span></div>
+    </div>
+  </section>
+
+  <!-- P19 HIVES -->
+  <section class="page" data-title="Hives and where they live">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P19</span><span class="tag theory">Theory</span><span class="time">⏱ 8 min</span></div>
+      <h1>Hives — and the files behind them</h1>
+      <p class="lede">The registry looks like one tree in regedit. On disk it is a handful of files called hives — and those files are your evidence.</p>
+    </div>
+    <div class="content">
+      <div class="term">
+        <div class="term-h"><b>Windows Registry</b><span>term</span></div>
+        <div class="term-rows">
+          <div>Definition</div><div>A hierarchical database of low-level settings for Windows, applications, users and hardware — thousands of keys and values.</div>
+          <div>Why it exists</div><div>One central place for configuration that the OS and programs read and write constantly.</div>
+          <div>Where used</div><div>Everywhere: services, drivers, startup, users, devices, recent activity.</div>
+          <div>Example</div><div><code>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code> starts programs at boot.</div>
+          <div>SOC example</div><div class="soc">Attackers use it for persistence, to disable security tools and to change system behaviour (Session 7's Run-key event).</div>
+        </div>
+      </div>
+      <figure class="fig" data-stepped data-mode="loop" data-interval="3200">
+        <div class="fig-head"><span class="fig-id">FIG S10-F6 · what regedit shows ↔ which file holds it</span><span class="fig-tag">5 steps</span></div>
+        <div class="fig-body">
+          <svg viewBox="0 0 980 300" role="img" aria-label="HKLM SAM, SECURITY, SYSTEM and SOFTWARE map to files in System32 config; HKCU maps to NTUSER.DAT; HKU holds every loaded user; HKCR is merged from SOFTWARE Classes and UsrClass.dat">
+            <g data-step="1"><rect class="nd brand" x="20" y="14" width="300" height="50" rx="8"/><text class="sm m" x="40" y="44">HKLM\SYSTEM</text><path class="arw brand" d="M322 39 L420 39"/><rect class="nd ev" x="424" y="14" width="536" height="50" rx="8"/><text class="xs m" x="440" y="44">C:\Windows\System32\config\SYSTEM</text><text class="xs mut" x="950" y="44" text-anchor="end">services · USB · time zone · network</text></g>
+            <g data-step="2"><rect class="nd brand" x="20" y="72" width="300" height="50" rx="8"/><text class="sm m" x="40" y="102">HKLM\SOFTWARE</text><path class="arw brand" d="M322 97 L420 97"/><rect class="nd ev" x="424" y="72" width="536" height="50" rx="8"/><text class="xs m" x="440" y="102">C:\Windows\System32\config\SOFTWARE</text><text class="xs mut" x="950" y="102" text-anchor="end">installed apps · Run keys · OS</text></g>
+            <g data-step="3"><rect class="nd brand" x="20" y="130" width="300" height="50" rx="8"/><text class="sm m" x="40" y="160">HKLM\SAM · SECURITY</text><path class="arw brand" d="M322 155 L420 155"/><rect class="nd ev" x="424" y="130" width="536" height="50" rx="8"/><text class="xs m" x="440" y="160">C:\Windows\System32\config\SAM · SECURITY</text><text class="xs mut" x="950" y="160" text-anchor="end">local accounts · policies</text></g>
+            <g data-step="4"><rect class="nd cp" x="20" y="188" width="300" height="50" rx="8"/><text class="sm m" x="40" y="218">HKCU (each user in HKU)</text><path class="arw brand" d="M322 213 L420 213"/><rect class="nd ev" x="424" y="188" width="536" height="50" rx="8"/><text class="xs m" x="440" y="218">C:\Users\&lt;user&gt;\NTUSER.DAT</text><text class="xs mut" x="950" y="218" text-anchor="end">MRUs · user Run keys · drives</text></g>
+            <g data-step="5"><rect class="nd lab" x="20" y="246" width="300" height="50" rx="8"/><text class="sm m" x="40" y="276">HKCR · HKCC</text><path class="arw brand" d="M322 271 L420 271"/><rect class="nd ev" x="424" y="246" width="536" height="50" rx="8"/><text class="xs m" x="440" y="276">SOFTWARE\Classes + UsrClass.dat · SYSTEM</text><text class="xs mut" x="950" y="276" text-anchor="end">file associations · COM</text></g>
+          </svg>
+        </div>
+        <ol class="fig-steps" hidden>
+          <li><b>SYSTEM</b> — startup programs, services and drivers, connected USB devices, time zone, boot settings.</li>
+          <li><b>SOFTWARE</b> — installed applications, execution history, persistence through Run keys.</li>
+          <li><b>SAM and SECURITY</b> — local accounts (SIDs, RIDs, logon counts) and security policy.</li>
+          <li data-key><b>NTUSER.DAT</b> — one per user: recently opened files (MRUs), user Run keys, browser history, mapped drives. <b>HKU</b> holds every loaded user, by SID — including users not logged in now.</li>
+          <li><b>HKCR and HKCC</b> — file associations and COM objects (hijacked associations launch malware) and the hardware profile.</li>
+        </ol>
+        <div class="fig-cap"><p></p></div>
+      </figure>
+      <div class="split">
+        <div class="box warn"><span class="box-t">Dirty hives</span><p>Each hive has transaction logs (<code>.LOG1</code>, <code>.LOG2</code>) beside it. Recent changes may still sit in the logs. Collect them <b>with</b> the hive; Registry Explorer will offer to replay them.</p></div>
+        <div class="box defend"><span class="box-t">Tools</span><p><b>Registry Explorer</b> (Eric Zimmerman) — GUI, bookmarks, data interpreter · <b>RegRipper</b> — plugins that pull known artefacts into a text report · <b>hivex</b> — Linux library and tools · <b>DCode</b> — converts timestamps.</p></div>
+      </div>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">SYSTEM · SOFTWARE · SAM · SECURITY in config\ — NTUSER.DAT in each profile — always with their .LOG files.</strong></p></div>
+    </div>
+  </section>
+
+  <!-- P20 ARTEFACTS -->
+  <section class="page" data-title="Artefacts that profile a host">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P20</span><span class="tag theory">Theory</span><span class="time">⏱ 11 min</span></div>
+      <h1>Keys that profile a system — and a user</h1>
+      <p class="lede">First the system: what is it, which time zone, which network. Then the user: who, what they opened, what they ran, what they plugged in.</p>
+    </div>
+    <div class="content">
+      <div class="box warn"><span class="box-t">First: which control set?</span><p>SYSTEM holds <code>ControlSet001</code>, sometimes <code>ControlSet002</code>. <code>SYSTEM\Select</code> → <b>Current</b> tells you which one was in use. Read that one.</p></div>
+      <div class="tbl-scroll"><table class="dtable"><colgroup><col style="width:22%"><col style="width:46%"><col></colgroup><thead><tr><th>Question</th><th>Hive \ key</th><th>Note</th></tr></thead><tbody>
+        <tr><td><b>Computer name</b></td><td><code>SYSTEM\ControlSet001\Control\ComputerName\ComputerName</code></td><td>Name the host in your report</td></tr>
+        <tr><td><b>Time zone</b></td><td><code>SYSTEM\ControlSet001\Control\TimeZoneInformation</code></td><td>Needed to read every local timestamp correctly</td></tr>
+        <tr><td><b>OS and install date</b></td><td><code>SOFTWARE\Microsoft\Windows NT\CurrentVersion</code></td><td><code>InstallDate</code> is a Unix epoch — convert it (DCode)</td></tr>
+        <tr><td><b>Network</b></td><td><code>SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces\{GUID}</code></td><td>IP, DHCP server, lease times (epochs)</td></tr>
+        <tr><td><b>RDP enabled?</b></td><td><code>SYSTEM\ControlSet001\Control\Terminal Server</code> → <code>fDenyTSConnections</code></td><td>0 = RDP allowed</td></tr>
+        <tr><td><b>Firewall</b></td><td><code>SYSTEM\ControlSet001\Services\SharedAccess\Parameters\FirewallPolicy</code></td><td>Profiles on or off</td></tr>
+        <tr><td><b>Local users</b></td><td><code>SAM\Domains\Account\Users</code></td><td>SID/RID, logon count, last logon, <b>password hint</b></td></tr>
+        <tr><td><b>Autostart</b></td><td><code>SOFTWARE\…\CurrentVersion\Run</code> · <code>RunOnce</code> · <code>NTUSER\…\Run</code></td><td>Persistence (T1547.001)</td></tr>
+        <tr><td><b>Installed programs</b></td><td><code>SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths</code></td><td>Programs registered on the system</td></tr>
+        <tr><td><b>Devices</b></td><td><code>SYSTEM\MountedDevices</code> · <code>SYSTEM\ControlSet001\Enum\USBSTOR</code></td><td>Drive letters, USB storage seen</td></tr>
+        <tr><td><b>Recent files</b></td><td><code>NTUSER\…\Explorer\RecentDocs</code></td><td>Recently opened files, by extension</td></tr>
+        <tr><td><b>Open/Save dialogs</b></td><td><code>NTUSER\…\Explorer\ComDlg32\OpenSavePidlMRU</code></td><td>Files picked in dialogs — uploads, attachments</td></tr>
+        <tr><td><b>Programs run</b></td><td><code>NTUSER\…\Explorer\UserAssist\{GUID}\Count</code></td><td>Names in <b>ROT13</b>, run count, last run</td></tr>
+      </tbody></table></div>
+      <div class="box concept"><span class="box-t">▶ Decode what you find</span><p>Three values look like nonsense until you know the encoding.</p></div>
+      <div class="pg">
+        <div class="pg-chips">
+          <button class="pg-chip" type="button" data-pg="a">UserAssist name</button>
+          <button class="pg-chip" type="button" data-pg="b">InstallDate</button>
+          <button class="pg-chip" type="button" data-pg="c">fDenyTSConnections</button>
+          <button class="pg-chip bad" type="button" data-pg="d">A Run value</button>
+        </div>
+        <div class="pg-out">
+          <div data-pg="a"><div class="logview"><div class="logview-h"><b>UserAssist</b> · <span class="src">value name</span></div><pre><span class="f">raw</span>      <span class="v">{1NP14R77-02R7-4R5Q-O744-2RO1NR5198O7}\abgrcnq.rkr</span>
+<span class="f">ROT13</span>    <span class="hit">{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\notepad.exe</span></pre><ul class="logview-notes"><li>ROT13 shifts every letter by 13 (a↔n, b↔o …). The GUID is the System32 known folder. Registry Explorer and RegRipper decode it for you — plus the run count and last run time.</li></ul></div></div>
+          <div data-pg="b"><div class="logview"><div class="logview-h"><b>SOFTWARE\Microsoft\Windows NT\CurrentVersion</b></div><pre><span class="f">InstallDate</span>  REG_DWORD  <span class="hit">0x68C6A2F0</span>  (1757848304)
+<span class="f">decoded</span>      <span class="v">2025-09-14 11:11:44 UTC</span></pre><ul class="logview-notes"><li>A Unix epoch: seconds since 1970-01-01 UTC. DCode, Registry Explorer's data interpreter or <code>date -u -d @1757848304</code> convert it.</li></ul></div></div>
+          <div data-pg="c"><div class="logview"><div class="logview-h"><b>SYSTEM\ControlSet001\Control\Terminal Server</b></div><pre><span class="f">fDenyTSConnections</span>  REG_DWORD  <span class="hit">0</span></pre><ul class="logview-notes"><li>The name is a double negative: <b>deny = 0</b> means RDP connections are <b>allowed</b>. Compare with 4624 type 10 events (Session 7).</li></ul></div></div>
+          <div data-pg="d"><div class="logview"><div class="logview-h"><b>NTUSER\Software\Microsoft\Windows\CurrentVersion\Run</b></div><pre><span class="f">OneDrive</span>    REG_SZ  "C:\Users\a.hassan\AppData\Local\Microsoft\OneDrive\OneDrive.exe" /background
+<span class="f">WinUpdate</span>   REG_SZ  <span class="bad">C:\ProgramData\update.exe</span></pre><ul class="logview-notes"><li>Same reading as Session 7: the second value imitates Windows Update and runs from <code>ProgramData</code>. The key's <b>last-write time</b> tells you when it changed.</li></ul></div></div>
+        </div>
+        <div class="pg-cap"><p data-pg="a">ROT13.</p><p data-pg="b">Unix epoch.</p><p data-pg="c">Double negative.</p><p data-pg="d">Persistence.</p></div>
+      </div>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">System first (control set, name, time zone, network) — then the user (SAM, Run, MRUs, UserAssist, devices).</strong></p></div>
+    </div>
+  </section>
+
+  <!-- P21 LIVE DEMO LAB 16 -->
+  <section class="page" data-title="Live demo — Windows Registry Analysis">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P21</span><span class="tag lab">Live demo</span><span class="time">⏱ 10 min</span></div>
+      <h1>Live demo — profile a system and a suspect from the hives</h1>
+      <p class="lede">The instructor runs INE's registry lab: a misconduct case where SYSTEM, SOFTWARE, SAM and NTUSER.DAT tell who the user was and what they did.</p>
+    </div>
+    <div class="content">
+      <div class="box source"><span class="box-t">The INE lab</span><p>A misconduct investigation. From the SYSTEM, SOFTWARE, SAM and NTUSER.DAT hives (and a profile image), build a profile of the system and of the user — with Registry Explorer, RegRipper and DCode.</p></div>
+      <div class="box lab-box"><span class="box-t">Watch sheet</span>
+        <ol class="steps">
+          <li>Which key tells the instructor which control set to read?</li>
+          <li>How is the install date converted to a readable time?</li>
+          <li>Which SAM fields describe the user account?</li>
+          <li>Where do the user's opened files and run programs come from?</li>
+          <li>Which key would show persistence?</li>
+        </ol></div>
+      <details class="case-ans"><summary>Check your sheet after the demo</summary><div>
+        <p><b>1</b> <code>SYSTEM\Select</code> → Current, then <code>CurrentControlSet → TimeZoneInformation</code>, Tcpip interfaces, RDP and firewall settings · <b>2</b> DCode (Unix epoch, and lease times the same way) · <b>3</b> SID/RID, logon count, last logon, password hint · <b>4</b> <code>OpenSavePidlMRU</code>, <code>RecentDocs</code>, <code>UserAssist</code> (ROT13), <code>App Paths</code>, <code>MountedDevices</code> · <b>5</b> <code>Run</code> / <code>RunOnce</code>.</p></div></details>
+      <div class="box key"><span class="box-t">Keep this</span><p><strong class="hl">Control set → system profile → accounts → user activity → persistence.</strong></p></div>
+    </div>
+  </section>
+
+  <!-- P22 YOUR LAB C -->
+  <section class="page" data-title="Your lab — profile your host">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P22</span><span class="tag lab">Your lab</span><span class="time">⏱ 20 min</span></div>
+      <h1>Your lab — profile your own host from its hives</h1>
+      <p class="lede">The hives you put into your custom AD1 in Session 9. You can check every answer against the live host — the best way to learn to trust the tool.</p>
+    </div>
+    <div class="content">
+      <div class="labslot">
+        <div class="ls-t"><span class="ls-dot"></span>Your environment<span class="ls-badge">analysis VM · alone</span></div>
+        <ol>
+          <li><span class="ls-k log">Evidence</span> your Session 9 AD1 → in FTK Imager <b>File → Add Evidence Item → Image File</b> → right-click the hives → <b>Export Files</b> to <code>C:\IR\hives\</code> (SYSTEM, SOFTWARE, SAM, NTUSER.DAT — and their .LOG1/.LOG2 if you collected them)</li>
+          <li><span class="ls-k det">Tools</span> Registry Explorer · RegRipper (<code>rip.exe</code>) · DCode</li>
+          <li><span class="ls-k res">Check</span> your Session 9 <code>LiveIR.txt</code> and <code>systeminfo</code> output — the answer key you made yourself</li>
+        </ol>
+      </div>
+      <div class="simscreen" data-title="SIMSCREEN S10-W2 · Registry Explorer → time zone and Run key (recreated interface)" data-interval="4600">
+        <div class="ss-stage"><div class="ss-holder">
+          <div class="wu rx" id="rxA" style="width:740px">
+            <div class="wu-tb"><span class="t">Registry Explorer</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="wu-mb"><span class="open">File</span><span>Tools</span><span>Options</span><span>Bookmarks</span><span>View</span><span>Help</span></div>
+            <div class="wu-menu" style="left:2px;top:57px"><div class="hl" id="rxLoad">Load hive</div><div>Load offline hive</div><div>Recent</div><div class="sep"></div><div>Export</div><div>Exit</div></div>
+            <div class="rx-body"><div class="rx-tree"><div class="rx-h">Registry hives (0)</div></div><div class="rx-vals"><div class="rx-h">Values</div></div></div>
+          </div>
+          <div class="wu rx" id="rxB" style="width:520px">
+            <div class="wu-tb"><span class="t">Dirty hive detected</span><span class="sp"><span class="b x">✕</span></span></div>
+            <div class="ftk-dlg" style="padding:14px 16px;background:#f0f0f0">
+              <p style="margin:0 0 10px">The hive <b>SYSTEM</b> is dirty (its transaction logs were not applied). Replay the transaction logs?</p>
+              <div class="wu-btns" style="justify-content:flex-end"><span class="wu-bt def" id="rxYes">Yes</span><span class="wu-bt">No</span></div>
+              <p style="margin:10px 0 0;color:#5c5c5c">Select the .LOG1 / .LOG2 files next. No logs? Choose No and note it in your report.</p>
+            </div>
+          </div>
+          <div class="wu rx" id="rxC" style="width:740px">
+            <div class="wu-tb"><span class="t">Registry Explorer</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="wu-mb"><span>File</span><span>Tools</span><span>Options</span><span>Bookmarks</span><span>View</span><span>Help</span></div>
+            <div class="rx-body">
+              <div class="rx-tree"><div class="rx-h">Registry hives (1) · Available bookmarks</div>
+                <div>▾ C:\IR\hives\SYSTEM</div><div class="i1">▾ ROOT</div><div class="i2">▾ ControlSet001</div><div class="i3">▾ Control</div><div class="i4 sel" id="rxTz">TimeZoneInformation</div><div class="i2">▸ MountedDevices</div><div class="i2" id="rxSelect">Select</div><div class="i2">▸ Setup</div></div>
+              <div class="rx-vals"><div class="rx-h">Values · TimeZoneInformation</div>
+                <div class="rx-r h"><span>Value Name</span><span>Value Type</span><span>Data</span></div>
+                <div class="rx-r"><span>Bias</span><span>RegDword</span><span>4294967176</span></div>
+                <div class="rx-r sel" id="rxTzv"><span>TimeZoneKeyName</span><span>RegSz</span><span>Egypt Standard Time</span></div>
+                <div class="rx-r"><span>DynamicDaylightTimeDisabled</span><span>RegDword</span><span>0</span></div>
+                <div class="rx-r"><span>ActiveTimeBias</span><span>RegDword</span><span>4294967116</span></div></div>
+            </div>
+          </div>
+          <div class="wu rx" id="rxD" style="width:740px">
+            <div class="wu-tb"><span class="t">Registry Explorer</span><span class="sp"><span class="b">—</span><span class="b">☐</span><span class="b x">✕</span></span></div>
+            <div class="wu-mb"><span>File</span><span>Tools</span><span>Options</span><span>Bookmarks</span><span>View</span><span>Help</span></div>
+            <div class="rx-body">
+              <div class="rx-tree"><div class="rx-h">Registry hives (2)</div>
+                <div>▸ C:\IR\hives\SYSTEM</div><div>▾ C:\IR\hives\SOFTWARE</div><div class="i1">▾ Microsoft</div><div class="i2">▾ Windows</div><div class="i3">▾ CurrentVersion</div><div class="i4 sel" id="rxRun">Run</div></div>
+              <div class="rx-vals"><div class="rx-h">Values · Run · last write (UTC) shown in the key properties</div>
+                <div class="rx-r h"><span>Value Name</span><span>Value Type</span><span>Data</span></div>
+                <div class="rx-r sel" id="rxRunv"><span>SecurityHealth</span><span>RegExpandSz</span><span>%windir%\system32\SecurityHealthSystray.exe</span></div>
+                <div class="rx-r"><span>(your other values)</span><span></span><span></span></div></div>
+            </div>
+          </div>
+        </div></div>
+        <ol class="ss-steps" hidden>
+          <li data-screen="rxA" data-target="rxLoad"><b>1.</b> <b>File → Load hive</b> → <code>C:\IR\hives\SYSTEM</code>.</li>
+          <li data-screen="rxB" data-target="rxYes"><b>2.</b> A dirty hive: replay the transaction logs if you have them — otherwise say No and write that down.</li>
+          <li data-screen="rxC" data-target="rxSelect"><b>3.</b> Read <b>Select → Current</b> first: it tells you which ControlSet to use.</li>
+          <li data-screen="rxC" data-target="rxTzv" data-key><b>4.</b> <b>ControlSet00x\Control\TimeZoneInformation</b> → <code>TimeZoneKeyName</code>. Every local time in your report depends on it.</li>
+          <li data-screen="rxD" data-target="rxRunv" data-key><b>5.</b> Load SOFTWARE → <b>Microsoft\Windows\CurrentVersion\Run</b>. Compare with the Run key you read from memory on page 8.</li>
+        </ol>
+      </div>
+      <p class="pr-note">Recreated interface. Values are examples — yours come from your own host.</p>
+      <h2><span class="h-t">RegRipper — the whole hive in one report</span></h2>
+      <pre><code>rip.exe -r C:\IR\hives\SYSTEM   -a &gt; C:\IR\hives\system.txt
+rip.exe -r C:\IR\hives\SOFTWARE -a &gt; C:\IR\hives\software.txt
+rip.exe -r C:\IR\hives\SAM      -a &gt; C:\IR\hives\sam.txt
+rip.exe -r C:\IR\hives\NTUSER.DAT -a &gt; C:\IR\hives\ntuser.txt</code></pre>
+      <p><code>-a</code> runs every plugin for that hive type. Search the text files for <code>timezone</code>, <code>compname</code>, <code>run</code>, <code>samparse</code>, <code>userassist</code>, <code>recentdocs</code>.</p>
+      <div class="tbl-scroll"><table class="dtable"><thead><tr><th>Profile sheet</th><th>Key / plugin</th><th>Your value</th><th>Matches live host?</th></tr></thead><tbody>
+        <tr><td>Computer name</td><td>ComputerName · <code>compname</code></td><td>…</td><td>LiveIR / systeminfo</td></tr>
+        <tr><td>Time zone</td><td>TimeZoneInformation · <code>timezone</code></td><td>…</td><td>…</td></tr>
+        <tr><td>OS + install date (UTC)</td><td>CurrentVersion · <code>winver</code></td><td>…</td><td>systeminfo</td></tr>
+        <tr><td>IP address · DHCP?</td><td>Tcpip\Interfaces · <code>ips</code></td><td>…</td><td>ipconfig /all</td></tr>
+        <tr><td>RDP allowed?</td><td>fDenyTSConnections</td><td>…</td><td>…</td></tr>
+        <tr><td>Your account: RID, logon count</td><td>SAM · <code>samparse</code></td><td>…</td><td>net user</td></tr>
+        <tr><td>HKLM + HKCU Run values</td><td>Run · <code>run</code></td><td>…</td><td>page 8 (memory)</td></tr>
+        <tr><td>Three programs you ran (UserAssist)</td><td><code>userassist</code></td><td>…</td><td>…</td></tr>
+      </tbody></table></div>
+      <div class="verify"><h4>Verify — tick when you have it</h4><ul>
+        <li>You read <code>Select → Current</code> before any ControlSet key.</li>
+        <li>Computer name, time zone and IP match your Session 9 LiveIR output.</li>
+        <li>Your install date is converted to UTC and written with its raw value.</li>
+        <li>The Run values from the hive match the ones you found in memory on page 8.</li>
+        <li>You decoded at least three UserAssist entries and recognised them as programs you ran.</li></ul></div>
+    </div>
+  </section>
+
+  <!-- P23 CHECK 2 -->
+  <section class="page" data-title="Knowledge check 2">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P23</span><span class="tag exam">Check</span><span class="time">⏱ 7 min</span></div>
+      <h1>Knowledge check 2 — files and registry</h1>
+      <p class="lede">The score below counts both checks of today.</p>
+    </div>
+    <div class="content">
+      <div class="q mcq" data-correct="b" data-why="/OpenAction triggers an action automatically when the document opens; with /JS or /JavaScript it can run a script on open.">
+        <p><span class="qn">Q7</span>pdfid shows <code>/OpenAction 1</code> and <code>/JS 1</code>. What does it mean?</p>
+        <ul class="opts"><li data-opt="a">The PDF is encrypted</li><li data-opt="b">A script may run automatically when the file opens</li><li data-opt="c">The PDF has one page</li><li data-opt="d">The PDF is damaged</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="d" data-why="pdf-parser can search for and extract objects, decode streams and dump scripts; pdfid only counts keywords.">
+        <p><span class="qn">Q8</span>Which tool extracts the object that holds the script?</p>
+        <ul class="opts"><li data-opt="a">pdfid</li><li data-opt="b">olevba</li><li data-opt="c">pestudio</li><li data-opt="d">pdf-parser</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="a" data-why="AutoOpen and Document_Open are auto-execution triggers: the macro runs when the document opens.">
+        <p><span class="qn">Q9</span>olevba flags <code>Document_Open</code>. That is…</p>
+        <ul class="opts"><li data-opt="a">an auto-execution trigger</li><li data-opt="b">an IOC URL</li><li data-opt="c">a document property</li><li data-opt="d">a digital signature</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="c" data-why="The COFF file header's TimeDateStamp is the compile time; it can be forged.">
+        <p><span class="qn">Q10</span>Where is a PE file's compile time — and can you trust it?</p>
+        <ul class="opts"><li data-opt="a">In .rsrc — always true</li><li data-opt="b">In the DOS stub — always true</li><li data-opt="c">In the COFF file header — it can be forged</li><li data-opt="d">In the import table — never set</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="b" data-why="Imports such as VirtualAlloc and WriteProcessMemory suggest the capability to inject code into other processes.">
+        <p><span class="qn">Q11</span>Imports include <code>WriteProcessMemory</code> and <code>CreateRemoteThread</code>. Likely capability?</p>
+        <ul class="opts"><li data-opt="a">Printing</li><li data-opt="b">Process injection</li><li data-opt="c">DNS queries</li><li data-opt="d">Reading the registry</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="d" data-why="NTUSER.DAT in each user's profile holds that user's settings: MRUs, user Run keys, UserAssist.">
+        <p><span class="qn">Q12</span>A user's recently opened files are in which hive?</p>
+        <ul class="opts"><li data-opt="a">SAM</li><li data-opt="b">SYSTEM</li><li data-opt="c">SECURITY</li><li data-opt="d">NTUSER.DAT</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="a" data-why="UserAssist value names are ROT13-encoded; decoding gives the program path, with run count and last run time.">
+        <p><span class="qn">Q13</span>UserAssist value names are encoded with…</p>
+        <ul class="opts"><li data-opt="a">ROT13</li><li data-opt="b">Base64</li><li data-opt="c">AES</li><li data-opt="d">SHA-256</li></ul><div class="mcq-fb"></div></div>
+      <div class="q mcq" data-correct="c" data-why="SYSTEM\Select → Current tells you which ControlSet00x was in use; read that one.">
+        <p><span class="qn">Q14</span>Before reading <code>ControlSet001</code>, you check…</p>
+        <ul class="opts"><li data-opt="a">SAM\Domains</li><li data-opt="b">The Run key</li><li data-opt="c">SYSTEM\Select → Current</li><li data-opt="d">UserAssist</li></ul><div class="mcq-fb"></div></div>
+      <div class="quiz-score" id="quizScore"></div>
+    </div>
+  </section>
+
+  <!-- P24 CHEAT -->
+  <section class="page" data-title="Cheat sheet">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P24</span><span class="tag">Cheat sheet</span><span class="time">⏱ keep open</span></div>
+      <h1>Cheat sheet</h1>
+      <p class="lede">Session 10 on one page. Prints clean.</p>
+    </div>
+    <div class="content">
+      <div class="cheat">
+        <div class="cheat-head"><h3>📋 Memory, files, registry — on one screen</h3><button class="btn-sm" type="button" onclick="window.print()">🖨 Print</button></div>
+        <div class="cheat-grid">
+          <div class="cheat-card"><h5>In RAM</h5><ul><li>Processes · connections · commands</li><li>Credentials · drivers · clipboard</li><li>Unpacked code · registry hives</li></ul></div>
+          <div class="cheat-card"><h5>Volatility 3</h5><ul><li><code>vol -f mem windows.info</code></li><li><code>windows.pstree · psscan · cmdline</code></li><li><code>windows.netscan · malfind · svcscan</code></li></ul></div>
+          <div class="cheat-card"><h5>V2 vs V3</h5><ul><li>V2: <code>imageinfo</code> → <code>--profile=</code></li><li>V3: symbol tables, faster</li><li>V2: <code>psxview · cmdscan · consoles</code></li></ul></div>
+          <div class="cheat-card"><h5>PDF</h5><ul><li><code>pdfid.py f.pdf</code> → /JS /JavaScript /OpenAction /AA /Launch</li><li><code>pdf-parser.py --stats · -s /JavaScript · -o N -f -w</code></li></ul></div>
+          <div class="cheat-card"><h5>Office</h5><ul><li><code>olevba file.docm</code></li><li>AutoExec · Suspicious · IOC rows</li><li>.docx cannot hold macros</li></ul></div>
+          <div class="cheat-card"><h5>PE</h5><ul><li>MZ · PE\0\0 · COFF · Optional · sections</li><li>Imports = capabilities</li><li>Entropy · raw vs virtual size · signature</li></ul></div>
+          <div class="cheat-card"><h5>Hives</h5><ul><li><code>config\SYSTEM SOFTWARE SAM SECURITY</code></li><li><code>Users\&lt;u&gt;\NTUSER.DAT</code> · UsrClass.dat</li><li>+ .LOG1 / .LOG2</li></ul></div>
+          <div class="cheat-card"><h5>System profile</h5><ul><li>Select → Current · ComputerName</li><li>TimeZoneInformation · Tcpip\Interfaces</li><li>CurrentVersion InstallDate (epoch)</li></ul></div>
+          <div class="cheat-card"><h5>User profile</h5><ul><li>SAM: RID · logons · hint</li><li>RecentDocs · OpenSavePidlMRU</li><li>UserAssist (ROT13) · USBSTOR</li></ul></div>
+          <div class="cheat-card"><h5>Persistence</h5><ul><li>HKLM / HKCU …\Run · RunOnce</li><li>Services · scheduled tasks</li><li>Check last-write times</li></ul></div>
+          <div class="cheat-card"><h5>RegRipper</h5><ul><li><code>rip.exe -r HIVE -a &gt; out.txt</code></li></ul></div>
+          <div class="cheat-card"><h5>Safety</h5><ul><li>Analyse copies · hash first</li><li>Never double-click a sample</li><li>Isolated analysis VM</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P25 HOMEWORK -->
+  <section class="page" data-title="Homework">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P25</span><span class="tag">Homework</span><span class="time">⏱ 3 min</span></div>
+      <h1>Homework</h1>
+      <p class="lede">Free rooms only — no subscription needed. Your progress is saved in this browser.</p>
+    </div>
+    <div class="content">
+      <div class="hw-head">
+        <div class="hw-progress" id="hwProgress">Required: <b>0 / 2</b> · All tasks: <b>0 / 7</b></div>
+        <div class="hw-actions"><button class="btn-sm" id="btnNewTask" type="button">➕ Create task</button><button class="btn-sm" id="hwAddAll" type="button">📅 Add all deadlines</button><button class="btn-sm" id="hwReset" type="button">↺ Reset progress</button></div>
+      </div>
+      <div id="taskList">
+        <div class="task mandatory">
+          <div class="task-top"><h3 class="task-title">Finish the four labs</h3><span class="badge req">Required</span></div>
+          <div class="task-body"><p>All verify checks on pages 8, 13, 16 and 22 ticked.</p></div>
+          <div class="task-deliver"><b>Deliverable:</b> your memory findings table, PE report and registry profile sheet.</div>
+          <div class="task-btns"></div>
+        </div>
+        <div class="task mandatory">
+          <div class="task-top"><h3 class="task-title">One-page host report</h3><span class="badge req">Required</span></div>
+          <div class="task-body"><p>Combine memory, file and registry findings for your lab host into one page: system profile, what was running at capture, persistence entries, and one thing that would have looked suspicious if you did not know the host.</p></div>
+          <div class="task-deliver"><b>Deliverable:</b> one page, posted before Session 11.</div>
+          <div class="task-btns"></div>
+        </div>
+        <div class="task optional"><div class="task-top"><h3 class="task-title">TryHackMe — Volatility Essentials</h3><span class="badge opt">Free</span></div><div class="task-links"><a class="task-link" href="https://tryhackme.com/room/volatilityessentials" target="_blank" rel="noopener">🔗 Open the room</a></div><div class="task-btns"></div></div>
+        <div class="task optional"><div class="task-top"><h3 class="task-title">TryHackMe — Critical (memory investigation)</h3><span class="badge opt">Free</span></div><div class="task-links"><a class="task-link" href="https://tryhackme.com/room/critical" target="_blank" rel="noopener">🔗 Open the room</a></div><div class="task-btns"></div></div>
+        <div class="task optional"><div class="task-top"><h3 class="task-title">TryHackMe — Dissecting PE Headers</h3><span class="badge opt">Free</span></div><div class="task-links"><a class="task-link" href="https://tryhackme.com/room/dissectingpeheaders" target="_blank" rel="noopener">🔗 Open the room</a></div><div class="task-btns"></div></div>
+        <div class="task optional"><div class="task-top"><h3 class="task-title">TryHackMe — Windows Forensics 1</h3><span class="badge opt">Free</span></div><div class="task-links"><a class="task-link" href="https://tryhackme.com/room/windowsforensics1" target="_blank" rel="noopener">🔗 Open the room</a></div><div class="task-btns"></div></div>
+        <div class="task optional"><div class="task-top"><h3 class="task-title">TryHackMe — Registry Persistence Detection</h3><span class="badge opt">Free</span></div><div class="task-links"><a class="task-link" href="https://tryhackme.com/room/registrypersistencedetection" target="_blank" rel="noopener">🔗 Open the room</a></div><div class="task-btns"></div></div>
+      </div>
+      <p class="hw-note">"Add all deadlines" downloads an .ics file for your calendar once your instructor sets the dates.</p>
+    </div>
+  </section>
+
+  <!-- P26 TAKEAWAYS -->
+  <section class="page" data-title="What you keep">
+    <div class="page-head">
+      <div class="kicker"><span class="snum">S10 · P26</span><span class="tag">Close</span><span class="time">⏱ 3 min</span></div>
+      <h1>What you keep</h1>
+      <p class="lede">Six lines to take into the capstone.</p>
+    </div>
+    <div class="content">
+      <ol class="takeaways">
+        <li><strong>Memory is the only witness</strong> for fileless attacks — capture first, analyse a verified copy.</li>
+        <li><strong>info → pstree → cmdline → netscan → malfind → registry</strong> — and judge every hit by its process.</li>
+        <li><strong>pdfid triages, pdf-parser extracts</strong>: /JS, /JavaScript, /OpenAction, /Launch are the words to fear.</li>
+        <li><strong>olevba shows trigger, action and IOC</strong> without running a line.</li>
+        <li><strong>PE headers say what and when; imports say what it can do; sections say whether it hides.</strong></li>
+        <li><strong>The registry remembers:</strong> control set → system profile → accounts → user activity → persistence.</li>
+      </ol>
+      <div class="box recall"><span class="box-t">→ Next</span><p><b>Session 11 — Capstone &amp; eCIR exam simulation.</b> One intrusion, every skill: SIEM, Windows logs, memory, files, registry — then an exam-style lab.</p></div>
+      <div class="box refs"><span class="box-t">References</span><ul>
+        <li>INE — Incident Handling &amp; Response Professional (eCIR): Incident Response: Digital Forensics — memory forensics, Volatility, malicious PDFs, olevba, PE headers, Windows registry; Labs 12, 14, 15, 16 (primary reference, exam wording).</li>
+        <li><a href="https://volatility3.readthedocs.io" target="_blank" rel="noopener">Volatility 3 documentation</a> · <a href="https://github.com/volatilityfoundation/volatility3" target="_blank" rel="noopener">Volatility 3 on GitHub</a></li>
+        <li><a href="https://blog.didierstevens.com/programs/pdf-tools/" target="_blank" rel="noopener">Didier Stevens — PDF tools (pdfid, pdf-parser)</a> · <a href="https://github.com/decalage2/oletools/wiki/olevba" target="_blank" rel="noopener">oletools — olevba</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format" target="_blank" rel="noopener">Microsoft — PE format</a> · <a href="https://www.winitor.com/" target="_blank" rel="noopener">pestudio</a></li>
+        <li><a href="https://ericzimmerman.github.io/" target="_blank" rel="noopener">Eric Zimmerman's tools (Registry Explorer)</a> · <a href="https://github.com/keydet89/RegRipper3.0" target="_blank" rel="noopener">RegRipper 3.0</a></li>
+        <li><a href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&amp;CK</a> — T1055, T1204.002, T1547.001, T1027 · TryHackMe rooms linked in the homework.</li>
+      </ul></div>
+    </div>
+  </section>
+</article></div></div>
+<!-- CREATE TASK MODAL (homework) -->
+<div class="modal" id="taskModal" role="dialog" aria-modal="true" aria-label="Create a homework task">
+  <div class="modal-box">
+    <h3>Create a homework task</h3>
+    <p class="modal-sub">Add your own lab, reading or exercise to this session's homework list.</p>
+    <div class="field"><label for="tTitle">Task title *</label><input type="text" id="tTitle" placeholder="e.g. TryHackMe — Investigating with Splunk"></div>
+    <div class="field"><label for="tDesc">Description</label><textarea id="tDesc" placeholder="What should the student do?"></textarea></div>
+    <div class="field-row">
+      <div class="field"><label for="tDue">Deadline</label><input type="date" id="tDue"></div>
+      <div class="field"><label>Type</label><div class="seg"><button type="button" data-type="mandatory" class="sel">Required</button><button type="button" data-type="optional">Optional</button></div></div>
+    </div>
+    <div class="field"><label>Links, labs or files</label><div id="tLinks"><div class="link-row"><input type="text" placeholder="Label" class="lk-label"><input type="text" placeholder="https://… or file.pdf" class="lk-url"></div></div>
+      <button type="button" class="btn-sm" id="addLink" style="margin-top:6px">＋ Add another link</button></div>
+    <div class="field"><label for="tDeliver">Deliverable</label><input type="text" id="tDeliver" placeholder="e.g. Screenshot of the completed room"></div>
+    <div class="modal-actions"><button class="btn-sm" type="button" data-close>Cancel</button><button class="btn primary" type="button" id="tSave">Add to homework list</button></div>
+  </div>
+</div>
+<nav id="botnav"></nav>
+<footer class="site-foot"><div class="wrap"><p>eCIR Diploma · ITGate Academy</p></div></footer>
+<script src="../assets/js/ecir.js"></script>
+<script src="../assets/js/simscreen.js"></script>
+<script src="../assets/js/homework.js"></script>
+<script src="../assets/js/task-creator.js"></script>
+</body>
+</html>

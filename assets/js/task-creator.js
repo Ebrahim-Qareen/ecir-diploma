@@ -13,7 +13,7 @@
     modal = document.getElementById('taskModal');
     if (!list || !modal) return;
 
-    KEY = 'itg-' + (document.body.getAttribute('data-session') || 'sX') + '-custom-tasks';
+    KEY = 'ecir5-' + (document.body.getAttribute('data-session') || 'sX') + '-custom-tasks';
 
     form.title = modal.querySelector('#tTitle');
     form.desc  = modal.querySelector('#tDesc');

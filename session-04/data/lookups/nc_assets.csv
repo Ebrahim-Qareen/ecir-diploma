@@ -1,0 +1,10 @@
+host,ip,owner,role,site
+DC01,10.10.1.10,it.ops,domain controller,HQ
+JUMP01,10.10.1.20,it.ops,jump server,HQ
+WEB01,10.10.2.11,web team,web server,DMZ
+LNX-APP01,10.10.2.21,reporting team,app server,DMZ
+FW01,10.10.0.1,network team,edge firewall,HQ
+SIEM01,10.10.9.10,SOC,SIEM,HQ
+SOC01,10.10.10.100,SOC,Splunk,HQ
+WIN-DC01,10.10.10.10,IT,lab domain controller,LAB
+LNX-WEB01,10.10.10.20,web team,lab web server,LAB

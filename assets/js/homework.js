@@ -19,7 +19,7 @@
       if (task.getAttribute('data-wired')) return;
       task.setAttribute('data-wired', '1');
       var id = sessionId + '-task-' + (i + 1);
-      var key = 'itg-' + id;
+      var key = 'ecir5-' + id;
 
       /* restore saved state */
       try { if (localStorage.getItem(key) === '1') task.classList.add('done'); } catch (e) {}
@@ -94,7 +94,7 @@
     resetBtn.addEventListener('click', function () {
       tasks.forEach(function (t, i) {
         t.classList.remove('done');
-        try { localStorage.removeItem('itg-' + sessionId + '-task-' + (i + 1)); } catch (e) {}
+        try { localStorage.removeItem('ecir5-' + sessionId + '-task-' + (i + 1)); } catch (e) {}
         var b = t.querySelector('.done-btn');
         if (b) { b.textContent = '☐ Mark as done'; b.classList.remove('is-done'); }
       });

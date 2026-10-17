@@ -1,0 +1,15 @@
+# Put this in $SPLUNK_HOME/etc/system/local/props.conf BEFORE loading night/jump01_security.log,
+# so each Windows event (several lines) stays one event, exactly as a Universal Forwarder would send it.
+[WinEventLog:Security]
+SHOULD_LINEMERGE = true
+BREAK_ONLY_BEFORE = ^\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d [AP]M
+TIME_PREFIX = ^
+TIME_FORMAT = %m/%d/%Y %I:%M:%S %p
+TZ = UTC
+MAX_TIMESTAMP_LOOKAHEAD = 25
+# the two CEF files and the two auth.log files use sourcetype syslog as they are; access_combined is built in.
+# All times are UTC: set TZ = UTC on sourcetype syslog and access_combined too if your server is not in UTC.
+[syslog]
+TZ = UTC
+[access_combined]
+TZ = UTC

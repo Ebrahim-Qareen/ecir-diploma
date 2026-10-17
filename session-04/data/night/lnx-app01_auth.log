@@ -1,0 +1,56 @@
+Oct  7 01:40:03 lnx-app01 sshd[51797]: Accepted publickey for deploy from 10.10.1.50 port 52114 ssh2: ED25519 SHA256:Kq3v9GmXcY0Rr2Wq0d7cHnV4Q1mP8sT6uJb5fLxZ2aE
+Oct  7 01:40:03 lnx-app01 sshd[51797]: pam_unix(sshd:session): session opened for user deploy(uid=1001) by (uid=0)
+Oct  7 02:29:56 lnx-app01 sshd[51803]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:29:58 lnx-app01 sshd[51803]: Failed password for svc_report from 198.51.100.147 port 40128 ssh2
+Oct  7 02:29:58 lnx-app01 sshd[51803]: Connection closed by authenticating user svc_report 198.51.100.147 port 40128 [preauth]
+Oct  7 02:30:02 lnx-app01 sshd[51809]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:04 lnx-app01 sshd[51809]: Failed password for svc_report from 198.51.100.147 port 40132 ssh2
+Oct  7 02:30:04 lnx-app01 sshd[51809]: Connection closed by authenticating user svc_report 198.51.100.147 port 40132 [preauth]
+Oct  7 02:30:08 lnx-app01 sshd[51817]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:10 lnx-app01 sshd[51817]: Failed password for svc_report from 198.51.100.147 port 40138 ssh2
+Oct  7 02:30:10 lnx-app01 sshd[51817]: Connection closed by authenticating user svc_report 198.51.100.147 port 40138 [preauth]
+Oct  7 02:30:14 lnx-app01 sshd[51822]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:16 lnx-app01 sshd[51822]: Failed password for svc_report from 198.51.100.147 port 40140 ssh2
+Oct  7 02:30:17 lnx-app01 sshd[51822]: Connection closed by authenticating user svc_report 198.51.100.147 port 40140 [preauth]
+Oct  7 02:30:20 lnx-app01 sshd[51826]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:21 lnx-app01 sshd[51826]: Failed password for svc_report from 198.51.100.147 port 40140 ssh2
+Oct  7 02:30:22 lnx-app01 sshd[51826]: Connection closed by authenticating user svc_report 198.51.100.147 port 40140 [preauth]
+Oct  7 02:30:26 lnx-app01 sshd[51831]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:28 lnx-app01 sshd[51831]: Failed password for svc_report from 198.51.100.147 port 40153 ssh2
+Oct  7 02:30:28 lnx-app01 sshd[51831]: Connection closed by authenticating user svc_report 198.51.100.147 port 40153 [preauth]
+Oct  7 02:30:31 lnx-app01 sshd[51839]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:33 lnx-app01 sshd[51839]: Failed password for svc_report from 198.51.100.147 port 40158 ssh2
+Oct  7 02:30:34 lnx-app01 sshd[51839]: Connection closed by authenticating user svc_report 198.51.100.147 port 40158 [preauth]
+Oct  7 02:30:36 lnx-app01 sshd[51846]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:38 lnx-app01 sshd[51846]: Failed password for svc_report from 198.51.100.147 port 40142 ssh2
+Oct  7 02:30:39 lnx-app01 sshd[51846]: Connection closed by authenticating user svc_report 198.51.100.147 port 40142 [preauth]
+Oct  7 02:30:41 lnx-app01 sshd[51849]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:43 lnx-app01 sshd[51849]: Failed password for svc_report from 198.51.100.147 port 40152 ssh2
+Oct  7 02:30:43 lnx-app01 sshd[51849]: Connection closed by authenticating user svc_report 198.51.100.147 port 40152 [preauth]
+Oct  7 02:30:47 lnx-app01 sshd[51858]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:49 lnx-app01 sshd[51858]: Failed password for svc_report from 198.51.100.147 port 40182 ssh2
+Oct  7 02:30:49 lnx-app01 sshd[51858]: Connection closed by authenticating user svc_report 198.51.100.147 port 40182 [preauth]
+Oct  7 02:30:53 lnx-app01 sshd[51866]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:30:54 lnx-app01 sshd[51866]: Failed password for svc_report from 198.51.100.147 port 40178 ssh2
+Oct  7 02:30:55 lnx-app01 sshd[51866]: Connection closed by authenticating user svc_report 198.51.100.147 port 40178 [preauth]
+Oct  7 02:30:59 lnx-app01 sshd[51872]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:31:00 lnx-app01 sshd[51872]: Failed password for svc_report from 198.51.100.147 port 40183 ssh2
+Oct  7 02:31:01 lnx-app01 sshd[51872]: Connection closed by authenticating user svc_report 198.51.100.147 port 40183 [preauth]
+Oct  7 02:31:04 lnx-app01 sshd[51874]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:31:05 lnx-app01 sshd[51874]: Failed password for svc_report from 198.51.100.147 port 40176 ssh2
+Oct  7 02:31:06 lnx-app01 sshd[51874]: Connection closed by authenticating user svc_report 198.51.100.147 port 40176 [preauth]
+Oct  7 02:31:09 lnx-app01 sshd[51876]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:31:11 lnx-app01 sshd[51876]: Failed password for svc_report from 198.51.100.147 port 40206 ssh2
+Oct  7 02:31:12 lnx-app01 sshd[51876]: Connection closed by authenticating user svc_report 198.51.100.147 port 40206 [preauth]
+Oct  7 02:31:15 lnx-app01 sshd[51885]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:31:17 lnx-app01 sshd[51885]: Failed password for svc_report from 198.51.100.147 port 40212 ssh2
+Oct  7 02:31:17 lnx-app01 sshd[51885]: Connection closed by authenticating user svc_report 198.51.100.147 port 40212 [preauth]
+Oct  7 02:31:21 lnx-app01 sshd[51891]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:31:22 lnx-app01 sshd[51891]: Failed password for svc_report from 198.51.100.147 port 40188 ssh2
+Oct  7 02:31:23 lnx-app01 sshd[51891]: Connection closed by authenticating user svc_report 198.51.100.147 port 40188 [preauth]
+Oct  7 02:31:27 lnx-app01 sshd[51895]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=198.51.100.147  user=svc_report
+Oct  7 02:31:28 lnx-app01 sshd[51895]: Failed password for svc_report from 198.51.100.147 port 40224 ssh2
+Oct  7 02:31:29 lnx-app01 sshd[51895]: Connection closed by authenticating user svc_report 198.51.100.147 port 40224 [preauth]
+Oct  7 02:31:47 lnx-app01 sshd[51897]: Accepted password for svc_report from 198.51.100.147 port 40391 ssh2
+Oct  7 02:31:47 lnx-app01 sshd[51897]: pam_unix(sshd:session): session opened for user svc_report(uid=1004) by (uid=0)
+Oct  7 02:33:10 lnx-app01 sudo: svc_report : TTY=pts/1 ; PWD=/home/svc_report ; USER=root ; COMMAND=/usr/bin/tar -czf /tmp/r.tgz /opt/reports

@@ -1,0 +1,1938 @@
+10/07/2026 01:37:12 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62470
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		administrator
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 01:37:31 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62505
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		admin
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 01:38:05 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62508
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		user
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 01:41:12 AM
+LogName=Security
+EventCode=4624
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=61870
+Keywords=Audit Success
+TaskCategory=Logon
+OpCode=Info
+Message=An account was successfully logged on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Impersonation Level:		Impersonation
+
+New Logon:
+	Security ID:		NOVACART\it.ops
+	Account Name:		it.ops
+	Account Domain:		NOVACART
+	Logon ID:		0x3E2D68
+	Linked Logon ID:		0x0
+	Network Account Name:	-
+	Network Account Domain:	-
+	Logon GUID:		{00000000-0000-0000-0000-000000000000}
+
+Process Information:
+	Process ID:		0x1f4
+	Process Name:		C:\Windows\System32\svchost.exe
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	10.10.4.21
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 01:41:14 AM
+LogName=Security
+EventCode=4624
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=61887
+Keywords=Audit Success
+TaskCategory=Logon
+OpCode=Info
+Message=An account was successfully logged on.
+
+Subject:
+	Security ID:		S-1-5-18
+	Account Name:		JUMP01$
+	Account Domain:		NOVACART
+	Logon ID:		0x3E7
+
+Logon Type:			10
+
+Impersonation Level:		Impersonation
+
+New Logon:
+	Security ID:		NOVACART\it.ops
+	Account Name:		it.ops
+	Account Domain:		NOVACART
+	Logon ID:		0x36F39E
+	Linked Logon ID:		0x0
+	Network Account Name:	-
+	Network Account Domain:	-
+	Logon GUID:		{00000000-0000-0000-0000-000000000000}
+
+Process Information:
+	Process ID:		0x1f4
+	Process Name:		C:\Windows\System32\svchost.exe
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	10.10.4.21
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		User32 
+	Authentication Package:	Negotiate
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 01:52:30 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=61890
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		it.ops
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	10.10.4.21
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 01:52:42 AM
+LogName=Security
+EventCode=4624
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=61917
+Keywords=Audit Success
+TaskCategory=Logon
+OpCode=Info
+Message=An account was successfully logged on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Impersonation Level:		Impersonation
+
+New Logon:
+	Security ID:		NOVACART\it.ops
+	Account Name:		it.ops
+	Account Domain:		NOVACART
+	Logon ID:		0x32A657
+	Linked Logon ID:		0x0
+	Network Account Name:	-
+	Network Account Domain:	-
+	Logon GUID:		{00000000-0000-0000-0000-000000000000}
+
+Process Information:
+	Process ID:		0x1f4
+	Process Name:		C:\Windows\System32\svchost.exe
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	10.10.4.21
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:02 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=61933
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		admin
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:10 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=61969
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		n.ibrahim
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:16 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=61999
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		test
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:24 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62016
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		o.khalil
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:31 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62049
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		t.ashraf
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:38 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62069
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		helpdesk
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:45 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62101
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		w.mansour
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:05:53 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62118
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		l.gamal
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:06:00 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62138
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		scanner
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:06:07 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62155
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		d.sherif
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:06:15 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62167
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		e.wahba
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:06:22 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62175
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		y.mostafa
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:01 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62214
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		admin
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:08 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62226
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		n.ibrahim
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:16 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62256
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		test
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:25 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62287
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		o.khalil
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:33 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62317
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		t.ashraf
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:39 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62325
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		helpdesk
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:46 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62355
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		w.mansour
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:07:54 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62360
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		l.gamal
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:08:01 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62367
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		scanner
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:08:08 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62387
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		d.sherif
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:08:16 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62408
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		e.wahba
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:08:23 AM
+LogName=Security
+EventCode=4624
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62413
+Keywords=Audit Success
+TaskCategory=Logon
+OpCode=Info
+Message=An account was successfully logged on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Impersonation Level:		Impersonation
+
+New Logon:
+	Security ID:		NOVACART\y.mostafa
+	Account Name:		y.mostafa
+	Account Domain:		NOVACART
+	Logon ID:		0x3486B1
+	Linked Logon ID:		0x0
+	Network Account Name:	-
+	Network Account Domain:	-
+	Logon GUID:		{00000000-0000-0000-0000-000000000000}
+
+Process Information:
+	Process ID:		0x1f4
+	Process Name:		C:\Windows\System32\svchost.exe
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:22:05 AM
+LogName=Security
+EventCode=4624
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62432
+Keywords=Audit Success
+TaskCategory=Logon
+OpCode=Info
+Message=An account was successfully logged on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Impersonation Level:		Impersonation
+
+New Logon:
+	Security ID:		NOVACART\y.mostafa
+	Account Name:		y.mostafa
+	Account Domain:		NOVACART
+	Logon ID:		0x3BFEBF
+	Linked Logon ID:		0x0
+	Network Account Name:	-
+	Network Account Domain:	-
+	Logon GUID:		{00000000-0000-0000-0000-000000000000}
+
+Process Information:
+	Process ID:		0x1f4
+	Process Name:		C:\Windows\System32\svchost.exe
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:22:07 AM
+LogName=Security
+EventCode=4624
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62451
+Keywords=Audit Success
+TaskCategory=Logon
+OpCode=Info
+Message=An account was successfully logged on.
+
+Subject:
+	Security ID:		S-1-5-18
+	Account Name:		JUMP01$
+	Account Domain:		NOVACART
+	Logon ID:		0x3E7
+
+Logon Type:			10
+
+Impersonation Level:		Impersonation
+
+New Logon:
+	Security ID:		NOVACART\y.mostafa
+	Account Name:		y.mostafa
+	Account Domain:		NOVACART
+	Logon ID:		0x3BBCF8
+	Linked Logon ID:		0x0
+	Network Account Name:	-
+	Network Account Domain:	-
+	Logon GUID:		{00000000-0000-0000-0000-000000000000}
+
+Process Information:
+	Process ID:		0x1f4
+	Process Name:		C:\Windows\System32\svchost.exe
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	203.0.113.58
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		User32 
+	Authentication Package:	Negotiate
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:26:44 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62523
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		r.helmy
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	10.10.3.15
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:26:58 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62533
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		r.helmy
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC000006A
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	10.10.3.15
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:31:03 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62560
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		administrator
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:31:20 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62575
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		admin
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:31:41 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62587
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		guest
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:32:02 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62621
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		test
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:32:30 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62658
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		rdp
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+10/07/2026 02:33:09 AM
+LogName=Security
+EventCode=4625
+EventType=0
+ComputerName=JUMP01.novacart.example
+SourceName=Microsoft Windows security auditing.
+Type=Information
+RecordNumber=62687
+Keywords=Audit Failure
+TaskCategory=Logon
+OpCode=Info
+Message=An account failed to log on.
+
+Subject:
+	Security ID:		NULL SID
+	Account Name:		-
+	Account Domain:		-
+	Logon ID:		0x0
+
+Logon Type:			3
+
+Account For Which Logon Failed:
+	Security ID:		NULL SID
+	Account Name:		support
+	Account Domain:		NOVACART
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006D
+	Sub Status:		0xC0000064
+
+Process Information:
+	Caller Process ID:	0x0
+	Caller Process Name:	-
+
+Network Information:
+	Workstation Name:	-
+	Source Network Address:	192.0.2.201
+	Source Port:		0
+
+Detailed Authentication Information:
+	Logon Process:		NtLmSsp 
+	Authentication Package:	NTLM
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
