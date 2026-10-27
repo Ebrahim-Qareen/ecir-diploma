@@ -1,0 +1,6 @@
+ip,source,note
+203.0.113.58,NovaCart IR · 7 Oct 2026,RDP password spray against JUMP01
+198.51.100.147,NovaCart IR · 7 Oct 2026,SSH brute force against LNX-APP01 and WEB01
+192.0.2.201,abuse feed,internet RDP scanner
+203.0.113.77,NovaCart IR · 14 Oct 2026,web attacks against WEB01
+198.51.100.23,NovaCart IR · 14 Oct 2026,C2 server contacted by WEB01

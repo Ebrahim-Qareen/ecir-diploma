@@ -1,0 +1,17 @@
+# Session 6 data pack - put this in $SPLUNK_HOME/etc/system/local/props.conf before nc6_load.sh, then restart Splunk.
+# All times are UTC.
+[syslog]
+TZ = UTC
+[access_combined]
+TZ = UTC
+# Zeek logs: tab-separated, one header line "#fields ..." names the columns, "ts" is epoch seconds.
+# Verify on your Splunk version (INDEXED_EXTRACTIONS needs the file to be loaded with this sourcetype).
+[zeek_tsv]
+INDEXED_EXTRACTIONS = tsv
+FIELD_DELIMITER = \t
+HEADER_FIELD_DELIMITER = \t
+FIELD_HEADER_REGEX = ^#fields\t(.*)
+PREAMBLE_REGEX = ^#(separator|set_separator|empty_field|unset_field|path|open|types|close)
+TIMESTAMP_FIELDS = ts
+TIME_FORMAT = %s.%6N
+TZ = UTC

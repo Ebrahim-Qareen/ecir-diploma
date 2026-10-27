@@ -1,0 +1,12 @@
+host,ip,owner,role,site,asset
+DC01,10.10.1.10,it.ops,domain controller,HQ,DC01
+JUMP01,10.10.1.20,it.ops,jump server,HQ,JUMP01
+WEB01,10.10.2.11,web team,web server,DMZ,WEB01
+LNX-APP01,10.10.2.21,reporting team,app server,DMZ,LNX-APP01
+FW01,10.10.0.1,network team,edge firewall,HQ,FW01
+SIEM01,10.10.9.10,SOC,SIEM,HQ,SIEM01
+SOC01,10.10.10.100,SOC,Splunk,HQ,SOC01
+WIN-DC01,10.10.10.10,IT,lab domain controller,LAB,WIN-DC01
+LNX-WEB01,10.10.10.20,web team,lab web server,LAB,LNX-WEB01
+LNX-DB01,10.10.3.21,data team,orders database (crown jewel),HQ,LNX-DB01
+SENSOR-DMZ01,10.10.2.250,SOC,Zeek sensor on the DMZ uplink,DMZ,SENSOR-DMZ01
