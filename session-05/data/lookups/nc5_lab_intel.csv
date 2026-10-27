@@ -1,0 +1,11 @@
+ioc,kind,verdict,asn,as_name,geo,whois,reports,detections,first_seen,tags,actor
+203.0.113.58,ip,malicious,AS64501,Example Cloud VPS,LAB-EU-2 · hosting data centre,VPS range · registered 2019,37,,2026-09-30,rdp-spray,
+198.51.100.147,ip,malicious,AS64503,ExampleNet Home Broadband,LAB-AS-1 · residential,ISP pool · registered 2008,12,,2026-09-28,ssh-bruteforce,
+192.0.2.201,ip,"scanner — noisy, low risk",AS64496,Example Scan Research,LAB-US-3 · research network,scanner project · registered 2015,3400,,2025-02-11,scanner,
+203.0.113.77,ip,malicious,AS64501,Example Cloud VPS,LAB-EU-2 · hosting data centre,VPS range · registered 2019,5,,2026-10-12,web-attack sqlmap,
+198.51.100.23,ip,malicious,AS64510,Example Bulletproof Hosting,LAB-EU-9 · offshore hosting,"cdn-sync.example → this address · domain registered 2026-10-02, privacy-protected",64,,2026-10-03,c2 webshell-campaign,CartSkimmer (lab name)
+cdn-sync.example,domain,malicious,AS64510,Example Bulletproof Hosting,resolves to 198.51.100.23,registered 2026-10-02 · privacy-protected,9,,2026-10-03,c2,CartSkimmer (lab name)
+00AE0F6BE60AD248DA07DDF949BDA4FF3BA747D15A07512825A81985DB23FB42,sha256,malicious,,,,,31,31/70,2026-09-21,loader · named svchost.exe,
+8BB669A85C90DE9ED94D1324983EEE6631177194A6B902D2612B67DE1DD7343B,sha256,malicious,,,,,18,18/70,2026-09-24,service implant,
+64384891F6C0CF930661DC73C0E6B11DE9463CE2D1C5DA9604DAE0BEA7843546,sha256,unknown,,,,,0,0/70,never seen,unsigned DLL,
+03DF8ED49AE6D732079DE93E79697F7E99B843F892D6AFCA1D0EBCCF40469656,sha256,malicious,,,,,22,22/60,2026-10-05,PHP web shell,CartSkimmer (lab name)

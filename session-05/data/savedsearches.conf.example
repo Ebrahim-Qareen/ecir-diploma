@@ -1,0 +1,67 @@
+# Session 5 — the NovaCart Rulebook as Splunk scheduled alerts (every 5 minutes, last 5 minutes; NC-S5-03 last 10)
+
+[NC-S5-01 Signature - address from the intel feed]
+search = (index=nc_wineventlog OR index=nc_fw OR index=nc_web) | eval ip=mvappend(Source_Network_Address, src, dst, clientip) | mvexpand ip | lookup nc5_intel_feed ip OUTPUT note | where isnotnull(note) | stats count min(_time) as first by ip host note
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -5m
+dispatch.latest_time = now
+enableSched = 1
+alert_type = number of events
+alert_comparator = greater than
+alert_threshold = 0
+alert.track = 1
+
+[NC-S5-02 Behaviour - system process name outside its folder]
+search = index=nc5_sysmon EventCode=1 (Image="*\\svchost.exe" OR Image="*\\lsass.exe" OR Image="*\\csrss.exe" OR Image="*\\services.exe") NOT Image="C:\\Windows\\System32\\*" | table _time host User Image CommandLine ParentImage
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -5m
+dispatch.latest_time = now
+enableSched = 1
+alert_type = number of events
+alert_comparator = greater than
+alert_threshold = 0
+alert.track = 1
+
+[NC-S5-03 Anomaly - server beacons to one external address]
+search = index=nc_fw src=10.10.* NOT dst=10.10.* | sort 0 _time | streamstats current=f last(_time) as prev by src dst dpt | eval gap=_time-prev | stats count avg(gap) as avg_gap stdev(gap) as sd by src dst dpt | where count>=5 AND sd<=5
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -10m
+dispatch.latest_time = now
+enableSched = 1
+alert_type = number of events
+alert_comparator = greater than
+alert_threshold = 0
+alert.track = 1
+
+[NC-S5-04 Threshold - many failed logons from one source]
+search = (index=nc_wineventlog EventCode=4625) OR (index=nc_linux "Failed password") | rex "for (invalid user )?(?<user>\S+) from (?<src_ip>\S+)" | eval src=coalesce(Source_Network_Address, src_ip), user=coalesce(Account_Name, user) | bin _time span=5m | stats count dc(user) as names by _time host src | where count>10 OR names>=5
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -5m
+dispatch.latest_time = now
+enableSched = 1
+alert_type = number of events
+alert_comparator = greater than
+alert_threshold = 0
+alert.track = 1
+
+[NC-S5-05 TTP - whoami run as SYSTEM]
+search = index=nc5_sysmon EventCode=1 Image="*\\whoami.exe" LogonId=0x3e7 | table _time host User ParentImage CommandLine
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -5m
+dispatch.latest_time = now
+enableSched = 1
+alert_type = number of events
+alert_comparator = greater than
+alert_threshold = 0
+alert.track = 1
+
+[NC-S5-06 Correlation - failed-logon burst then a success from the same source]
+search = index=nc_wineventlog (EventCode=4625 OR (EventCode=4624 Logon_Type=10)) | eval outcome=if(EventCode=4625,"fail","success") | stats count(eval(outcome="fail")) as fails dc(eval(if(outcome="fail",Account_Name,null()))) as names min(_time) as first max(eval(if(outcome="success",_time,null()))) as success by Source_Network_Address | where (fails>10 OR names>=5) AND isnotnull(success) AND success-first<=1800
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -5m
+dispatch.latest_time = now
+enableSched = 1
+alert_type = number of events
+alert_comparator = greater than
+alert_threshold = 0
+alert.track = 1

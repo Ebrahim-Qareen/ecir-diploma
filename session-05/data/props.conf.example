@@ -1,0 +1,8 @@
+# Session 5 — one JSON object per line, time in the "timestamp" field (UTC)
+[nc5_json]
+INDEXED_EXTRACTIONS = json
+KV_MODE = none
+TIMESTAMP_FIELDS = timestamp
+TIME_FORMAT = %Y-%m-%dT%H:%M:%SZ
+TZ = UTC
+SHOULD_LINEMERGE = false
